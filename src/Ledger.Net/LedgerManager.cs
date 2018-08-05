@@ -21,6 +21,11 @@ namespace Ledger.Net
         {
 
         }
+
+        public async Task<TReadMessage> SendMessageAsync<TReadMessage, TWriteMessage>(TWriteMessage message)
+        {
+
+        }
         #endregion
     }
 }
