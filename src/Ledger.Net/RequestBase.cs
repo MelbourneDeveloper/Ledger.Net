@@ -1,6 +1,6 @@
 ﻿namespace Ledger.Net
 {
-    public abstract class LedgerRequestBase
+    public abstract class RequestBase
     {
         #region Public Abstract Properties
         public abstract byte Argument1 { get; }
@@ -13,7 +13,7 @@
         public byte[] Data { get; }
         #endregion
 
-        public LedgerRequestBase()
+        public RequestBase()
         {
         }
     }

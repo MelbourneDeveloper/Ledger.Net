@@ -24,7 +24,9 @@ namespace Ledger.Net
             return null;
         }
 
-        public async Task<TReadMessage> SendMessageAsync<TReadMessage, TWriteMessage>(TWriteMessage message)
+        public async Task<TResponse> SendMessageAsync<TResponse, TWrite>(TWrite message)
+           where TResponse : ResponseBase
+           where TWrite : RequestBase
         {
             await _SemaphoreSlim.WaitAsync();
 
@@ -37,7 +39,7 @@ namespace Ledger.Net
                 _SemaphoreSlim.Release();
             }
 
-            return default(TReadMessage);
+            return default(TResponse);
         }
         #endregion
     }
