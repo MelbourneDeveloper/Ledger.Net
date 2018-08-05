@@ -19,12 +19,12 @@ namespace Ledger.Net
         #region Public Methods
         public async Task<string> GetAddressAsync(string coinShortcut, uint coinNumber, bool isChange, uint index, bool showDisplay, AddressType addressType)
         {
-
+            return null;
         }
 
         public async Task<TReadMessage> SendMessageAsync<TReadMessage, TWriteMessage>(TWriteMessage message)
         {
-
+            return default(TReadMessage);
         }
         #endregion
     }
