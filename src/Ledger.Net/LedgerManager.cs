@@ -1,4 +1,5 @@
 ﻿using Hid.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ledger.Net
@@ -7,6 +8,7 @@ namespace Ledger.Net
     {
         #region Fields
         private readonly IHidDevice _LedgerHidDevice;
+        protected SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
         #endregion
 
         #region Constructor
@@ -24,6 +26,17 @@ namespace Ledger.Net
 
         public async Task<TReadMessage> SendMessageAsync<TReadMessage, TWriteMessage>(TWriteMessage message)
         {
+            await _SemaphoreSlim.WaitAsync();
+
+            try
+            {
+
+            }
+            finally
+            {
+                _SemaphoreSlim.Release();
+            }
+
             return default(TReadMessage);
         }
         #endregion
