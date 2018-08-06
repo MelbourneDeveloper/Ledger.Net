@@ -13,9 +13,9 @@ namespace Ledger.Net.Requests
             using (var memoryStream = new MemoryStream(data))
             {
                 var publicKeyLength = memoryStream.ReadByte();
-                var publicKeyData = LedgerManager.ReadAllBytes(memoryStream, publicKeyLength);
+                var publicKeyData = memoryStream.ReadAllBytes(publicKeyLength);
                 var addressLength = memoryStream.ReadByte();
-                Address = Encoding.ASCII.GetString(LedgerManager.ReadAllBytes(memoryStream, addressLength));
+                Address = Encoding.ASCII.GetString(memoryStream.ReadAllBytes(addressLength));
             }
         }
     }
