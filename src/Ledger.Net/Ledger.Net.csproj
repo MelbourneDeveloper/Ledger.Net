@@ -16,7 +16,7 @@ Please use this https://github.com/LedgerHQ/ledger-dotnet-api</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Hid.Net\Hid.Net\Hid.Net.csproj" />
+    <PackageReference Include="Hid.Net" Version="1.1.9" />
   </ItemGroup>
 
 </Project>

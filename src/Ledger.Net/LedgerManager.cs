@@ -22,7 +22,7 @@ namespace Ledger.Net
         #endregion
 
         #region Private Methods
-        private async Task WriteMessageAsync<TWrite>(TWrite message) where TWrite : RequestBase
+        private async Task WriteRequestAsync<TWrite>(TWrite message) where TWrite : RequestBase
         {
             var packetIndex = 0;
             byte[] data = null;
@@ -37,7 +37,7 @@ namespace Ledger.Net
             }
         }
 
-        protected async Task<byte[]> ReadMessageAsync()
+        protected async Task<byte[]> ReadResponseAsync()
         {
             var response = new MemoryStream();
             var remaining = 0;
@@ -138,51 +138,37 @@ namespace Ledger.Net
         public async Task<string> GetAddressAsync(uint coinNumber, uint account, bool isChange, uint index, bool showDisplay, AddressType addressType)
         {
             var isSegwit = true;
-            var indices = new[] { ((isSegwit ? (uint)49 : 44) | Constants.HardeningConstant) >> 0, (coinNumber | Constants.HardeningConstant) >> (int)account, (0 | Constants.HardeningConstant) >> 0, isChange ? 1 : (uint)0, index };
+            var indices = new[] { ((isSegwit ? (uint)49 : 44) | Constants.HARDENING_CONSTANT) >> 0, (coinNumber | Constants.HARDENING_CONSTANT) >> (int)account, (0 | Constants.HARDENING_CONSTANT) >> 0, isChange ? 1 : (uint)0, index };
 
             byte[] addressIndicesData;
 
             using (var memoryStream = new MemoryStream())
             {
-                var length = indices.Length;
                 memoryStream.WriteByte((byte)indices.Length);
                 for (var i = 0; i < indices.Length; i++)
                 {
-                    var bytes = UintToBytes(indices[i]);
-                    memoryStream.Write(bytes, 0, bytes.Length);
+                    var data = indices[i].ToBytes();
+                    memoryStream.Write(data, 0, data.Length);
                 }
                 addressIndicesData = memoryStream.ToArray();
             }
 
-            var request = new BitcoinAppGetPublicKeyRequest(showDisplay, BitcoinAddressType.Segwit, addressIndicesData);
-
-            var bitcoinAppGetPublicKeyResponse = await SendMessageAsync<BitcoinAppGetPublicKeyResponse,BitcoinAppGetPublicKeyRequest>(request);
+            var bitcoinAppGetPublicKeyResponse = await SendRequestAsync<BitcoinAppGetPublicKeyResponse,BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(showDisplay, BitcoinAddressType.Segwit, addressIndicesData));
 
             return bitcoinAppGetPublicKeyResponse.Address;
         }
 
-        internal static byte[] UintToBytes(uint value)
-        {
-            return new byte[]
-            {
-                (byte)(value >> 24),
-                (byte)(value >> 16),
-                (byte)(value >> 8),
-                (byte)value,
-            };
-        }
-
-        public async Task<TResponse> SendMessageAsync<TResponse, TWrite>(TWrite message)
+        public async Task<TResponse> SendRequestAsync<TResponse, TRequest>(TRequest request)
            where TResponse : ResponseBase
-           where TWrite : RequestBase
+           where TRequest : RequestBase
         {
             await _SemaphoreSlim.WaitAsync();
 
             try
             {
-                await WriteMessageAsync(message);
-                var resultData = await ReadMessageAsync();
-                return (TResponse)Activator.CreateInstance(typeof(TResponse), resultData);
+                await WriteRequestAsync(request);
+                var responseData = await ReadResponseAsync();
+                return (TResponse)Activator.CreateInstance(typeof(TResponse), responseData);
             }
             finally
             {

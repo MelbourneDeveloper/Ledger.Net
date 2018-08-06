@@ -2,8 +2,6 @@
 {
     public class Constants
     {
-        public const uint HardeningConstant = 0x80000000;
-
         #region Generic App Constants
         public const byte CLA = 0xE0;
         public const int DEFAULT_CHANNEL = 0x0101;
@@ -13,6 +11,10 @@
 
         #region Bitcoin Blue Instructions
         public const byte BTCHIP_INS_GET_WALLET_PUBLIC_KEY = 0x40;
+        #endregion
+
+        #region Other Constants
+        public const uint HARDENING_CONSTANT = 0x80000000;
         #endregion
     }
 }

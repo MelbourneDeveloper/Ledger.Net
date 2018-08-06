@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ledger.Net", "Ledger.Net\Le
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ledger.Net.Tests", "Ledger.Net.Tests\Ledger.Net.Tests.csproj", "{8E6C7DD5-9449-4074-AFA6-D994D2F75833}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hid.Net", "..\..\Hid.Net\Hid.Net\Hid.Net.csproj", "{D67825B3-D9FF-4EA0-9B12-D977751A6E99}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{8E6C7DD5-9449-4074-AFA6-D994D2F75833}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E6C7DD5-9449-4074-AFA6-D994D2F75833}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E6C7DD5-9449-4074-AFA6-D994D2F75833}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D67825B3-D9FF-4EA0-9B12-D977751A6E99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D67825B3-D9FF-4EA0-9B12-D977751A6E99}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D67825B3-D9FF-4EA0-9B12-D977751A6E99}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D67825B3-D9FF-4EA0-9B12-D977751A6E99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

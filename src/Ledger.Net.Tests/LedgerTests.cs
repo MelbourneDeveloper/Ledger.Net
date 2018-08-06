@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Ledger.Net.Tests
 {
-    public class UnitTest1
+    public class LedgerTests
     {
 
         public static VendorProductIds[] WellKnownLedgerWallets = new VendorProductIds[]
