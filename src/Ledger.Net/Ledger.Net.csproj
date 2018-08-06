@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
     <Description>This is a stub. Please don't download. Work in progress.
 
 Please use this https://github.com/LedgerHQ/ledger-dotnet-api</Description>
