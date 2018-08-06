@@ -1,4 +1,6 @@
-﻿namespace Ledger.Net
+﻿using System;
+
+namespace Ledger.Net
 {
     public abstract class RequestBase
     {
@@ -13,8 +15,25 @@
         public byte[] Data { get; }
         #endregion
 
-        public RequestBase()
+        #region Constructor
+        public RequestBase(byte[] data)
         {
+            Data = data;
         }
+        #endregion
+
+        #region Internal Methods
+        internal byte[] ToAPDU()
+        {
+            var apdu = new byte[Data.Length + 5];
+            apdu[0] = Cla;
+            apdu[1] = Ins;
+            apdu[2] = Argument1;
+            apdu[3] = Argument2;
+            apdu[4] = (byte)(Data.Length);
+            Array.Copy(Data, 0, apdu, 5, Data.Length);
+            return apdu;
+        }
+        #endregion
     }
 }

@@ -15,7 +15,7 @@
         #endregion
 
         #region Constructor
-        public BitcoinAppGetPublicKeyRequest(bool display, BitcoinAddressType bitcoinAddressType)
+        public BitcoinAppGetPublicKeyRequest(bool display, BitcoinAddressType bitcoinAddressType, byte[] data) : base(data)
         {
             Display = display;
             BitcoinAddressType = bitcoinAddressType;
