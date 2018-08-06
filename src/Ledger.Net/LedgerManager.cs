@@ -50,12 +50,15 @@ namespace Ledger.Net
                 do
                 {
                     var packetData = await LedgerHidDevice.ReadAsync();
-                    var commandPart = GetResponseDataPacket(packetData, packetIndex, ref remaining);
+                    var responseDataPacket = GetResponseDataPacket(packetData, packetIndex, ref remaining);
                     packetIndex++;
 
-                    if (commandPart == null)
+                    if (responseDataPacket == null)
+                    {
                         return null;
-                    response.Write(commandPart, 0, commandPart.Length);
+                    }
+
+                    response.Write(responseDataPacket, 0, responseDataPacket.Length);
 
                 } while (remaining != 0);
 
@@ -106,17 +109,21 @@ namespace Ledger.Net
                 {
                     var position = (int)input.Position;
                     var channel = input.ReadAllBytes(2);
-                    if (input.ReadByte() != Constants.TAG_APDU)
+
+                    int thirdByte = input.ReadByte();
+                    if (thirdByte != Constants.TAG_APDU)
                     {
                         return null;
                     }
 
-                    if (input.ReadByte() != ((packetIndex >> 8) & 0xff))
+                    int fourthByte = input.ReadByte();
+                    if (fourthByte != ((packetIndex >> 8) & 0xff))
                     {
                         return null;
                     }
 
-                    if (input.ReadByte() != (packetIndex & 0xff))
+                    int fifthByte = input.ReadByte();
+                    if (fifthByte != (packetIndex & 0xff))
                     {
                         return null;
                     }
