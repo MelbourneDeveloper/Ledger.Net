@@ -135,7 +135,7 @@ namespace Ledger.Net
         #endregion
 
         #region Public Methods
-        public async Task<string> GetAddressAsync(uint coinNumber, bool isChange, uint account, uint index, bool showDisplay, AddressType addressType)
+        public async Task<string> GetAddressAsync(uint coinNumber, uint account, bool isChange, uint index, bool showDisplay, AddressType addressType)
         {
             var isSegwit = true;
             var indices = new[] { ((isSegwit ? (uint)49 : 44) | Constants.HardeningConstant) >> 0, (coinNumber | Constants.HardeningConstant) >> (int)account, (0 | Constants.HardeningConstant) >> 0, isChange ? 1 : (uint)0, index };
