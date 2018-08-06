@@ -42,6 +42,7 @@ namespace Ledger.Net.Tests
                 _UsageSpecification.Any(u => d.UsagePage == u.UsagePage && d.Usage == u.Usage));
 
             var ledgerHidDevice = new WindowsHidDevice(retVal);
+            await ledgerHidDevice.InitializeAsync();
             var ledgerManager = new LedgerManager(ledgerHidDevice);
             var address = await ledgerManager.GetAddressAsync(0, false, 0, 0, false, AddressType.Bitcoin);
         }
