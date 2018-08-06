@@ -10,15 +10,18 @@ namespace Ledger.Net
     public class LedgerManager
     {
         #region Fields
-        private readonly IHidDevice _LedgerHidDevice;
         protected SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
         #endregion
 
         #region Constructor
         public LedgerManager(IHidDevice ledgerHidDevice)
         {
-            _LedgerHidDevice = ledgerHidDevice;
+            LedgerHidDevice = ledgerHidDevice;
         }
+        #endregion
+
+        #region Public Properties
+        public IHidDevice LedgerHidDevice { get; }
         #endregion
 
         #region Private Methods
@@ -32,7 +35,7 @@ namespace Ledger.Net
                 {
                     data = GetRequestDataPacket(memoryStream, packetIndex);
                     packetIndex++;
-                    await _LedgerHidDevice.WriteAsync(data);
+                    await LedgerHidDevice.WriteAsync(data);
                 } while (memoryStream.Position != memoryStream.Length);
             }
         }
@@ -46,7 +49,7 @@ namespace Ledger.Net
             {
                 do
                 {
-                    var packetData = await _LedgerHidDevice.ReadAsync();
+                    var packetData = await LedgerHidDevice.ReadAsync();
                     var commandPart = GetResponseDataPacket(packetData, packetIndex, ref remaining);
                     packetIndex++;
 
