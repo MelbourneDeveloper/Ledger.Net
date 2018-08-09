@@ -158,7 +158,7 @@ namespace Ledger.Net
         public async Task<string> GetAddressAsync(uint coinNumber, uint account, bool isChange, uint index, bool showDisplay, AddressType addressType)
         {
             var isSegwit = true;
-            var indices = new[] { ((isSegwit ? (uint)49 : 44) | Constants.HARDENING_CONSTANT) >> 0, (coinNumber | Constants.HARDENING_CONSTANT) >> (int)account, (0 | Constants.HARDENING_CONSTANT) >> 0, isChange ? 1 : (uint)0, index };
+            var indices = new[] { ((isSegwit ? (uint)49 : 44) | Constants.HARDENING_CONSTANT) >> 0, (coinNumber | Constants.HARDENING_CONSTANT) >> 0, (0 | Constants.HARDENING_CONSTANT) >> (int)account, isChange ? 1 : (uint)0, index };
 
             byte[] addressIndicesData;
 
