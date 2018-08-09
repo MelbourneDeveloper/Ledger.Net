@@ -1,4 +1,5 @@
 ﻿using Hid.Net;
+using Ledger.Net.Requests;
 using System;
 using System.IO;
 using System.Threading;
@@ -9,19 +10,22 @@ namespace Ledger.Net
     public class LedgerManager
     {
         #region Fields
-        private readonly IHidDevice _LedgerHidDevice;
         protected SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
         #endregion
 
         #region Constructor
         public LedgerManager(IHidDevice ledgerHidDevice)
         {
-            _LedgerHidDevice = ledgerHidDevice;
+            LedgerHidDevice = ledgerHidDevice;
         }
         #endregion
 
+        #region Public Properties
+        public IHidDevice LedgerHidDevice { get; }
+        #endregion
+
         #region Private Methods
-        private async Task WriteMessageAsync<TWrite>(TWrite message) where TWrite : RequestBase
+        private async Task WriteRequestAsync<TWrite>(TWrite message) where TWrite : RequestBase
         {
             var packetIndex = 0;
             byte[] data = null;
@@ -29,28 +33,42 @@ namespace Ledger.Net
             {
                 do
                 {
-                    data = GetDataPacket(memoryStream, packetIndex);
+                    data = GetRequestDataPacket(memoryStream, packetIndex);
                     packetIndex++;
-                    await _LedgerHidDevice.WriteAsync(data);
+                    await LedgerHidDevice.WriteAsync(data);
                 } while (memoryStream.Position != memoryStream.Length);
+            }
+        }
+
+        protected async Task<byte[]> ReadResponseAsync()
+        {
+            var remaining = 0;
+            var packetIndex = 0;
+
+            using (var response = new MemoryStream())
+            {
+                do
+                {
+                    var packetData = await LedgerHidDevice.ReadAsync();
+                    var responseDataPacket = GetResponseDataPacket(packetData, packetIndex, ref remaining);
+                    packetIndex++;
+
+                    if (responseDataPacket == null)
+                    {
+                        return null;
+                    }
+
+                    response.Write(responseDataPacket, 0, responseDataPacket.Length);
+
+                } while (remaining != 0);
+
+                return response.ToArray();
             }
         }
         #endregion
 
         #region Private Static Methods
-        public static byte[] ReadAllBytes(Stream stream, int totalByteCount)
-        {
-            var data = new byte[totalByteCount];
-            var totalReadCount = 0;
-            int readCount;
-            do
-            {
-                totalReadCount += (readCount = stream.Read(data, totalReadCount, totalByteCount - totalReadCount));
-            } while (readCount > 0 && totalReadCount < totalByteCount);
-            return data;
-        }
-
-        private static byte[] GetDataPacket(Stream stream, int packetIndex)
+        private static byte[] GetRequestDataPacket(Stream stream, int packetIndex)
         {
             using (var returnStream = new MemoryStream())
             {
@@ -70,7 +88,7 @@ namespace Ledger.Net
                 var headerLength = (int)(returnStream.Position - position);
                 var blockLength = Math.Min(Constants.LEDGER_HID_PACKET_SIZE - headerLength, (int)stream.Length - (int)stream.Position);
 
-                var packetBytes = ReadAllBytes(stream, blockLength);
+                var packetBytes = stream.ReadAllBytes(blockLength);
 
                 returnStream.Write(packetBytes, 0, packetBytes.Length);
 
@@ -82,30 +100,100 @@ namespace Ledger.Net
                 return returnStream.ToArray();
             }
         }
+
+        protected byte[] GetResponseDataPacket(byte[] data, int packetIndex, ref int remaining)
+        {
+            using (var returnStream = new MemoryStream())
+            {
+                using (var input = new MemoryStream(data))
+                {
+                    var position = (int)input.Position;
+                    var channel = input.ReadAllBytes(2);
+
+                    int thirdByte = input.ReadByte();
+                    if (thirdByte != Constants.TAG_APDU)
+                    {
+                        return null;
+                    }
+
+                    int fourthByte = input.ReadByte();
+                    if (fourthByte != ((packetIndex >> 8) & 0xff))
+                    {
+                        return null;
+                    }
+
+                    int fifthByte = input.ReadByte();
+                    if (fifthByte != (packetIndex & 0xff))
+                    {
+                        return null;
+                    }
+
+                    if (packetIndex == 0)
+                    {
+                        remaining = ((input.ReadByte()) << 8);
+                        remaining |= input.ReadByte();
+                    }
+
+                    var headerSize = input.Position - position;
+                    var blockSize = (int)Math.Min(remaining, Constants.LEDGER_HID_PACKET_SIZE - headerSize);
+
+                    var commandPart = new byte[blockSize];
+
+                    if (input.Read(commandPart, 0, commandPart.Length) != commandPart.Length)
+                    {
+                        return null;
+                    }
+
+                    returnStream.Write(commandPart, 0, commandPart.Length);
+
+                    remaining -= blockSize;
+
+                    return returnStream.ToArray();
+                }
+            }
+        }
         #endregion
 
         #region Public Methods
-        public async Task<string> GetAddressAsync(string coinShortcut, uint coinNumber, bool isChange, uint index, bool showDisplay, AddressType addressType)
+        public async Task<string> GetAddressAsync(uint coinNumber, uint account, bool isChange, uint index, bool showDisplay, AddressType addressType)
         {
-            return null;
+            var isSegwit = true;
+            var indices = new[] { ((isSegwit ? (uint)49 : 44) | Constants.HARDENING_CONSTANT) >> 0, (coinNumber | Constants.HARDENING_CONSTANT) >> 0, (0 | Constants.HARDENING_CONSTANT) >> (int)account, isChange ? 1 : (uint)0, index };
+
+            byte[] addressIndicesData;
+
+            using (var memoryStream = new MemoryStream())
+            {
+                memoryStream.WriteByte((byte)indices.Length);
+                for (var i = 0; i < indices.Length; i++)
+                {
+                    var data = indices[i].ToBytes();
+                    memoryStream.Write(data, 0, data.Length);
+                }
+                addressIndicesData = memoryStream.ToArray();
+            }
+
+            var bitcoinAppGetPublicKeyResponse = await SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(showDisplay, BitcoinAddressType.Segwit, addressIndicesData));
+
+            return bitcoinAppGetPublicKeyResponse.Address;
         }
 
-        public async Task<TResponse> SendMessageAsync<TResponse, TWrite>(TWrite message)
+        public async Task<TResponse> SendRequestAsync<TResponse, TRequest>(TRequest request)
            where TResponse : ResponseBase
-           where TWrite : RequestBase
+           where TRequest : RequestBase
         {
             await _SemaphoreSlim.WaitAsync();
 
             try
             {
-                await WriteMessageAsync(message);
+                await WriteRequestAsync(request);
+                var responseData = await ReadResponseAsync();
+                return (TResponse)Activator.CreateInstance(typeof(TResponse), responseData);
             }
             finally
             {
                 _SemaphoreSlim.Release();
             }
-
-            return default(TResponse);
         }
         #endregion
     }
