@@ -46,6 +46,33 @@ namespace Ledger.Net.Tests
             var ledgerManager = new LedgerManager(ledgerHidDevice);
             var address = await ledgerManager.GetAddressAsync(0, 0, false, 0, true, AddressType.Bitcoin);
         }
+
+        [Fact]
+        public async Task GetEthereumAddress()
+        {
+            var devices = new List<DeviceInformation>();
+
+            var collection = WindowsHidDevice.GetConnectedDeviceInformations();
+
+            foreach (var ids in WellKnownLedgerWallets)
+            {
+                if (ids.ProductId == null)
+                    devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId));
+                else
+                    devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId && c.ProductId == ids.ProductId));
+
+            }
+            var retVal = devices
+                .FirstOrDefault(d =>
+                _UsageSpecification == null ||
+                _UsageSpecification.Length == 0 ||
+                _UsageSpecification.Any(u => d.UsagePage == u.UsagePage && d.Usage == u.Usage));
+
+            var ledgerHidDevice = new WindowsHidDevice(retVal);
+            await ledgerHidDevice.InitializeAsync();
+            var ledgerManager = new LedgerManager(ledgerHidDevice);
+            var address = await ledgerManager.GetAddressAsync(60, 0, false, 0, true, AddressType.Bitcoin);
+        }
     }
 
     public class VendorProductIds
