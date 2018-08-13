@@ -173,9 +173,19 @@ namespace Ledger.Net
                 addressIndicesData = memoryStream.ToArray();
             }
 
-            var bitcoinAppGetPublicKeyResponse = await SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(showDisplay, BitcoinAddressType.Segwit, addressIndicesData));
+            if(coinNumber==60)
+            {
+                var ethereumAppGetPublicKeyResponse = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(showDisplay, addressIndicesData));
+                return ethereumAppGetPublicKeyResponse.Address;
+            }
+            else
+            {
+                var bitcoinAppGetPublicKeyResponse = await SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(showDisplay, BitcoinAddressType.Segwit, addressIndicesData));
+                return bitcoinAppGetPublicKeyResponse.Address;
+            }
 
-            return bitcoinAppGetPublicKeyResponse.Address;
+
+
         }
 
         public async Task<TResponse> SendRequestAsync<TResponse, TRequest>(TRequest request)
