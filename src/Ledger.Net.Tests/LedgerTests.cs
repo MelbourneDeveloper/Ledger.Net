@@ -9,7 +9,6 @@ namespace Ledger.Net.Tests
 {
     public class LedgerTests
     {
-
         public static VendorProductIds[] WellKnownLedgerWallets = new VendorProductIds[]
         {
             new VendorProductIds(0x2c97),
@@ -17,7 +16,6 @@ namespace Ledger.Net.Tests
         };
 
         static readonly UsageSpecification[] _UsageSpecification = new[] { new UsageSpecification(0xffa0, 0x01) };
-
 
         [Fact]
         public async Task GetAddress()
@@ -32,8 +30,8 @@ namespace Ledger.Net.Tests
                     devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId));
                 else
                     devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId && c.ProductId == ids.ProductId));
-
             }
+
             var retVal = devices
                 .FirstOrDefault(d =>
                 _UsageSpecification == null ||
@@ -44,11 +42,7 @@ namespace Ledger.Net.Tests
             await ledgerHidDevice.InitializeAsync();
             var ledgerManager = new LedgerManager(ledgerHidDevice);
 
-            //var address = await ledgerManager.GetAddressAsync(AddressType.Bitcoin, 0, 0, false, 0, false, true);
-
-            // Easy call to retrieve one of the Bitcoin addresses
-            // Other overloaded method can still be called if more info is needed
-            var address = await ledgerManager.GetAddressAsync(AddressType.Bitcoin, 0);
+            var address = await ledgerManager.GetAddressAsync(0, 0, false, 0, false, AddressType.Bitcoin, true);
             if (address == null)
             {
                 throw new Exception("Address not returned");
@@ -68,8 +62,8 @@ namespace Ledger.Net.Tests
                     devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId));
                 else
                     devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId && c.ProductId == ids.ProductId));
-
             }
+
             var retVal = devices
                 .FirstOrDefault(d =>
                 _UsageSpecification == null ||
@@ -80,8 +74,7 @@ namespace Ledger.Net.Tests
             await ledgerHidDevice.InitializeAsync();
             var ledgerManager = new LedgerManager(ledgerHidDevice);
 
-            // Easy call to retrieve one of the Ethereum addresses
-            var address = await ledgerManager.GetAddressAsync(AddressType.Ethereum, 0);
+            var address = await ledgerManager.GetAddressAsync(60, 0, false, 0, false, AddressType.Ethereum, false);
 
             if (address == null)
             {

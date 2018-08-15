@@ -1,5 +1,6 @@
 ﻿using Hid.Net;
 using Ledger.Net.Requests;
+using Ledger.Net.Requests.Helpers;
 using Ledger.Net.Responses;
 using System;
 using System.IO;
@@ -156,50 +157,18 @@ namespace Ledger.Net
         #endregion
 
         #region Public Methods
-        public async Task<string> GetAddressAsync(AddressType addressType, uint addressIndex)
-        {
-            GetPublicKeyResponseBase response;
-            if (addressType == AddressType.Ethereum)
-            {
-                response = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(
-                    addressIndex,
-                    false,
-                    false));
-            }
-            else
-            {
-                response = await SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(
-                    addressIndex,
-                    false));
-            }
-
-            if (!response.IsSuccess)
-            {
-                throw new Exception(response.StatusMessage);
-            }
-
-            return response.Address;
-        }
-
         public async Task<string> GetAddressAsync(uint coinNumber, uint account, bool isChange, uint index, bool showDisplay, AddressType addressType, bool isSegwit)
 		{
+            byte[] data = PublicKeyHelpers.GetDerivationPathData(addressType, coinNumber, account, index, isChange, isSegwit);
+
             GetPublicKeyResponseBase response;
             if (addressType == AddressType.Ethereum)
             {
-                response = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(
-                    60,
-                    showDisplay,
-                    false));
+                response = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(showDisplay, false, data));
             }
             else
             {
-                response = await SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(
-                    coinNumber,
-                    account,
-                    index,
-                    isSegwit,
-                    isChange,
-                    showDisplay));
+                response = await SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(showDisplay, BitcoinAddressType.Segwit, data));
             }
 
             if (!response.IsSuccess)

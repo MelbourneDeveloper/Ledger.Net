@@ -1,6 +1,6 @@
 ﻿namespace Ledger.Net.Requests
 {
-    public class BitcoinAppGetPublicKeyRequest : GetPublicKeyRequestBase
+    public class BitcoinAppGetPublicKeyRequest : RequestBase
     {
         #region Public Overrides
         public override byte Argument1 => (byte)(Display ? 1 : 0);
@@ -15,22 +15,10 @@
         #endregion
 
         #region Constructor
-        public BitcoinAppGetPublicKeyRequest(uint index, bool display) : base(0, 0, index, false, true)
+        public BitcoinAppGetPublicKeyRequest(bool display, BitcoinAddressType bitcoinAddressType, byte[] data) : base(data)
         {
             Display = display;
-            BitcoinAddressType = BitcoinAddressType.Segwit;
-        }
-
-        public BitcoinAppGetPublicKeyRequest(
-            uint coinNumber,
-            uint account,
-            uint index,
-            bool isSegwit,
-            bool isChange,
-            bool display) : base(coinNumber, account, index, isChange, isSegwit)
-        {
-            Display = display;
-            BitcoinAddressType = isSegwit ? BitcoinAddressType.Segwit : BitcoinAddressType.Legacy;
+            BitcoinAddressType = bitcoinAddressType;
         }
         #endregion
     }
