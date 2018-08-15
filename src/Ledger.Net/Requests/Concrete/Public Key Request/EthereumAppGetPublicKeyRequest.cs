@@ -1,6 +1,6 @@
 ﻿namespace Ledger.Net.Requests
 {
-    public class EthereumAppGetPublicKeyRequest : RequestBase
+    public class EthereumAppGetPublicKeyRequest : GetPublicKeyRequestBase
     {
         #region Constants
         private const byte P2_NO_CHAINCODE = 0x00;
@@ -22,7 +22,7 @@
         #endregion
 
         #region Constructor
-        public EthereumAppGetPublicKeyRequest(bool display, bool useChainCode, byte[] data) : base(data)
+        public EthereumAppGetPublicKeyRequest(uint index, bool display, bool useChainCode) : base(60, 0, index, false, false)
         {
             Display = display;
             UseChainCode = useChainCode;

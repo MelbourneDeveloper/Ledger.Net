@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-
 namespace Ledger.Net.Tests
 {
     public class LedgerTests
@@ -44,7 +43,8 @@ namespace Ledger.Net.Tests
             var ledgerHidDevice = new WindowsHidDevice(retVal);
             await ledgerHidDevice.InitializeAsync();
             var ledgerManager = new LedgerManager(ledgerHidDevice);
-            var address = await ledgerManager.GetAddressAsync(0, 0, false, 0, false, AddressType.Bitcoin, true);
+            var address = await ledgerManager.GetAddressAsync(AddressType.Bitcoin, 0, 0, false, 0, false, true);
+            var address2 = await ledgerManager.GetAddressAsync(AddressType.Bitcoin, 0);
             if (address == null)
             {
                 throw new Exception("Address not returned");
@@ -75,7 +75,7 @@ namespace Ledger.Net.Tests
             var ledgerHidDevice = new WindowsHidDevice(retVal);
             await ledgerHidDevice.InitializeAsync();
             var ledgerManager = new LedgerManager(ledgerHidDevice);
-            var address = await ledgerManager.GetAddressAsync(60, 0, false, 0, false, AddressType.Ethereum, false);
+            var address = await ledgerManager.GetAddressAsync(AddressType.Ethereum, 0);
             if (address == null)
             {
                 throw new Exception("Address not returned");

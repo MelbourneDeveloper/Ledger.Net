@@ -156,31 +156,57 @@ namespace Ledger.Net
         #endregion
 
         #region Public Methods
-        public async Task<string> GetAddressAsync(uint coinNumber, uint account, bool isChange, uint index, bool showDisplay, AddressType addressType, bool isSegwit)
+        public async Task<string> GetAddressAsync(AddressType addressType, uint addressIndex)
         {
-            var indices = new[] { ((isSegwit ? (uint)49 : 44) | Constants.HARDENING_CONSTANT) >> 0, (coinNumber | Constants.HARDENING_CONSTANT) >> 0, (0 | Constants.HARDENING_CONSTANT) >> (int)account, isChange ? 1 : (uint)0, index };
-
-            byte[] addressIndicesData;
-
-            using (var memoryStream = new MemoryStream())
-            {
-                memoryStream.WriteByte((byte)indices.Length);
-                for (var i = 0; i < indices.Length; i++)
-                {
-                    var data = indices[i].ToBytes();
-                    memoryStream.Write(data, 0, data.Length);
-                }
-                addressIndicesData = memoryStream.ToArray();
-            }
-
             GetPublicKeyResponseBase response;
             if (addressType == AddressType.Ethereum)
             {
-                response = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(showDisplay, false, addressIndicesData));
+                response = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(
+                    addressIndex,
+                    false,
+                    false));
             }
             else
             {
-                response = await SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(showDisplay, BitcoinAddressType.Segwit, addressIndicesData));
+                response = await SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(
+                    addressIndex,
+                    false));
+            }
+
+            if (!response.IsSuccess)
+            {
+                throw new Exception(response.StatusMessage);
+            }
+
+            return response.Address;
+        }
+
+        public async Task<string> GetAddressAsync(
+            AddressType addressType,
+            uint coinNumber,
+            uint account,
+            bool isChange,
+            uint index,
+            bool showDisplay,
+            bool isSegwit)
+        {
+            GetPublicKeyResponseBase response;
+            if (addressType == AddressType.Ethereum)
+            {
+                response = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(
+                    60,
+                    showDisplay,
+                    false));
+            }
+            else
+            {
+                response = await SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(
+                    coinNumber,
+                    account,
+                    index,
+                    isSegwit,
+                    isChange,
+                    showDisplay));
             }
 
             if (!response.IsSuccess)
