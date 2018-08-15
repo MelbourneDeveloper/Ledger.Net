@@ -20,7 +20,7 @@ namespace Ledger.Net.Requests
                 var publicKeyLength = memoryStream.ReadByte();
                 var publicKeyData = memoryStream.ReadAllBytes(publicKeyLength);
                 var addressLength = memoryStream.ReadByte();
-                Address = Encoding.ASCII.GetString(memoryStream.ReadAllBytes(addressLength));
+                Address = "0x" + Encoding.ASCII.GetString(memoryStream.ReadAllBytes(addressLength)).ToLower();
             }
         }
     }
