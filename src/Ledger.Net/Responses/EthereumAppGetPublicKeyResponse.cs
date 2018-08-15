@@ -1,27 +1,17 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 
-namespace Ledger.Net.Requests
+namespace Ledger.Net.Responses
 {
-    public class EthereumAppGetPublicKeyResponse : ResponseBase
+    public class EthereumAppGetPublicKeyResponse : GetPublicKeyResponseBase
     {
-        public string Address { get; }
-
         public EthereumAppGetPublicKeyResponse(byte[] data) : base(data)
         {
-            if (!IsSuccess)
-            {
-                return;
-            }
+        }
 
-            using (var memoryStream = new MemoryStream(data))
-            {
-                var publicKeyLength = memoryStream.ReadByte();
-                var publicKeyData = memoryStream.ReadAllBytes(publicKeyLength);
-                var addressLength = memoryStream.ReadByte();
-                Address = "0x" + Encoding.ASCII.GetString(memoryStream.ReadAllBytes(addressLength)).ToLower();
-            }
+        protected override string GetAddressFromStream(Stream memoryStream, int addressLength)
+        {
+            return "0x" + Encoding.ASCII.GetString(memoryStream.ReadAllBytes(addressLength)).ToLower();
         }
     }
 }

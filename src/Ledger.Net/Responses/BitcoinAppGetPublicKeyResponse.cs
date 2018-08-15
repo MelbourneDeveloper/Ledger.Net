@@ -1,22 +1,17 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 
-namespace Ledger.Net.Requests
+namespace Ledger.Net.Responses
 {
-    public class BitcoinAppGetPublicKeyResponse : ResponseBase
+    public class BitcoinAppGetPublicKeyResponse : GetPublicKeyResponseBase
     {
-        public string Address { get; }
-
         public BitcoinAppGetPublicKeyResponse(byte[] data) : base(data)
         {
-            using (var memoryStream = new MemoryStream(data))
-            {
-                var publicKeyLength = memoryStream.ReadByte();
-                var publicKeyData = memoryStream.ReadAllBytes(publicKeyLength);
-                var addressLength = memoryStream.ReadByte();
-                Address = Encoding.ASCII.GetString(memoryStream.ReadAllBytes(addressLength));
-            }
+        }
+
+        protected override string GetAddressFromStream(Stream memoryStream, int addressLength)
+        {
+            return Encoding.ASCII.GetString(memoryStream.ReadAllBytes(addressLength));
         }
     }
 }

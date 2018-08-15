@@ -1,5 +1,6 @@
 ﻿using Hid.Net;
 using Ledger.Net.Requests;
+using Ledger.Net.Responses;
 using System;
 using System.IO;
 using System.Threading;
