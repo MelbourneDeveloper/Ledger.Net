@@ -23,14 +23,16 @@
                         return "Instruction not supported in current app or there is no app running";
                     case 0x6B00:
                         return "Invalid parameter";
+                    case 0x6A80:
+                        return "The data is invalid";
+                    case 0x6804:
+                        return "Unknown error. Possibly from Firmware?";
                     default:
                         return "Shrugging in your general direction";
                 }
             }
         }
         #endregion
-
-        private int asdasd =  0x6804;
 
         #region Constructor
         public ResponseBase(byte[] data)

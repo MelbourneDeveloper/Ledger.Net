@@ -44,7 +44,7 @@ namespace Ledger.Net.Tests
             var ledgerHidDevice = new WindowsHidDevice(retVal);
             await ledgerHidDevice.InitializeAsync();
             var ledgerManager = new LedgerManager(ledgerHidDevice);
-            var address = await ledgerManager.GetAddressAsync(0, 0, false, 0, true, AddressType.Bitcoin);
+            var address = await ledgerManager.GetAddressAsync(0, 0, false, 0, true, AddressType.Bitcoin, true);
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace Ledger.Net.Tests
             var ledgerHidDevice = new WindowsHidDevice(retVal);
             await ledgerHidDevice.InitializeAsync();
             var ledgerManager = new LedgerManager(ledgerHidDevice);
-            var address = await ledgerManager.GetAddressAsync(60, 0, false, 0, true, AddressType.Bitcoin);
+            var address = await ledgerManager.GetAddressAsync(60, 0, false, 0, true, AddressType.Ethereum, false);
         }
     }
 
