@@ -43,8 +43,12 @@ namespace Ledger.Net.Tests
             var ledgerHidDevice = new WindowsHidDevice(retVal);
             await ledgerHidDevice.InitializeAsync();
             var ledgerManager = new LedgerManager(ledgerHidDevice);
-            var address = await ledgerManager.GetAddressAsync(AddressType.Bitcoin, 0, 0, false, 0, false, true);
-            var address2 = await ledgerManager.GetAddressAsync(AddressType.Bitcoin, 0);
+
+            //var address = await ledgerManager.GetAddressAsync(AddressType.Bitcoin, 0, 0, false, 0, false, true);
+
+            // Easy call to retrieve one of the Bitcoin addresses
+            // Other overloaded method can still be called if more info is needed
+            var address = await ledgerManager.GetAddressAsync(AddressType.Bitcoin, 0);
             if (address == null)
             {
                 throw new Exception("Address not returned");
@@ -75,7 +79,10 @@ namespace Ledger.Net.Tests
             var ledgerHidDevice = new WindowsHidDevice(retVal);
             await ledgerHidDevice.InitializeAsync();
             var ledgerManager = new LedgerManager(ledgerHidDevice);
+
+            // Easy call to retrieve one of the Ethereum addresses
             var address = await ledgerManager.GetAddressAsync(AddressType.Ethereum, 0);
+
             if (address == null)
             {
                 throw new Exception("Address not returned");
