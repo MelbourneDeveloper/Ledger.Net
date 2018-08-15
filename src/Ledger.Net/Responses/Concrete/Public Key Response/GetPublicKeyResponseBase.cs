@@ -6,7 +6,7 @@ namespace Ledger.Net.Responses
     {
         public string Address { get; }
 
-        public GetPublicKeyResponseBase(byte[] data) : base(data)
+        protected GetPublicKeyResponseBase(byte[] data) : base(data)
         {
             if (!IsSuccess)
             {

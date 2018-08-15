@@ -1,4 +1,4 @@
-﻿namespace Ledger.Net
+﻿namespace Ledger.Net.Responses
 {
     public abstract class ResponseBase
     {
@@ -45,7 +45,7 @@
         #endregion
 
         #region Constructor
-        public ResponseBase(byte[] data)
+        protected ResponseBase(byte[] data)
         {
             Data = data;
             ReturnCode = ((data[data.Length - 2] & HardeningConstant) << 8) | data[data.Length - 1] & HardeningConstant;
