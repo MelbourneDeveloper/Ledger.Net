@@ -22,7 +22,7 @@
         #endregion
 
         #region Constructor
-        public EthereumAppGetPublicKeyRequest(uint index, bool display, bool useChainCode) : base(60, 0, index, false, false)
+        public EthereumAppGetPublicKeyRequest(bool display, bool useChainCode, byte[] data) : base(data)
         {
             Display = display;
             UseChainCode = useChainCode;

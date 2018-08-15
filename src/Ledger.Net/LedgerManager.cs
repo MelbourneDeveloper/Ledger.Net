@@ -181,15 +181,8 @@ namespace Ledger.Net
             return response.Address;
         }
 
-        public async Task<string> GetAddressAsync(
-            AddressType addressType,
-            uint coinNumber,
-            uint account,
-            bool isChange,
-            uint index,
-            bool showDisplay,
-            bool isSegwit)
-        {
+        public async Task<string> GetAddressAsync(uint coinNumber, uint account, bool isChange, uint index, bool showDisplay, AddressType addressType, bool isSegwit)
+		{
             GetPublicKeyResponseBase response;
             if (addressType == AddressType.Ethereum)
             {
