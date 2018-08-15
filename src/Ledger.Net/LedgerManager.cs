@@ -174,7 +174,13 @@ namespace Ledger.Net
 
             if (addressType == AddressType.Ethereum)
             {
-                var ethereumAppGetPublicKeyResponse = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(showDisplay, true, addressIndicesData));
+                var ethereumAppGetPublicKeyResponse = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(showDisplay, false, addressIndicesData));
+
+                if (!ethereumAppGetPublicKeyResponse.IsSuccess)
+                {
+                    throw new Exception(ethereumAppGetPublicKeyResponse.StatusMessage);
+                }
+
                 return ethereumAppGetPublicKeyResponse.Address;
             }
             else
