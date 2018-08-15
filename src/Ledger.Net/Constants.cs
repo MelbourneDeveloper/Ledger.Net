@@ -14,7 +14,7 @@
         #endregion
 
         #region Ethereum Blue Instructions
-        public const byte ETHEREUM_GET_WALLET_PUBLIC_KEY = 0x02;    
+        public const byte ETHEREUM_GET_WALLET_PUBLIC_KEY = 0x02;
         #endregion
 
         #region Other Constants

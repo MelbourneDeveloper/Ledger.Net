@@ -10,6 +10,11 @@ namespace Ledger.Net.Requests
 
         public EthereumAppGetPublicKeyResponse(byte[] data) : base(data)
         {
+            if (!IsSuccess)
+            {
+                return;
+            }
+
             using (var memoryStream = new MemoryStream(data))
             {
                 var publicKeyLength = memoryStream.ReadByte();
