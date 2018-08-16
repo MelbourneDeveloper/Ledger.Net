@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ledger.Net
+namespace Ledger.Net.Requests
 {
     public abstract class RequestBase
     {
@@ -16,7 +16,7 @@ namespace Ledger.Net
         #endregion
 
         #region Constructor
-        public RequestBase(byte[] data)
+        protected RequestBase(byte[] data)
         {
             Data = data;
         }

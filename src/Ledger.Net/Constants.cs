@@ -1,6 +1,6 @@
 ﻿namespace Ledger.Net
 {
-    public class Constants
+    public static class Constants
     {
         #region Generic App Constants
         public const byte CLA = 0xE0;
@@ -15,6 +15,7 @@
 
         #region Ethereum Blue Instructions
         public const byte ETHEREUM_GET_WALLET_PUBLIC_KEY = 0x02;
+        public const byte ETHEREUM_SIGN_TX = 0x04;
         #endregion
 
         #region Other Constants
