@@ -194,7 +194,7 @@ namespace Ledger.Net
 
         public async Task<string> GetAddressAsync(uint account, uint index)
         {
-            return await GetAddressAsync(0, false, index, false);
+            return await GetAddressAsync(account, false, index, false);
         }
 
         public async Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)
