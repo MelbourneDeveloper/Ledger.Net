@@ -40,7 +40,7 @@ namespace Ledger.Net.Tests
 
             var ledgerHidDevice = new WindowsHidDevice(retVal);
             await ledgerHidDevice.InitializeAsync();
-            var ledgerManager = new LedgerManager(ledgerHidDevice, new DefaultCoinUtility());
+            var ledgerManager = new LedgerManager(ledgerHidDevice);
 
             var address = await ledgerManager.GetAddressAsync(0, false, 0, true);
             if (address == null)
@@ -72,7 +72,7 @@ namespace Ledger.Net.Tests
 
             var ledgerHidDevice = new WindowsHidDevice(retVal);
             await ledgerHidDevice.InitializeAsync();
-            var ledgerManager = new LedgerManager(ledgerHidDevice, new DefaultCoinUtility());
+            var ledgerManager = new LedgerManager(ledgerHidDevice);
             ledgerManager.SetCoinNumber(60);
             var address = await ledgerManager.GetAddressAsync(0, 0);
 
