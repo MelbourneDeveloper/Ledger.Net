@@ -158,11 +158,11 @@ namespace Ledger.Net
 
         #region Public Methods
         public async Task<string> GetAddressAsync(uint coinNumber, uint account, bool isChange, uint index, bool showDisplay, AddressType addressType, bool isSegwit)
-		{
+        {
             byte[] data = PublicKeyHelpers.GetDerivationPathData(addressType, coinNumber, account, index, isChange, isSegwit);
 
             GetPublicKeyResponseBase response;
-            if (addressType == AddressType.Ethereum || addressType == AddressType.EthereumClassic)
+            if (addressType == AddressType.Ethereum)
             {
                 response = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(showDisplay, false, data));
             }

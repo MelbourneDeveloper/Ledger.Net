@@ -11,7 +11,7 @@ namespace Ledger.Net.Requests.Helpers
 
         private static uint[] GetDerivationIndices(AddressType addressType, uint coinNumber, uint account, uint index, bool isChange, bool isSegwit)
         {
-            bool isEthereumRelated = addressType == AddressType.Ethereum || addressType == AddressType.EthereumClassic;
+            bool isEthereumRelated = addressType == AddressType.Ethereum;
 
             uint[] indices = new uint[isEthereumRelated ? 4 : 5];
             indices[0] = ((isSegwit ? (uint)49 : 44) | Constants.HARDENING_CONSTANT) >> 0;

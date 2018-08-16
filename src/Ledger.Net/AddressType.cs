@@ -3,7 +3,6 @@
     public enum AddressType
     {
         Bitcoin,
-        Ethereum,
-        EthereumClassic
+        Ethereum
     }
 }
