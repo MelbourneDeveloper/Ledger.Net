@@ -29,7 +29,7 @@ namespace Ledger.Net
                     coinInfo.IsSegwit = false;
                     return coinInfo;
                 default:
-                    throw new NotImplementedException("Coin not implemented. You can implement your own ICoinUtility for other coins.");
+                    throw new NotImplementedException("Coin not implemented. You can implement your own ICoinUtility for other coins and set CoinUtility in the LedgerManager constructor.");
             }
         }
     }
