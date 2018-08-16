@@ -26,7 +26,7 @@ namespace Ledger.Net.Requests.Helpers
             indices[1] = (coinNumber | Constants.HARDENING_CONSTANT) >> 0;
 
             //Account
-            indices[2] = (0 | Constants.HARDENING_CONSTANT) >> (int)account;
+            indices[2] = (account | Constants.HARDENING_CONSTANT) >> 0;
 
             if (isEthereumRelated)
             {
