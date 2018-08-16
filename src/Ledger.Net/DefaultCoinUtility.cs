@@ -6,28 +6,14 @@ namespace Ledger.Net
     {
         public CoinInfo GetCoinInfo(uint coinNumber)
         {
-            var coinInfo = new CoinInfo { CoinNumber = coinNumber };
-
-            switch(coinNumber)
+            switch (coinNumber)
             {
                 case 0:
-                    coinInfo.App = App.Bitcoin;
-                    coinInfo.FullName = "Bitcoin";
-                    coinInfo.ShortName = "BTC";
-                    coinInfo.IsSegwit = true;
-                    return coinInfo;
+                    return new CoinInfo(App.Bitcoin, "BTC", "Bitcoin", coinNumber, true);
                 case 60:
-                    coinInfo.App = App.Ethereum;
-                    coinInfo.FullName = "Ethereum";
-                    coinInfo.ShortName = "ETC";
-                    coinInfo.IsSegwit = false;
-                    return coinInfo;
+                    return new CoinInfo(App.Ethereum, "ETH", "Ethereum", coinNumber, false);
                 case 61:
-                    coinInfo.App = App.Ethereum;
-                    coinInfo.FullName = "Ethereum";
-                    coinInfo.ShortName = "ETC";
-                    coinInfo.IsSegwit = false;
-                    return coinInfo;
+                    return new CoinInfo(App.Ethereum, "ETC", "Ethereum Classic", coinNumber, false);
                 default:
                     throw new NotImplementedException("Coin not implemented. You can implement your own ICoinUtility for other coins and set CoinUtility in the LedgerManager constructor.");
             }

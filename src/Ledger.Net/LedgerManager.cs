@@ -37,7 +37,7 @@ namespace Ledger.Net
         #region Public Properties
         public IHidDevice LedgerHidDevice { get; }
         public ICoinUtility CoinUtility { get; }
-        public CoinInfo CurrentCoin { get; private set; }
+        public ICoinInfo CurrentCoin { get; private set; }
         #endregion
 
         #region Private Methods

@@ -1,11 +1,20 @@
 ﻿namespace Ledger.Net
 {
-    public class CoinInfo 
+    public class CoinInfo : ICoinInfo
     {
-        public App App { get; set; }
-        public string ShortName { get; set; }
-        public string FullName { get; set; }
-        public uint CoinNumber { get; set; }
-        public bool IsSegwit { get; set; }
+        public App App { get; }
+        public string ShortName { get; }
+        public string FullName { get; }
+        public uint CoinNumber { get; }
+        public bool IsSegwit { get; }
+
+        public CoinInfo(App app, string shortName, string fullName, uint coinNumber, bool isSegwit)
+        {
+            App = app;
+            ShortName = shortName;
+            FullName = fullName;
+            CoinNumber = coinNumber;
+            IsSegwit = isSegwit;
+        }
     }
 }
