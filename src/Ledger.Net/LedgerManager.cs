@@ -16,15 +16,20 @@ namespace Ledger.Net
         #endregion
 
         #region Constructor
-        public LedgerManager(IHidDevice ledgerHidDevice)
+        public LedgerManager(IHidDevice ledgerHidDevice) : this(ledgerHidDevice, null)
         {
-            LedgerHidDevice = ledgerHidDevice;
-            CoinUtility = new DefaultCoinUtility();
         }
 
-        public LedgerManager(IHidDevice ledgerHidDevice, ICoinUtility coinUtility) : this(ledgerHidDevice)
+        public LedgerManager(IHidDevice ledgerHidDevice, ICoinUtility coinUtility)
         {
+            LedgerHidDevice = ledgerHidDevice;
             CoinUtility = coinUtility;
+
+            if (CoinUtility == null)
+            {
+                CoinUtility = new DefaultCoinUtility();
+            }
+
             SetCoinNumber(0);
         }
         #endregion
