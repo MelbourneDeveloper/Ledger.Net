@@ -1,6 +1,6 @@
 ﻿namespace Ledger.Net
 {
-    public enum AddressType
+    public enum App
     {
         Bitcoin,
         Ethereum

@@ -4,14 +4,14 @@ namespace Ledger.Net.Requests.Helpers
 {
     public static class PublicKeyHelpers
     {
-        public static byte[] GetDerivationPathData(AddressType addressType, uint coinNumber, uint account, uint index, bool isChange, bool isSegwit)
+        public static byte[] GetDerivationPathData(App addressType, uint coinNumber, uint account, uint index, bool isChange, bool isSegwit)
         {
             return GetByteData(GetDerivationIndices(addressType, coinNumber, account, index, isChange, isSegwit));
         }
 
-        private static uint[] GetDerivationIndices(AddressType addressType, uint coinNumber, uint account, uint index, bool isChange, bool isSegwit)
+        private static uint[] GetDerivationIndices(App addressType, uint coinNumber, uint account, uint index, bool isChange, bool isSegwit)
         {
-            bool isEthereumRelated = addressType == AddressType.Ethereum;
+            bool isEthereumRelated = addressType == App.Ethereum;
 
             uint[] indices = new uint[isEthereumRelated ? 4 : 5];
             indices[0] = ((isSegwit ? (uint)49 : 44) | Constants.HARDENING_CONSTANT) >> 0;
