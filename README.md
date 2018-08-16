@@ -13,6 +13,8 @@ Currently supports:
 - Clone the repo and run the GetAddress unit test
 - Repeat for Ethereum
 
+For any instructions that are not implemented you will need to create a RequestBase, and ResponseBase class. Then, you will need to call SendRequestAsync. See the see also section.
+
 **Would love to see some samples for UWP or Android**
 
 ## Store App Production Usage (Not Yet In Production)
@@ -36,6 +38,13 @@ Litecoin: MVAbLaNPq7meGXvZMU4TwypUsDEuU6stpY
 
 ## See Also
 
+This library has more instructions implemented out of the box.
+
 https://github.com/LedgerHQ/ledger-dotnet-api
 
-This library has more instructions implemented out of the box
+ These are the actual 3rd party apps on the Ledger, their codebase, and samples. These can be used to reverse engineer the Request/Response messages.
+
+https://github.com/LedgerHQ/blue-app-btc
+
+https://github.com/LedgerHQ/blue-app-eth
+
