@@ -162,7 +162,7 @@ namespace Ledger.Net
             byte[] data = PublicKeyHelpers.GetDerivationPathData(addressType, coinNumber, account, index, isChange, isSegwit);
 
             GetPublicKeyResponseBase response;
-            if (addressType == AddressType.Ethereum)
+            if (addressType == AddressType.Ethereum || addressType == AddressType.EthereumClassic)
             {
                 response = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(showDisplay, false, data));
             }
