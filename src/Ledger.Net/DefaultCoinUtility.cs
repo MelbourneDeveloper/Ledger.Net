@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Ledger.Net
 {
@@ -31,7 +29,7 @@ namespace Ledger.Net
                     coinInfo.IsSegwit = false;
                     return coinInfo;
                 default:
-                    throw new NotImplementedException("Coin not implemented");
+                    throw new NotImplementedException("Coin not implemented. You can implement your own ICoinUtility for other coins.");
             }
         }
     }

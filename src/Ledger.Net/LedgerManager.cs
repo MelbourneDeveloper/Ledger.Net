@@ -16,14 +16,17 @@ namespace Ledger.Net
         #endregion
 
         #region Constructor
-        public LedgerManager(IHidDevice ledgerHidDevice)
+        public LedgerManager(IHidDevice ledgerHidDevice, ICoinUtility coinUtility)
         {
             LedgerHidDevice = ledgerHidDevice;
+            CoinUtility = coinUtility;
         }
         #endregion
 
         #region Public Properties
         public IHidDevice LedgerHidDevice { get; }
+        public ICoinUtility CoinUtility { get; }
+        public CoinInfo CurrentCoin { get; private set; }
         #endregion
 
         #region Private Methods
@@ -157,12 +160,17 @@ namespace Ledger.Net
         #endregion
 
         #region Public Methods
-        public async Task<string> GetAddressAsync(uint coinNumber, uint account, bool isChange, uint index, bool showDisplay, App addressType, bool isSegwit)
+        public void SetCoinNumber(uint coinNumber)
         {
-            byte[] data = PublicKeyHelpers.GetDerivationPathData(addressType, coinNumber, account, index, isChange, isSegwit);
+            CurrentCoin = CoinUtility.GetCoinInfo(coinNumber);
+        }
+
+        public async Task<string> GetAddressAsync(uint coinNumber, uint account, bool isChange, uint index, bool showDisplay, App app, bool isSegwit)
+        {
+            byte[] data = PublicKeyHelpers.GetDerivationPathData(app, coinNumber, account, index, isChange, isSegwit);
 
             GetPublicKeyResponseBase response;
-            if (addressType == App.Ethereum)
+            if (app == App.Ethereum)
             {
                 response = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(showDisplay, false, data));
             }
