@@ -2,24 +2,20 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <Description>A cross platform C# library for the Ledger hardware wallet. 
-
-To see the sample in a .NET Core unit test, please clone the repo. https://github.com/MelbourneDeveloper/Ledger.Net
- . Android, and UWP samples on their way.
-
-This is a similar library. It is more complete. I have contributed to this library, but the design is different.
-Please use this https://github.com/LedgerHQ/ledger-dotnet-api</Description>
+    <Description>A cross platform C# library for the Ledger hardwarewallet. To see the sample in a .NET Core unit test, please clone the repo. https://github.com/MelbourneDeveloper/Ledger.Net. Android, and UWP samples on their way. Support for all coins will come bit by bit, but you are able to add support by writing Request and Response messages.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://github.com/MelbourneDeveloper/Ledger.Net/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/MelbourneDeveloper/Ledger.Net</PackageProjectUrl>
-    <AssemblyVersion>1.1.1.0</AssemblyVersion>
-    <FileVersion>1.1.1.0</FileVersion>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
     <Company>Christian Findlay</Company>
-    <Version>1.1.1</Version>
+    <Version>1.2.0</Version>
     <RepositoryUrl>https://github.com/MelbourneDeveloper/Ledger.Net</RepositoryUrl>
-    <PackageReleaseNotes>A working version</PackageReleaseNotes>
+    <PackageReleaseNotes>Add Ethereum support for addresses. SetCoinNumber to set the current coin/app (0=Bitcoin, 60=Ethereum). Breaking change: GetAddressAsync method overload simplified</PackageReleaseNotes>
     <Copyright>Copyright (c) 2018 Christian Findlay</Copyright>
+    <Title>Ledger.Net</Title>
+    <Summary>A cross platform C# library for the Ledger hardwarewallet.</Summary>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
