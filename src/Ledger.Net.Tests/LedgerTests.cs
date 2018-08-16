@@ -42,7 +42,7 @@ namespace Ledger.Net.Tests
             await ledgerHidDevice.InitializeAsync();
             var ledgerManager = new LedgerManager(ledgerHidDevice);
 
-            var address = await ledgerManager.GetAddressAsync(0, false, 0, true);
+            var address = await ledgerManager.GetAddressAsync(0, false, 0, false);
             if (address == null)
             {
                 throw new Exception("Address not returned");
