@@ -198,6 +198,7 @@ namespace Ledger.Net
             }
             else
             {
+                //TODO: Should we use the Coin's IsSegwit here?
                 response = await SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(showDisplay, BitcoinAddressType.Segwit, data));
             }
 
