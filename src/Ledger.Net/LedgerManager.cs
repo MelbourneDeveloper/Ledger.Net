@@ -182,6 +182,11 @@ namespace Ledger.Net
             CurrentCoin = CoinUtility.GetCoinInfo(coinNumber);
         }
 
+        public async Task<string> GetAddressAsync(uint account, uint index)
+        {
+            return await GetAddressAsync(0, false, index, false);
+        }
+
         public async Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)
         {
             byte[] data = PublicKeyHelpers.GetDerivationPathData(CurrentCoin.App, CurrentCoin.CoinNumber, account, index, isChange, CurrentCoin.IsSegwit);
