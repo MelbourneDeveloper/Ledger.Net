@@ -71,6 +71,22 @@ namespace Ledger.Net
                 return response.ToArray();
             }
         }
+
+        private async Task<TResponse> SendRequestAsync<TResponse>(RequestBase request) where TResponse : ResponseBase
+        {
+            await _SemaphoreSlim.WaitAsync();
+
+            try
+            {
+                await WriteRequestAsync(request);
+                var responseData = await ReadResponseAsync();
+                return (TResponse)Activator.CreateInstance(typeof(TResponse), responseData);
+            }
+            finally
+            {
+                _SemaphoreSlim.Release();
+            }
+        }
         #endregion
 
         #region Private Static Methods
@@ -186,23 +202,6 @@ namespace Ledger.Net
             }
 
             return response.Address;
-        }
-
-        private async Task<TResponse> SendRequestAsync<TResponse>(RequestBase request)
-           where TResponse : ResponseBase
-        {
-            await _SemaphoreSlim.WaitAsync();
-
-            try
-            {
-                await WriteRequestAsync(request);
-                var responseData = await ReadResponseAsync();
-                return (TResponse)Activator.CreateInstance(typeof(TResponse), responseData);
-            }
-            finally
-            {
-                _SemaphoreSlim.Release();
-            }
         }
 
         public async Task<TResponse> SendRequestAsync<TResponse, TRequest>(TRequest request)
