@@ -20,6 +20,7 @@ namespace Ledger.Net
         {
             LedgerHidDevice = ledgerHidDevice;
             CoinUtility = coinUtility;
+            SetCoinNumber(0);
         }
         #endregion
 
@@ -165,12 +166,12 @@ namespace Ledger.Net
             CurrentCoin = CoinUtility.GetCoinInfo(coinNumber);
         }
 
-        public async Task<string> GetAddressAsync(uint coinNumber, uint account, bool isChange, uint index, bool showDisplay, App app, bool isSegwit)
+        public async Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)
         {
-            byte[] data = PublicKeyHelpers.GetDerivationPathData(app, coinNumber, account, index, isChange, isSegwit);
+            byte[] data = PublicKeyHelpers.GetDerivationPathData(CurrentCoin.App, CurrentCoin.CoinNumber, account, index, isChange, CurrentCoin.IsSegwit);
 
             GetPublicKeyResponseBase response;
-            if (app == App.Ethereum)
+            if (CurrentCoin.App == App.Ethereum)
             {
                 response = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(showDisplay, false, data));
             }
@@ -187,9 +188,8 @@ namespace Ledger.Net
             return response.Address;
         }
 
-        public async Task<TResponse> SendRequestAsync<TResponse, TRequest>(TRequest request)
+        private async Task<TResponse> SendRequestAsync<TResponse>(RequestBase request)
            where TResponse : ResponseBase
-           where TRequest : RequestBase
         {
             await _SemaphoreSlim.WaitAsync();
 
@@ -203,6 +203,13 @@ namespace Ledger.Net
             {
                 _SemaphoreSlim.Release();
             }
+        }
+
+        public async Task<TResponse> SendRequestAsync<TResponse, TRequest>(TRequest request)
+           where TResponse : ResponseBase
+           where TRequest : RequestBase
+        {
+            return await SendRequestAsync<TResponse>(request);
         }
         #endregion
     }

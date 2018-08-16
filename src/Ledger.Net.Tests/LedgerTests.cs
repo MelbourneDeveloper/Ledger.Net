@@ -42,7 +42,7 @@ namespace Ledger.Net.Tests
             await ledgerHidDevice.InitializeAsync();
             var ledgerManager = new LedgerManager(ledgerHidDevice, new DefaultCoinUtility());
 
-            var address = await ledgerManager.GetAddressAsync(0, 0, false, 0, false, App.Bitcoin, true);
+            var address = await ledgerManager.GetAddressAsync(0, false, 0, true);
             if (address == null)
             {
                 throw new Exception("Address not returned");
@@ -73,8 +73,8 @@ namespace Ledger.Net.Tests
             var ledgerHidDevice = new WindowsHidDevice(retVal);
             await ledgerHidDevice.InitializeAsync();
             var ledgerManager = new LedgerManager(ledgerHidDevice, new DefaultCoinUtility());
-
-            var address = await ledgerManager.GetAddressAsync(60, 0, false, 0, false, App.Ethereum, false);
+            ledgerManager.SetCoinNumber(60);
+            var address = await ledgerManager.GetAddressAsync(0, false, 0, true);
 
             if (address == null)
             {
