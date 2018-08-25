@@ -23,7 +23,6 @@ namespace Ledger.Net.Tests
             var ledgerManager = await GetLedger();
 
             var coinVersion = await ledgerManager.GetCoinVersion();
-
         }
 
         [Fact]

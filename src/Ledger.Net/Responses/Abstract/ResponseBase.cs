@@ -8,7 +8,6 @@
 
         #region Public Properties
         public byte[] Data { get; }
-        public int StatusCode { get; }
         public bool IsSuccess => ReturnCode == 0x9000;
         public int ReturnCode { get; }
         public string StatusMessage
