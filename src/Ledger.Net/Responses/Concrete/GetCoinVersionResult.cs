@@ -1,9 +1,10 @@
-﻿using System.Linq;
+﻿using Ledger.Net.Responses;
+using System.Linq;
 using System.Text;
 
 namespace LedgerWallet
 {
-	public class GetCoinVersionResult
+	public class GetCoinVersionResponse: ResponseBase
 	{
 		#region Constants
 		private const int CoinLengthPos = 5;
@@ -16,13 +17,13 @@ namespace LedgerWallet
 		#endregion
 
 		#region Constructor
-		public GetCoinVersionResult(byte[] bytes)
+		public GetCoinVersionResponse(byte[] data) : base(data)
 		{
-			var coinLength = bytes[CoinLengthPos];
+			var coinLength = data[CoinLengthPos];
 			var shortCoinNameStartPos = (CoinLengthPos + SpacerLength) + coinLength;
-			var shortCoinLength = bytes[shortCoinNameStartPos - 1];
+			var shortCoinLength = data[shortCoinNameStartPos - 1];
 
-			var responseList = bytes.ToList();
+			var responseList = data.ToList();
 
 			var coinNameData = responseList.GetRange(6, coinLength).ToArray();
 			var shortCoinNameData = responseList.GetRange(shortCoinNameStartPos, shortCoinLength).ToArray();
