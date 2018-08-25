@@ -99,6 +99,13 @@ namespace Ledger.Net
         #endregion
 
         #region Public Methods
+
+        public async Task<string> GetCoinVersion()
+        {
+            var asdasd = await SendRequestAsync<GetCoinVersionResponse, GetCoinVersionRequest>(new GetCoinVersionRequest());
+            return asdasd.ShortCoinName;
+        }
+
         public void SetCoinNumber(uint coinNumber)
         {
             CurrentCoin = CoinUtility.GetCoinInfo(coinNumber);

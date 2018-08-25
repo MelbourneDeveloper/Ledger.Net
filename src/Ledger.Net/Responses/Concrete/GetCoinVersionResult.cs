@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace LedgerWallet
+namespace Ledger.Net.Responses
 {
 	public class GetCoinVersionResponse: ResponseBase
 	{
