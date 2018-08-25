@@ -100,15 +100,15 @@ namespace Ledger.Net
 
         #region Public Methods
 
-        public async Task<string> GetCoinVersion()
-        {
-            var asdasd = await SendRequestAsync<GetCoinVersionResponse, GetCoinVersionRequest>(new GetCoinVersionRequest());
-            return asdasd.ShortCoinName;
-        }
-
         public void SetCoinNumber(uint coinNumber)
         {
             CurrentCoin = CoinUtility.GetCoinInfo(coinNumber);
+        }
+
+        public async Task SetCoinNumber()
+        {
+            var getCoinVersionRequest = await SendRequestAsync<GetCoinVersionResponse, GetCoinVersionRequest>(new GetCoinVersionRequest());
+            CurrentCoin = CoinUtility.GetCoinInfo(getCoinVersionRequest.ShortCoinName);
         }
 
         public async Task<string> GetAddressAsync(uint account, uint index)

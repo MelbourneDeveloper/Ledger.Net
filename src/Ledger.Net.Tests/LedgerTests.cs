@@ -18,11 +18,13 @@ namespace Ledger.Net.Tests
         static readonly UsageSpecification[] _UsageSpecification = new[] { new UsageSpecification(0xffa0, 0x01) };
 
         [Fact]
-        public async Task GetCoinVersion()
+        public async Task GetAddressAnyBitcoinApp()
         {
             var ledgerManager = await GetLedger();
 
-            var coinVersion = await ledgerManager.GetCoinVersion();
+            await ledgerManager.SetCoinNumber();
+
+            var address = await ledgerManager.GetAddressAsync(0, false, 0, false);
         }
 
         [Fact]
