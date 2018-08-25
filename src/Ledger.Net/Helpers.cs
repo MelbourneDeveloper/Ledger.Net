@@ -45,6 +45,58 @@ namespace Ledger.Net
                 return returnStream.ToArray();
             }
         }
+
+        internal static byte[] GetResponseDataPacket(byte[] data, int packetIndex, ref int remaining)
+        {
+            using (var returnStream = new MemoryStream())
+            {
+                using (var input = new MemoryStream(data))
+                {
+                    var position = (int)input.Position;
+                    var channel = input.ReadAllBytes(2);
+
+                    int thirdByte = input.ReadByte();
+                    if (thirdByte != Constants.TAG_APDU)
+                    {
+                        return null;
+                    }
+
+                    int fourthByte = input.ReadByte();
+                    if (fourthByte != ((packetIndex >> 8) & 0xff))
+                    {
+                        return null;
+                    }
+
+                    int fifthByte = input.ReadByte();
+                    if (fifthByte != (packetIndex & 0xff))
+                    {
+                        return null;
+                    }
+
+                    if (packetIndex == 0)
+                    {
+                        remaining = ((input.ReadByte()) << 8);
+                        remaining |= input.ReadByte();
+                    }
+
+                    var headerSize = input.Position - position;
+                    var blockSize = (int)Math.Min(remaining, Constants.LEDGER_HID_PACKET_SIZE - headerSize);
+
+                    var commandPart = new byte[blockSize];
+
+                    if (input.Read(commandPart, 0, commandPart.Length) != commandPart.Length)
+                    {
+                        return null;
+                    }
+
+                    returnStream.Write(commandPart, 0, commandPart.Length);
+
+                    remaining -= blockSize;
+
+                    return returnStream.ToArray();
+                }
+            }
+        }
         #endregion
 
         #region Private Methods
