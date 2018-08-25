@@ -11,6 +11,7 @@ namespace Ledger.Net
                 case 0:
                     return new CoinInfo(App.Bitcoin, "BTC", "Bitcoin", coinNumber, true);
                 case 2:
+                    //Segwit?
                     return new CoinInfo(App.Bitcoin, "LTC", "Litecoin", coinNumber, true);
                 case 60:
                     return new CoinInfo(App.Ethereum, "ETH", "Ethereum", coinNumber, false);
@@ -28,6 +29,7 @@ namespace Ledger.Net
                 case "BTC":
                     return new CoinInfo(App.Bitcoin, "BTC", "Bitcoin", 0, true);
                 case "LTC":
+                    //Segwit?
                     return new CoinInfo(App.Bitcoin, "LTC", "Litecoin", 2, true);
                 case "ETH":
                     return new CoinInfo(App.Ethereum, "ETH", "Ethereum", 60, false);
