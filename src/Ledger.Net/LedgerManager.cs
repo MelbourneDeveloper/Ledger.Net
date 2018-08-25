@@ -105,6 +105,9 @@ namespace Ledger.Net
             CurrentCoin = CoinUtility.GetCoinInfo(coinNumber);
         }
 
+        /// <summary>
+        /// This will set the coin based on the currently open app. Note: this only currently works with Bitcoin based Ledger apps.
+        /// </summary>
         public async Task SetCoinNumber()
         {
             var getCoinVersionRequest = await SendRequestAsync<GetCoinVersionResponse, GetCoinVersionRequest>(new GetCoinVersionRequest());
