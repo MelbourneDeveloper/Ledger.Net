@@ -20,27 +20,7 @@ namespace Ledger.Net.Tests
         [Fact]
         public async Task GetAddress()
         {
-            var devices = new List<DeviceInformation>();
-
-            var collection = WindowsHidDevice.GetConnectedDeviceInformations();
-
-            foreach (var ids in WellKnownLedgerWallets)
-            {
-                if (ids.ProductId == null)
-                    devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId));
-                else
-                    devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId && c.ProductId == ids.ProductId));
-            }
-
-            var retVal = devices
-                .FirstOrDefault(d =>
-                _UsageSpecification == null ||
-                _UsageSpecification.Length == 0 ||
-                _UsageSpecification.Any(u => d.UsagePage == u.UsagePage && d.Usage == u.Usage));
-
-            var ledgerHidDevice = new WindowsHidDevice(retVal);
-            await ledgerHidDevice.InitializeAsync();
-            var ledgerManager = new LedgerManager(ledgerHidDevice);
+            var ledgerManager = await GetLedger();
 
             var address = await ledgerManager.GetAddressAsync(0, false, 0, false);
             if (address == null)
@@ -51,6 +31,19 @@ namespace Ledger.Net.Tests
 
         [Fact]
         public async Task GetEthereumAddress()
+        {
+            var ledgerManager = await GetLedger();
+
+            ledgerManager.SetCoinNumber(60);
+            var address = await ledgerManager.GetAddressAsync(0, 0);
+
+            if (address == null)
+            {
+                throw new Exception("Address not returned");
+            }
+        }
+
+        private static async Task<LedgerManager> GetLedger()
         {
             var devices = new List<DeviceInformation>();
 
@@ -73,13 +66,7 @@ namespace Ledger.Net.Tests
             var ledgerHidDevice = new WindowsHidDevice(retVal);
             await ledgerHidDevice.InitializeAsync();
             var ledgerManager = new LedgerManager(ledgerHidDevice);
-            ledgerManager.SetCoinNumber(60);
-            var address = await ledgerManager.GetAddressAsync(0, 0);
-
-            if (address == null)
-            {
-                throw new Exception("Address not returned");
-            }
+            return ledgerManager;
         }
     }
 
