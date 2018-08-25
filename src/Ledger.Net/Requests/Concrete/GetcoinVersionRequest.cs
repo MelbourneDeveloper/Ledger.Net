@@ -1,6 +1,6 @@
 ﻿namespace Ledger.Net.Requests
 {
-    public class GetcoinVersionRequest : RequestBase
+    public class GetCoinVersionRequest : RequestBase
     {
         #region Public Overrides
         public override byte Argument1 => 0;
@@ -10,7 +10,7 @@
         #endregion
 
         #region Constructor
-        public GetcoinVersionRequest() : base(new byte[0])
+        public GetCoinVersionRequest() : base(new byte[0])
         {
         }
         #endregion
