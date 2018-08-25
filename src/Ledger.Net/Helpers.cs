@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
-namespace Ledger.Net.Requests.Helpers
+namespace Ledger.Net
 {
-    public static class PublicKeyHelpers
+    public static class Helpers
     {
         public static byte[] GetDerivationPathData(App app, uint coinNumber, uint account, uint index, bool isChange, bool isSegwit)
         {

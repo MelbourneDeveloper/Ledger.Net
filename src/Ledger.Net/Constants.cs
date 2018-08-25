@@ -11,6 +11,7 @@
 
         #region Bitcoin Blue Instructions
         public const byte BTCHIP_INS_GET_WALLET_PUBLIC_KEY = 0x40;
+        public const byte BTCHIP_INS_GET_COIN_VER = 22;
         #endregion
 
         #region Ethereum Blue Instructions

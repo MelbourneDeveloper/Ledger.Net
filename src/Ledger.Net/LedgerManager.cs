@@ -1,6 +1,5 @@
 ﻿using Hid.Net;
 using Ledger.Net.Requests;
-using Ledger.Net.Requests.Helpers;
 using Ledger.Net.Responses;
 using System;
 using System.IO;
@@ -199,7 +198,7 @@ namespace Ledger.Net
 
         public async Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)
         {
-            byte[] data = PublicKeyHelpers.GetDerivationPathData(CurrentCoin.App, CurrentCoin.CoinNumber, account, index, isChange, CurrentCoin.IsSegwit);
+            byte[] data = Helpers.GetDerivationPathData(CurrentCoin.App, CurrentCoin.CoinNumber, account, index, isChange, CurrentCoin.IsSegwit);
 
             GetPublicKeyResponseBase response;
             if (CurrentCoin.App == App.Ethereum)
