@@ -48,14 +48,14 @@ namespace Ledger.Net
             {
                 do
                 {
-                    data = GetRequestDataPacket(memoryStream, packetIndex);
+                    data = Helpers.GetRequestDataPacket(memoryStream, packetIndex);
                     packetIndex++;
                     await LedgerHidDevice.WriteAsync(data);
                 } while (memoryStream.Position != memoryStream.Length);
             }
         }
 
-        protected async Task<byte[]> ReadResponseAsync()
+        private async Task<byte[]> ReadResponseAsync()
         {
             var remaining = 0;
             var packetIndex = 0;
@@ -94,41 +94,6 @@ namespace Ledger.Net
             finally
             {
                 _SemaphoreSlim.Release();
-            }
-        }
-        #endregion
-
-        #region Private Static Methods
-        private static byte[] GetRequestDataPacket(Stream stream, int packetIndex)
-        {
-            using (var returnStream = new MemoryStream())
-            {
-                var position = (int)returnStream.Position;
-                returnStream.WriteByte((Constants.DEFAULT_CHANNEL >> 8) & 0xff);
-                returnStream.WriteByte(Constants.DEFAULT_CHANNEL & 0xff);
-                returnStream.WriteByte(Constants.TAG_APDU);
-                returnStream.WriteByte((byte)((packetIndex >> 8) & 0xff));
-                returnStream.WriteByte((byte)(packetIndex & 0xff));
-
-                if (packetIndex == 0)
-                {
-                    returnStream.WriteByte((byte)((stream.Length >> 8) & 0xff));
-                    returnStream.WriteByte((byte)(stream.Length & 0xff));
-                }
-
-                var headerLength = (int)(returnStream.Position - position);
-                var blockLength = Math.Min(Constants.LEDGER_HID_PACKET_SIZE - headerLength, (int)stream.Length - (int)stream.Position);
-
-                var packetBytes = stream.ReadAllBytes(blockLength);
-
-                returnStream.Write(packetBytes, 0, packetBytes.Length);
-
-                while ((returnStream.Length % Constants.LEDGER_HID_PACKET_SIZE) != 0)
-                {
-                    returnStream.WriteByte(0);
-                }
-
-                return returnStream.ToArray();
             }
         }
 

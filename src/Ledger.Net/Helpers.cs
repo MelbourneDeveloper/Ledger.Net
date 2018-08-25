@@ -1,14 +1,53 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Ledger.Net
 {
     public static class Helpers
     {
+        #region Public Methods
         public static byte[] GetDerivationPathData(App app, uint coinNumber, uint account, uint index, bool isChange, bool isSegwit)
         {
             return GetByteData(GetDerivationIndices(app, coinNumber, account, index, isChange, isSegwit));
         }
+        #endregion
 
+        #region Internal Methods
+        internal static byte[] GetRequestDataPacket(Stream stream, int packetIndex)
+        {
+            using (var returnStream = new MemoryStream())
+            {
+                var position = (int)returnStream.Position;
+                returnStream.WriteByte((Constants.DEFAULT_CHANNEL >> 8) & 0xff);
+                returnStream.WriteByte(Constants.DEFAULT_CHANNEL & 0xff);
+                returnStream.WriteByte(Constants.TAG_APDU);
+                returnStream.WriteByte((byte)((packetIndex >> 8) & 0xff));
+                returnStream.WriteByte((byte)(packetIndex & 0xff));
+
+                if (packetIndex == 0)
+                {
+                    returnStream.WriteByte((byte)((stream.Length >> 8) & 0xff));
+                    returnStream.WriteByte((byte)(stream.Length & 0xff));
+                }
+
+                var headerLength = (int)(returnStream.Position - position);
+                var blockLength = Math.Min(Constants.LEDGER_HID_PACKET_SIZE - headerLength, (int)stream.Length - (int)stream.Position);
+
+                var packetBytes = stream.ReadAllBytes(blockLength);
+
+                returnStream.Write(packetBytes, 0, packetBytes.Length);
+
+                while ((returnStream.Length % Constants.LEDGER_HID_PACKET_SIZE) != 0)
+                {
+                    returnStream.WriteByte(0);
+                }
+
+                return returnStream.ToArray();
+            }
+        }
+        #endregion
+
+        #region Private Methods
         private static uint[] GetDerivationIndices(App app, uint coinNumber, uint account, uint index, bool isChange, bool isSegwit)
         {
             //BIP 44 - https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
@@ -62,5 +101,6 @@ namespace Ledger.Net
 
             return addressIndicesData;
         }
+        #endregion
     }
 }
