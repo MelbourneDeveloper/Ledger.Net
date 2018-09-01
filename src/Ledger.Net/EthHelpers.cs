@@ -20,6 +20,8 @@ namespace Ledger.Net
             using (var memoryStream = new MemoryStream())
             {
                 // We need to write the path data as well when the first argument is 0x00, and not when it is 0x80?
+                // New info found: https://github.com/LedgerHQ/ledgerjs/blob/master/packages/hw-app-eth/src/Eth.js#L147
+                // The first data block that is sent needs to send with 0x00, and then the rest of them need to be sent with 0x80.
                 if (derivationPathData != null)
                 {
                     memoryStream.Write(derivationPathData, 0, derivationPathData.Length);
