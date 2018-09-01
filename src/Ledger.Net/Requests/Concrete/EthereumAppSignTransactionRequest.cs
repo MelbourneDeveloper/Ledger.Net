@@ -2,6 +2,11 @@
 {
     public class EthereumAppSignTransactionRequest : RequestBase
     {
+        // The first block of data that is sent needs to be 0x00, and the rest would be 0x80. How should this be done?
+        // Javascript implementation: https://github.com/LedgerHQ/ledgerjs/blob/master/packages/hw-app-eth/src/Eth.js#L147
+        // Foreach function uses 0x00 on the first index of the data array and 0x80 on the rest.
+        // Foreach implementation is moved to the utils.js file: https://github.com/LedgerHQ/ledgerjs/blob/master/packages/hw-app-eth/src/utils.js#L58
+
         private const byte P1_FIRST_TRANSACTION_BLOCK = 0x00;
         private const byte P1_SUBSEQUENT_TRANSACTION_BLOCK = 0x80;
 
@@ -13,13 +18,12 @@
         #endregion
 
         #region Public Properties
-        public bool FirstTransactionDataBlock { get; }
+        public bool FirstTransactionDataBlock { get; protected set; }
         #endregion
 
         #region Constructor
-        public EthereumAppSignTransactionRequest(bool firstTransactionDataBlock, byte[] data) : base(data)
+        public EthereumAppSignTransactionRequest(byte[] data) : base(data)
         {
-            FirstTransactionDataBlock = firstTransactionDataBlock;
         }
         #endregion
     }
