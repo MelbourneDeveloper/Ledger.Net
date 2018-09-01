@@ -46,6 +46,7 @@ namespace Ledger.Net.Tests
             ledgerManager.SetCoinNumber(60);
 
             var response = await ledgerManager.EthSignTransactionAsync("0", "3b9aca00", "5208", "689c56aef474df92d44a1b70850f808488f9769c", "de0b6b3a7640000", "", "4");
+            Assert.True(response.SignatureV == 4);
         }
 
         [Fact]
