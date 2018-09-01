@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 namespace Ledger.Net
@@ -8,6 +10,31 @@ namespace Ledger.Net
     {
         private const string Format = "X1";
         private static readonly Encoding Encoding = new UTF8Encoding();
+
+        public static byte[] GetTransactionData(byte[] derivationPathData, string hexNonce, string hexGasPrice, string hexGasLimit, string addressTo, string hexValue, string data, string hexChainId)
+        {
+            byte[] transactionData;
+            using (var memoryStream = new MemoryStream())
+            {
+                if (derivationPathData != null)
+                {
+                    memoryStream.Write(derivationPathData, 0, derivationPathData.Length);
+                }
+                WriteTransactionBytes(memoryStream, hexNonce);
+                WriteTransactionBytes(memoryStream, hexGasPrice);
+                WriteTransactionBytes(memoryStream, hexGasLimit);
+                WriteTransactionBytes(memoryStream, addressTo);
+                WriteTransactionBytes(memoryStream, hexValue);
+                WriteTransactionBytes(memoryStream, data);
+                WriteTransactionBytes(memoryStream, hexChainId); // v
+                WriteTransactionBytes(memoryStream, "0"); // r
+                WriteTransactionBytes(memoryStream, "0"); // s
+
+                transactionData = memoryStream.ToArray();
+            }
+
+            return transactionData;
+        }
 
         public static string ToHexString(this IEnumerable<byte> bytes)
         {
@@ -65,6 +92,12 @@ namespace Ledger.Net
         public static byte[] ToEthBytes(this int number)
         {
             return Encoding.GetBytes($"0x{ToHexBytes(number)}");
+        }
+
+        private static void WriteTransactionBytes(MemoryStream memoryStream, string hexValue)
+        {
+            byte[] bytes = hexValue.ToHexBytes();
+            memoryStream.Write(bytes, 0, bytes.Length);
         }
     }
 }

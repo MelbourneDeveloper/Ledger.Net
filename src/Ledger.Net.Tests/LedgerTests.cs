@@ -17,26 +17,35 @@ namespace Ledger.Net.Tests
 
         static readonly UsageSpecification[] _UsageSpecification = new[] { new UsageSpecification(0xffa0, 0x01) };
 
+        //[Fact]
+        //public async Task GetAddressAnyBitcoinApp()
+        //{
+        //    var ledgerManager = await GetLedger();
+
+        //    await ledgerManager.SetCoinNumber();
+
+        //    var address = await ledgerManager.GetAddressAsync(0, false, 0, false);
+        //}
+
+        //[Fact]
+        //public async Task GetAddress()
+        //{
+        //    var ledgerManager = await GetLedger();
+
+        //    var address = await ledgerManager.GetAddressAsync(0, false, 0, false);
+        //    if (address == null)
+        //    {
+        //        throw new Exception("Address not returned");
+        //    }
+        //}
+
         [Fact]
-        public async Task GetAddressAnyBitcoinApp()
+        public async Task SignEthereumTransaction()
         {
             var ledgerManager = await GetLedger();
+            ledgerManager.SetCoinNumber(60);
 
-            await ledgerManager.SetCoinNumber();
-
-            var address = await ledgerManager.GetAddressAsync(0, false, 0, false);
-        }
-
-        [Fact]
-        public async Task GetAddress()
-        {
-            var ledgerManager = await GetLedger();
-
-            var address = await ledgerManager.GetAddressAsync(0, false, 0, false);
-            if (address == null)
-            {
-                throw new Exception("Address not returned");
-            }
+            var response = await ledgerManager.EthSignTransactionAsync("0", "3b9aca00", "5208", "689c56aef474df92d44a1b70850f808488f9769c", "de0b6b3a7640000", "", "4");
         }
 
         [Fact]

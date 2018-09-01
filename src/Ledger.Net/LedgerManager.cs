@@ -119,6 +119,14 @@ namespace Ledger.Net
             return await GetAddressAsync(account, false, index, false);
         }
 
+        public async Task<EthereumAppSignTransactionResponse> EthSignTransactionAsync(string hexNonce, string hexGasPrice, string hexGasLimit, string addressTo, string hexValue, string data, string hexChainId)
+        {
+            byte[] derivationData = Helpers.GetDerivationPathData(CurrentCoin.App, CurrentCoin.CoinNumber, 0, 0, false, CurrentCoin.IsSegwit);
+
+            EthereumAppSignTransactionRequest request = new EthereumAppSignTransactionRequest(true, EthHelpers.GetTransactionData(derivationData, hexNonce, hexGasPrice, hexGasLimit, addressTo, hexValue, data, hexChainId));
+            return await SendRequestAsync<EthereumAppSignTransactionResponse, EthereumAppSignTransactionRequest>(request);
+        }
+
         public async Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)
         {
             byte[] data = Helpers.GetDerivationPathData(CurrentCoin.App, CurrentCoin.CoinNumber, account, index, isChange, CurrentCoin.IsSegwit);
