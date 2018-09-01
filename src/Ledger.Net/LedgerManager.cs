@@ -122,9 +122,14 @@ namespace Ledger.Net
         public async Task<EthereumAppSignTransactionResponse> EthSignTransactionAsync(string hexNonce, string hexGasPrice, string hexGasLimit, string addressTo, string hexValue, string data, string hexChainId)
         {
             byte[] derivationData = Helpers.GetDerivationPathData(CurrentCoin.App, CurrentCoin.CoinNumber, 0, 0, false, CurrentCoin.IsSegwit);
+            byte[] firstBlock = EthHelpers.GetTransactionData(derivationData, hexNonce, hexGasPrice, hexGasLimit, addressTo, hexValue, data, hexChainId);
+            byte[] secondBlock = EthHelpers.GetTransactionData(null, hexNonce, hexGasPrice, hexGasLimit, addressTo, hexValue, data, hexChainId);
 
-            EthereumAppSignTransactionRequest request = new EthereumAppSignTransactionRequest(true, EthHelpers.GetTransactionData(derivationData, hexNonce, hexGasPrice, hexGasLimit, addressTo, hexValue, data, hexChainId));
-            return await SendRequestAsync<EthereumAppSignTransactionResponse, EthereumAppSignTransactionRequest>(request);
+            EthereumAppSignTransactionRequest firstRequest = new EthereumAppSignTransactionRequest(true, firstBlock);
+            EthereumAppSignTransactionRequest secondRequest = new EthereumAppSignTransactionRequest(false, secondBlock);
+
+            await SendRequestAsync<EthereumAppSignTransactionResponse, EthereumAppSignTransactionRequest>(firstRequest);
+            return await SendRequestAsync<EthereumAppSignTransactionResponse, EthereumAppSignTransactionRequest>(secondRequest);
         }
 
         public async Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)

@@ -32,24 +32,27 @@ namespace Ledger.Net
                                                                .Concat(addressTo.ToHexBytes())
                                                                .Concat(hexValue.ToHexBytes())
                                                                .Concat(data.ToHexBytes())
+                                                               .Concat(hexChainId.ToHexBytes())
+                                                               .Concat("0".ToHexBytes())
+                                                               .Concat("0".ToHexBytes())
                                                                .ToArray();
+
+                memoryStream.WriteByte((byte)combinedByteData.Length); // Do we need to first write the byte length?
+                memoryStream.Write(combinedByteData, 0, combinedByteData.Length);
 
                 // v, r, s is included because it seems like it is needed based on a couple of sources.
                 // https://github.com/LedgerHQ/ledgerjs/issues/43#issuecomment-366984725
                 // https://github.com/LedgerHQ/ledgerjs/blob/master/packages/web3-subprovider/src/index.js#L143
 
-                byte[] vrs = hexChainId.ToHexBytes() // v
-                                       .Concat("0".ToHexBytes()) // r
-                                       .Concat("0".ToHexBytes()) // s
-                                       .ToArray();
+                // Not sure if v, r, s should be included in the regular data chunk or separate, or neither.
 
-                // Not sure if v, r, s should be included in the regular data chunk or separate, or none at all.
+                //byte[] vrs = hexChainId.ToHexBytes() // v
+                //                       .Concat("0".ToHexBytes()) // r
+                //                       .Concat("0".ToHexBytes()) // s
+                //                       .ToArray();
 
-                memoryStream.WriteByte((byte)combinedByteData.Length); // Do we need to first write the byte length?
-                memoryStream.Write(combinedByteData, 0, combinedByteData.Length);
-
-                memoryStream.WriteByte((byte)vrs.Length);
-                memoryStream.Write(vrs, 0, vrs.Length);
+                //memoryStream.WriteByte((byte)vrs.Length);
+                //memoryStream.Write(vrs, 0, vrs.Length);
 
                 transactionData = memoryStream.ToArray();
             }
