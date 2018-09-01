@@ -18,12 +18,13 @@
         #endregion
 
         #region Public Properties
-        public bool FirstTransactionDataBlock { get; protected set; }
+        public bool FirstTransactionDataBlock { get; }
         #endregion
 
         #region Constructor
-        public EthereumAppSignTransactionRequest(byte[] data) : base(data)
+        public EthereumAppSignTransactionRequest(bool firstTransactionDataBlock, byte[] data) : base(data)
         {
+            FirstTransactionDataBlock = firstTransactionDataBlock;
         }
         #endregion
     }
