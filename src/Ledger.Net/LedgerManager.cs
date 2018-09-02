@@ -125,7 +125,7 @@ namespace Ledger.Net
             byte[] derivationData = Helpers.GetDerivationPathData(CurrentCoin.App, CurrentCoin.CoinNumber, account, index, isChange, CurrentCoin.IsSegwit);
 
             // Create base class like GetPublicKeyResponseBase and make the method more like GetAddressAsync
-            EthereumAppSignTransactionRequest firstRequest = new EthereumAppSignTransactionRequest(true, derivationData.Concat(transactionData).ToArray());
+            EthereumAppSignTransactionRequest firstRequest = new EthereumAppSignTransactionRequest(derivationData.Concat(transactionData).ToArray());
 
             return await SendRequestAsync<EthereumAppSignTransactionResponse, EthereumAppSignTransactionRequest>(firstRequest);
         }
