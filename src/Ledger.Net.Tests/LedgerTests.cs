@@ -45,7 +45,9 @@ namespace Ledger.Net.Tests
             var ledgerManager = await GetLedger();
             ledgerManager.SetCoinNumber(60);
 
-            var response = await ledgerManager.EthSignTransactionAsync("0", "3b9aca00", "5208", "689c56aef474df92d44a1b70850f808488f9769c", "de0b6b3a7640000", "", "4");
+            byte[] rlpEncodedTransactionData = { 227, 128, 132, 59, 154, 202, 0, 130, 82, 8, 148, 139, 6, 158, 207, 123, 242, 48, 225, 83, 184, 237, 144, 59, 171, 242, 68, 3, 204, 162, 3, 128, 128, 4, 128, 128 };
+
+            var response = await ledgerManager.SignTransactionAsync(0, 0, false, rlpEncodedTransactionData);
 
             Assert.True(response.SignatureR?.Length == 32);
             Assert.True(response.SignatureS?.Length == 32);

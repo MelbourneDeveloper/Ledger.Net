@@ -3,6 +3,7 @@ using Ledger.Net.Requests;
 using Ledger.Net.Responses;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -119,17 +120,14 @@ namespace Ledger.Net
             return await GetAddressAsync(account, false, index, false);
         }
 
-        public async Task<EthereumAppSignTransactionResponse> EthSignTransactionAsync(string hexNonce, string hexGasPrice, string hexGasLimit, string addressTo, string hexValue, string data, string hexChainId)
+        public async Task<EthereumAppSignTransactionResponse> SignTransactionAsync(uint account, uint index, bool isChange, byte[] transactionData)
         {
-            byte[] derivationData = Helpers.GetDerivationPathData(CurrentCoin.App, CurrentCoin.CoinNumber, 0, 0, false, CurrentCoin.IsSegwit);
-            byte[] firstBlock = EthHelpers.GetTransactionData(derivationData, hexNonce, hexGasPrice, hexGasLimit, addressTo, hexValue, data, hexChainId);
-            byte[] secondBlock = EthHelpers.GetTransactionData(null, hexNonce, hexGasPrice, hexGasLimit, addressTo, hexValue, data, hexChainId);
+            byte[] derivationData = Helpers.GetDerivationPathData(CurrentCoin.App, CurrentCoin.CoinNumber, account, index, isChange, CurrentCoin.IsSegwit);
 
-            EthereumAppSignTransactionRequest firstRequest = new EthereumAppSignTransactionRequest(true, firstBlock);
-            EthereumAppSignTransactionRequest secondRequest = new EthereumAppSignTransactionRequest(false, secondBlock);
+            // Create base class like GetPublicKeyResponseBase and make the method more like GetAddressAsync
+            EthereumAppSignTransactionRequest firstRequest = new EthereumAppSignTransactionRequest(true, derivationData.Concat(transactionData).ToArray());
 
-            await SendRequestAsync<EthereumAppSignTransactionResponse, EthereumAppSignTransactionRequest>(firstRequest);
-            return await SendRequestAsync<EthereumAppSignTransactionResponse, EthereumAppSignTransactionRequest>(secondRequest);
+            return await SendRequestAsync<EthereumAppSignTransactionResponse, EthereumAppSignTransactionRequest>(firstRequest);
         }
 
         public async Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)
