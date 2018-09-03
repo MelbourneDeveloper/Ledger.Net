@@ -1,4 +1,6 @@
 using Hid.Net;
+using Ledger.Net.Requests;
+using Ledger.Net.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,30 +16,29 @@ namespace Ledger.Net.Tests
             new VendorProductIds(0x2c97),
             new VendorProductIds(0x2581, 0x3b7c)
         };
+        private static readonly UsageSpecification[] _UsageSpecification = new[] { new UsageSpecification(0xffa0, 0x01) };
 
-        static readonly UsageSpecification[] _UsageSpecification = new[] { new UsageSpecification(0xffa0, 0x01) };
+        [Fact]
+        public async Task GetAddressAnyBitcoinApp()
+        {
+            var ledgerManager = await GetLedger();
 
-        //[Fact]
-        //public async Task GetAddressAnyBitcoinApp()
-        //{
-        //    var ledgerManager = await GetLedger();
+            await ledgerManager.SetCoinNumber();
 
-        //    await ledgerManager.SetCoinNumber();
+            var address = await ledgerManager.GetAddressAsync(0, false, 0, false);
+        }
 
-        //    var address = await ledgerManager.GetAddressAsync(0, false, 0, false);
-        //}
+        [Fact]
+        public async Task GetAddress()
+        {
+            var ledgerManager = await GetLedger();
 
-        //[Fact]
-        //public async Task GetAddress()
-        //{
-        //    var ledgerManager = await GetLedger();
-
-        //    var address = await ledgerManager.GetAddressAsync(0, false, 0, false);
-        //    if (address == null)
-        //    {
-        //        throw new Exception("Address not returned");
-        //    }
-        //}
+            var address = await ledgerManager.GetAddressAsync(0, false, 0, false);
+            if (address == null)
+            {
+                throw new Exception("Address not returned");
+            }
+        }
 
         [Fact]
         public async Task SignEthereumTransaction()
@@ -47,7 +48,12 @@ namespace Ledger.Net.Tests
 
             byte[] rlpEncodedTransactionData = { 227, 128, 132, 59, 154, 202, 0, 130, 82, 8, 148, 139, 6, 158, 207, 123, 242, 48, 225, 83, 184, 237, 144, 59, 171, 242, 68, 3, 204, 162, 3, 128, 128, 4, 128, 128 };
 
-            var response = await ledgerManager.SignTransactionAsync(0, 0, false, rlpEncodedTransactionData);
+            var derivationData = Helpers.GetDerivationPathData(ledgerManager.CurrentCoin.App, ledgerManager.CurrentCoin.CoinNumber, 0, 0, false, ledgerManager.CurrentCoin.IsSegwit);
+
+            // Create base class like GetPublicKeyResponseBase and make the method more like GetAddressAsync
+            var firstRequest = new EthereumAppSignTransactionRequest(derivationData.Concat(rlpEncodedTransactionData).ToArray());
+
+            var response = await ledgerManager.SendRequestAsync<EthereumAppSignTransactionResponse, EthereumAppSignTransactionRequest>(firstRequest);
 
             Assert.True(response.SignatureR?.Length == 32);
             Assert.True(response.SignatureS?.Length == 32);
@@ -76,9 +82,13 @@ namespace Ledger.Net.Tests
             foreach (var ids in WellKnownLedgerWallets)
             {
                 if (ids.ProductId == null)
+                {
                     devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId));
+                }
                 else
+                {
                     devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId && c.ProductId == ids.ProductId));
+                }
             }
 
             var retVal = devices

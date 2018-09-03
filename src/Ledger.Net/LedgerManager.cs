@@ -3,7 +3,6 @@ using Ledger.Net.Requests;
 using Ledger.Net.Responses;
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -118,16 +117,6 @@ namespace Ledger.Net
         public async Task<string> GetAddressAsync(uint account, uint index)
         {
             return await GetAddressAsync(account, false, index, false);
-        }
-
-        public async Task<EthereumAppSignTransactionResponse> SignTransactionAsync(uint account, uint index, bool isChange, byte[] transactionData)
-        {
-            byte[] derivationData = Helpers.GetDerivationPathData(CurrentCoin.App, CurrentCoin.CoinNumber, account, index, isChange, CurrentCoin.IsSegwit);
-
-            // Create base class like GetPublicKeyResponseBase and make the method more like GetAddressAsync
-            EthereumAppSignTransactionRequest firstRequest = new EthereumAppSignTransactionRequest(derivationData.Concat(transactionData).ToArray());
-
-            return await SendRequestAsync<EthereumAppSignTransactionResponse, EthereumAppSignTransactionRequest>(firstRequest);
         }
 
         public async Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)
