@@ -7,10 +7,10 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://github.com/MelbourneDeveloper/Ledger.Net/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/MelbourneDeveloper/Ledger.Net</PackageProjectUrl>
-    <AssemblyVersion>1.2.1.0</AssemblyVersion>
-    <FileVersion>1.2.1.0</FileVersion>
+    <AssemblyVersion>1.3.0.0</AssemblyVersion>
+    <FileVersion>1.3.0.0</FileVersion>
     <Company>Christian Findlay</Company>
-    <Version>1.2.1</Version>
+    <Version>1.3.0</Version>
     <RepositoryUrl>https://github.com/MelbourneDeveloper/Ledger.Net</RepositoryUrl>
     <PackageReleaseNotes>Add Ethereum support for addresses. SetCoinNumber to set the current coin/app (0=Bitcoin, 60=Ethereum). Breaking change: GetAddressAsync method overload simplified</PackageReleaseNotes>
     <Copyright>Copyright (c) 2018 Christian Findlay</Copyright>
