@@ -146,7 +146,9 @@ namespace Ledger.Net
         {
             switch(response.ReturnCode)
             {
-                case Constants.SecurityNotValidCode:
+                case Constants.InstructionNotSupportedStatusCode:
+                    throw new InstructionNotSupportedException(response.Data);
+                case Constants.SecurityNotValidStatusCode:
                     throw new SecurityException(response.Data);
                 default:
                     throw new Exception(response.StatusMessage);

@@ -18,7 +18,7 @@
                 {
                     case 0x9000:
                         return "Success";
-                    case 0x6D00:
+                    case Constants.InstructionNotSupportedStatusCode:
                         return "Instruction not supported in current app or there is no app running";
                     case 0x6B00:
                         return "Invalid parameter";
@@ -30,7 +30,7 @@
                         return "CLA not supported in current app";
                     case 0x6700:
                         return "Data length is incorrect?";
-                    case Constants.SecurityNotValidCode:
+                    case Constants.SecurityNotValidStatusCode:
                         return "The security is not valid for this command";
                     case 0x6985:
                         return "Conditions have not been satisfied for this command";
