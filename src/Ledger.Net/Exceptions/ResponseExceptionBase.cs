@@ -2,7 +2,7 @@
 
 namespace Ledger.Net.Exceptions
 {
-    public class ResponseExceptionBase : Exception
+    public abstract class ResponseExceptionBase : Exception
     {
         public byte[] ResponseData { get; }
 
