@@ -55,22 +55,24 @@ namespace Ledger.Net
                     var position = (int)input.Position;
                     var channel = input.ReadAllBytes(2);
 
-                    int thirdByte = input.ReadByte();
+                    var thirdByte = input.ReadByte();
                     if (thirdByte != Constants.TAG_APDU)
                     {
-                        throw new ManagerException($"Bad read. The third byte was not equal to {nameof(Constants.TAG_APDU)}");
+                        ThrowReadException("third", Constants.TAG_APDU, thirdByte, packetIndex);
                     }
 
                     int fourthByte = input.ReadByte();
-                    if (fourthByte != ((packetIndex >> 8) & 0xff))
+                    var expectedResult = (packetIndex >> 8) & 0xff;
+                    if (fourthByte != expectedResult)
                     {
-                        throw new ManagerException($"Bad read. The fourth byte was not correct");
+                        ThrowReadException("fourth", expectedResult, fourthByte, packetIndex);
                     }
 
                     int fifthByte = input.ReadByte();
-                    if (fifthByte != (packetIndex & 0xff))
+                    expectedResult = packetIndex & 0xff;
+                    if (fifthByte != expectedResult)
                     {
-                        throw new ManagerException($"Bad read. The fourth byte was not correct");
+                        ThrowReadException("fifth", expectedResult, fifthByte, packetIndex);
                     }
 
                     if (packetIndex == 0)
@@ -83,10 +85,9 @@ namespace Ledger.Net
                     var blockSize = (int)Math.Min(remaining, Constants.LEDGER_HID_PACKET_SIZE - headerSize);
 
                     var commandPart = new byte[blockSize];
-
                     if (input.Read(commandPart, 0, commandPart.Length) != commandPart.Length)
                     {
-                        throw new ManagerException($"Bad read. The data read was not of the correct size");
+                        throw new ManagerException($"Reading from the Ledger failed. The data read was not of the correct size. It is possible that the incorrect Hid device has been used. Please check that the Hid device with the correct UsagePage was selected");
                     }
 
                     returnStream.Write(commandPart, 0, commandPart.Length);
@@ -100,6 +101,12 @@ namespace Ledger.Net
         #endregion
 
         #region Private Methods
+        private static void ThrowReadException(string bytePosition, int expected, int actual, int packetIndex)
+        {
+            throw new ManagerException($"Reading from the Ledger failed. The {bytePosition} byte was incorrect. Expected: {expected} Actual: {actual} Packet Index: {packetIndex}. It is possible that the incorrect Hid device has been used. Please check that the Hid device with the correct UsagePage was selected");
+        }
+
+
         private static uint[] GetDerivationIndices(App app, uint coinNumber, uint account, uint index, bool isChange, bool isSegwit)
         {
             //BIP 44 - https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
