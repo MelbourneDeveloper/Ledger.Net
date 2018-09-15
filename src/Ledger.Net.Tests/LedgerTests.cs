@@ -55,6 +55,8 @@ namespace Ledger.Net.Tests
 
             var response = await ledgerManager.SendRequestAsync<EthereumAppSignTransactionResponse, EthereumAppSignTransactionRequest>(firstRequest);
 
+            Assert.True(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
+
             Assert.True(response.SignatureR?.Length == 32);
             Assert.True(response.SignatureS?.Length == 32);
         }
