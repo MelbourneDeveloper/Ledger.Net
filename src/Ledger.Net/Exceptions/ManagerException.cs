@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ledger.Net
+namespace Ledger.Net.Exceptions
 {
     public class ManagerException : Exception
     {

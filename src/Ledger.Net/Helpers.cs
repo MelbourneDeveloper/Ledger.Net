@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ledger.Net.Exceptions;
+using System;
 using System.IO;
 
 namespace Ledger.Net

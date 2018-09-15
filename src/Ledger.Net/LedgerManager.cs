@@ -1,4 +1,5 @@
 ﻿using Hid.Net;
+using Ledger.Net.Exceptions;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
 using System;

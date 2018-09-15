@@ -1,4 +1,4 @@
-﻿namespace Ledger.Net
+﻿namespace Ledger.Net.Exceptions
 {
     public class InstructionNotSupportedException : ResponseExceptionBase
     {
