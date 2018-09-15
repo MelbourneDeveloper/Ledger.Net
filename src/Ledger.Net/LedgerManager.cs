@@ -128,8 +128,14 @@ namespace Ledger.Net
         /// </summary>
         public async Task SetCoinNumber()
         {
-            var getCoinVersionRequest = await SendRequestAsync<GetCoinVersionResponse, GetCoinVersionRequest>(new GetCoinVersionRequest());
-            CurrentCoin = CoinUtility.GetCoinInfo(getCoinVersionRequest.ShortCoinName);
+            var getCoinVersionResponse = await SendRequestAsync<GetCoinVersionResponse, GetCoinVersionRequest>(new GetCoinVersionRequest());
+
+            if (!getCoinVersionResponse.IsSuccess)
+            {
+                HandleErrorResponse(getCoinVersionResponse);
+            }
+
+            CurrentCoin = CoinUtility.GetCoinInfo(getCoinVersionResponse.ShortCoinName);
         }
 
         public async Task<string> GetAddressAsync(uint account, uint index)

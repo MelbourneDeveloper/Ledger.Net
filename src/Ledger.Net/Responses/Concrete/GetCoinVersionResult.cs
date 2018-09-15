@@ -19,7 +19,12 @@ namespace Ledger.Net.Responses
 		#region Constructor
 		public GetCoinVersionResponse(byte[] data) : base(data)
 		{
-			var coinLength = data[CoinLengthPos];
+            if (!IsSuccess)
+            {
+                return;
+            }
+
+            var coinLength = data[CoinLengthPos];
 			var shortCoinNameStartPos = (CoinLengthPos + SpacerLength) + coinLength;
 			var shortCoinLength = data[shortCoinNameStartPos - 1];
 
