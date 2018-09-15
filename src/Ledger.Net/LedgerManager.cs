@@ -98,6 +98,21 @@ namespace Ledger.Net
         }
         #endregion
 
+        #region Private Static Methods
+        private static void HandleErrorResponse(ResponseBase response)
+        {
+            switch (response.ReturnCode)
+            {
+                case Constants.InstructionNotSupportedStatusCode:
+                    throw new InstructionNotSupportedException(response.Data);
+                case Constants.SecurityNotValidStatusCode:
+                    throw new SecurityException(response.Data);
+                default:
+                    throw new Exception(response.StatusMessage);
+            }
+        }
+        #endregion
+
         #region Public Methods
 
         public void SetCoinNumber(uint coinNumber)
@@ -140,19 +155,6 @@ namespace Ledger.Net
             }
 
             return response.Address;
-        }
-
-        private static void HandleErrorResponse(ResponseBase response)
-        {
-            switch(response.ReturnCode)
-            {
-                case Constants.InstructionNotSupportedStatusCode:
-                    throw new InstructionNotSupportedException(response.Data);
-                case Constants.SecurityNotValidStatusCode:
-                    throw new SecurityException(response.Data);
-                default:
-                    throw new Exception(response.StatusMessage);
-            }
         }
 
         public async Task<TResponse> SendRequestAsync<TResponse, TRequest>(TRequest request)
