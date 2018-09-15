@@ -136,10 +136,21 @@ namespace Ledger.Net
 
             if (!response.IsSuccess)
             {
-                throw new Exception(response.StatusMessage);
+                HandleErrorResponse(response);
             }
 
             return response.Address;
+        }
+
+        private static void HandleErrorResponse(ResponseBase response)
+        {
+            switch(response.ReturnCode)
+            {
+                case Constants.SecurityNotValidCode:
+                    throw new SecurityException(response.Data);
+                default:
+                    throw new Exception(response.StatusMessage);
+            }
         }
 
         public async Task<TResponse> SendRequestAsync<TResponse, TRequest>(TRequest request)

@@ -22,5 +22,9 @@
         #region Other Constants
         public const uint HARDENING_CONSTANT = 0x80000000;
         #endregion
+
+        #region Error Codes
+        public const int SecurityNotValidCode = 0x6982;
+        #endregion
     }
 }

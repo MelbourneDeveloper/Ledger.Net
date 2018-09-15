@@ -30,7 +30,7 @@
                         return "CLA not supported in current app";
                     case 0x6700:
                         return "Data length is incorrect?";
-                    case 0x6982:
+                    case Constants.SecurityNotValidCode:
                         return "The security is not valid for this command";
                     case 0x6985:
                         return "Conditions have not been satisfied for this command";
