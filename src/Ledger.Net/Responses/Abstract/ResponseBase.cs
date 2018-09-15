@@ -28,8 +28,8 @@
                         return "Unknown error. Possibly from Firmware?";
                     case 0x6E00:
                         return "CLA not supported in current app";
-                    case 0x6700:
-                        return "Data length is incorrect?";
+                    case Constants.IncorrectLengthStatusCode:
+                        return "Data length is incorrect";
                     case Constants.SecurityNotValidStatusCode:
                         return "The security is not valid for this command";
                     case 0x6985:

@@ -26,6 +26,7 @@
         #region Error Codes
         public const int SecurityNotValidStatusCode = 0x6982;
         public const int InstructionNotSupportedStatusCode = 0x6D00;
+        public const int IncorrectLengthStatusCode = 0x6700;
         #endregion
     }
 }

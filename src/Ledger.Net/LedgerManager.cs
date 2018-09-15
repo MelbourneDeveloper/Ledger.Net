@@ -107,6 +107,8 @@ namespace Ledger.Net
                     throw new InstructionNotSupportedException(response.Data);
                 case Constants.SecurityNotValidStatusCode:
                     throw new SecurityException(response.Data);
+                case Constants.IncorrectLengthStatusCode:
+                    throw new IncorrectLengthException(response.Data);
                 default:
                     throw new Exception(response.StatusMessage);
             }
