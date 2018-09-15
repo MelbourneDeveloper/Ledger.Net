@@ -11,7 +11,7 @@ namespace Ledger.Net
     public class LedgerManager
     {
         #region Fields
-        protected SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
+        private SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
         #endregion
 
         #region Constructor

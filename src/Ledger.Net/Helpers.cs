@@ -58,19 +58,19 @@ namespace Ledger.Net
                     int thirdByte = input.ReadByte();
                     if (thirdByte != Constants.TAG_APDU)
                     {
-                        return null;
+                        throw new ManagerException($"Bad read. The third byte was not equal to {nameof(Constants.TAG_APDU)}");
                     }
 
                     int fourthByte = input.ReadByte();
                     if (fourthByte != ((packetIndex >> 8) & 0xff))
                     {
-                        return null;
+                        throw new ManagerException($"Bad read. The fourth byte was not correct");
                     }
 
                     int fifthByte = input.ReadByte();
                     if (fifthByte != (packetIndex & 0xff))
                     {
-                        return null;
+                        throw new ManagerException($"Bad read. The fourth byte was not correct");
                     }
 
                     if (packetIndex == 0)
@@ -86,7 +86,7 @@ namespace Ledger.Net
 
                     if (input.Read(commandPart, 0, commandPart.Length) != commandPart.Length)
                     {
-                        return null;
+                        throw new ManagerException($"Bad read. The data read was not of the correct size");
                     }
 
                     returnStream.Write(commandPart, 0, commandPart.Length);
@@ -123,7 +123,7 @@ namespace Ledger.Net
             {
                 //BIP44 Deviation for Ledger
                 //Index
-                indices[3] =  index;
+                indices[3] = index;
             }
             else
             {
