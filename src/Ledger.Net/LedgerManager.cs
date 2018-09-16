@@ -129,7 +129,7 @@ namespace Ledger.Net
                     }
                     else
                     {
-                        await ErrorPrompt(response.ReturnCode, null);
+                        await ErrorPrompt(response.ReturnCode, null, memberName);
                     }
                 }
                 catch (Exception ex)
@@ -140,7 +140,7 @@ namespace Ledger.Net
                     }
                     else
                     {
-                        await ErrorPrompt(null, ex);
+                        await ErrorPrompt(null, ex, memberName);
                     }
                 }
             }

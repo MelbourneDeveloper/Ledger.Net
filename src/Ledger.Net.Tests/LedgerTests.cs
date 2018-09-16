@@ -3,6 +3,7 @@ using Ledger.Net.Requests;
 using Ledger.Net.Responses;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -11,6 +12,8 @@ namespace Ledger.Net.Tests
 {
     public class LedgerTests
     {
+        private static LedgerManager _LedgerManager;
+
         public static VendorProductIds[] WellKnownLedgerWallets = new VendorProductIds[]
         {
             new VendorProductIds(0x2c97),
@@ -28,12 +31,23 @@ namespace Ledger.Net.Tests
             var address = await ledgerManager.GetAddressAsync(0, false, 0, false);
         }
 
+        private async Task Prompt(int? returnCode, Exception exception, string member)
+        {
+            System.Diagnostics.Debug.WriteLine("Something went wrong. Please open the correct app");
+            await Task.Delay(5000);
+
+            if (exception is IOException)
+            {
+                await _LedgerManager.LedgerHidDevice.InitializeAsync();
+            }
+        }
+
         [Fact]
         public async Task GetAddress()
         {
-            var ledgerManager = await GetLedger();
+            _LedgerManager = await GetLedger(Prompt);
 
-            var address = await ledgerManager.GetAddressAsync(0, false, 0, false);
+            var address = await _LedgerManager.GetAddressAsync(0, false, 0, false);
             if (address == null)
             {
                 throw new Exception("Address not returned");
