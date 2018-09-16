@@ -4,19 +4,27 @@ namespace Ledger.Net
 {
     public class DefaultCoinUtility : ICoinUtility
     {
+        public readonly static CoinInfo Bitcoin = new CoinInfo(App.Bitcoin, "BTC", "Bitcoin", 0, true);
+        //Segwit?
+        public readonly static CoinInfo Litecoin = new CoinInfo(App.Bitcoin, "LTC", "Litecoin", 2, true);
+        public readonly static CoinInfo Ethereum = new CoinInfo(App.Ethereum, "ETH", "Ethereum", 60, false);
+        public readonly static CoinInfo EthereumClassic = new CoinInfo(App.Ethereum, "ETC", "Ethereum Classic", 61, false);
+        public readonly static CoinInfo BitcoinGold = new CoinInfo(App.BitcoinGold, "BTG", "Bitcoin Gold", 156, false);
+
         public CoinInfo GetCoinInfo(uint coinNumber)
         {
             switch (coinNumber)
             {
                 case 0:
-                    return new CoinInfo(App.Bitcoin, "BTC", "Bitcoin", coinNumber, true);
+                    return Bitcoin;
                 case 2:
-                    //Segwit?
-                    return new CoinInfo(App.Bitcoin, "LTC", "Litecoin", coinNumber, true);
+                    return Litecoin;
                 case 60:
-                    return new CoinInfo(App.Ethereum, "ETH", "Ethereum", coinNumber, false);
+                    return Ethereum;
                 case 61:
-                    return new CoinInfo(App.Ethereum, "ETC", "Ethereum Classic", coinNumber, false);
+                    return EthereumClassic;
+                case 156:
+                    return BitcoinGold;
                 default:
                     throw new NotImplementedException("Coin not implemented. You can implement your own ICoinUtility for other coins and set CoinUtility in the LedgerManager constructor.");
             }
@@ -27,14 +35,16 @@ namespace Ledger.Net
             switch (coinShortName)
             {
                 case "BTC":
-                    return new CoinInfo(App.Bitcoin, "BTC", "Bitcoin", 0, true);
+                    return Bitcoin;
                 case "LTC":
                     //Segwit?
-                    return new CoinInfo(App.Bitcoin, "LTC", "Litecoin", 2, true);
+                    return Litecoin;
                 case "ETH":
-                    return new CoinInfo(App.Ethereum, "ETH", "Ethereum", 60, false);
+                    return Ethereum;
                 case "ETC":
-                    return new CoinInfo(App.Ethereum, "ETC", "Ethereum Classic", 61, false);
+                    return EthereumClassic;
+                case "BTG":
+                    return BitcoinGold;
                 default:
                     throw new NotImplementedException("Coin not implemented. You can implement your own ICoinUtility for other coins and set CoinUtility in the LedgerManager constructor.");
             }

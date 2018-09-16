@@ -3,6 +3,7 @@
     public enum App
     {
         Bitcoin,
-        Ethereum
+        Ethereum,
+        BitcoinGold
     }
 }
