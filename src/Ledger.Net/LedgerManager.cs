@@ -17,6 +17,7 @@ namespace Ledger.Net
 
         #region Public Properties
         public ReturnCodePromptDelegate ReturnCodePrompt { get; }
+        public int PromptRetryCount { get; set; } = 6;
         #endregion
 
         #region Constructor
@@ -158,23 +159,45 @@ namespace Ledger.Net
         {
             byte[] data = Helpers.GetDerivationPathData(CurrentCoin.App, CurrentCoin.CoinNumber, account, index, isChange, CurrentCoin.IsSegwit);
 
-            GetPublicKeyResponseBase response;
-            if (CurrentCoin.App == App.Ethereum)
+            var memberName = nameof(GetAddressAsync);
+
+            for (var i = 0; i < PromptRetryCount; i++)
             {
-                response = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(showDisplay, false, data));
-            }
-            else
-            {
-                //TODO: Should we use the Coin's IsSegwit here?
-                response = await SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(showDisplay, BitcoinAddressType.Segwit, data));
+                try
+                {
+                    GetPublicKeyResponseBase response;
+                    if (CurrentCoin.App == App.Ethereum)
+                    {
+                        response = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(showDisplay, false, data));
+                    }
+                    else
+                    {
+                        //TODO: Should we use the Coin's IsSegwit here?
+                        response = await SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(showDisplay, BitcoinAddressType.Segwit, data));
+                    }
+
+                    if (response.IsSuccess)
+                    {
+                        return response.Address;
+                    }
+                    else if (ReturnCodePrompt == null)
+                    {
+                        HandleErrorResponse(response);
+                    }
+                    else
+                    {
+                        await ReturnCodePrompt(response.ReturnCode, null);
+                    }
+
+                    return response.Address;
+                }
+                catch (Exception ex)
+                {
+                    await ReturnCodePrompt(null, ex);
+                }
             }
 
-            if (!response.IsSuccess)
-            {
-                HandleErrorResponse(response);
-            }
-
-            return response.Address;
+            throw new TooManyPromptsException(PromptRetryCount, memberName);
         }
 
         public async Task<TResponse> SendRequestAsync<TResponse, TRequest>(TRequest request)
