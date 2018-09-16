@@ -16,7 +16,7 @@ namespace Ledger.Net
         #endregion
 
         #region Public Properties
-        public ReturnCodePromptDelegate ReturnCodePrompt { get; }
+        public ErrorPromptDelegate ErrorPrompt { get; }
         public int PromptRetryCount { get; set; } = 6;
         #endregion
 
@@ -30,9 +30,9 @@ namespace Ledger.Net
 
         }
 
-        public LedgerManager(IHidDevice ledgerHidDevice, ICoinUtility coinUtility, ReturnCodePromptDelegate returnCodePrompt)
+        public LedgerManager(IHidDevice ledgerHidDevice, ICoinUtility coinUtility, ErrorPromptDelegate errorPrompt)
         {
-            ReturnCodePrompt = returnCodePrompt;
+            ErrorPrompt = errorPrompt;
 
             LedgerHidDevice = ledgerHidDevice;
             CoinUtility = coinUtility;
@@ -123,24 +123,24 @@ namespace Ledger.Net
                         return response;
                     }
 
-                    if (ReturnCodePrompt == null)
+                    if (ErrorPrompt == null)
                     {
                         HandleErrorResponse(response);
                     }
                     else
                     {
-                        await ReturnCodePrompt(response.ReturnCode, null);
+                        await ErrorPrompt(response.ReturnCode, null);
                     }
                 }
                 catch (Exception ex)
                 {
-                    if (ReturnCodePrompt == null)
+                    if (ErrorPrompt == null)
                     {
                         throw;
                     }
                     else
                     {
-                        await ReturnCodePrompt(null, ex);
+                        await ErrorPrompt(null, ex);
                     }
                 }
             }

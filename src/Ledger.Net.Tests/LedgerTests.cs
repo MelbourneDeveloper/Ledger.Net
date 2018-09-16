@@ -75,7 +75,7 @@ namespace Ledger.Net.Tests
             }
         }
 
-        private static async Task<LedgerManager> GetLedger()
+        private static async Task<LedgerManager> GetLedger(ErrorPromptDelegate errorPrompt = null)
         {
             var devices = new List<DeviceInformation>();
 
@@ -101,7 +101,7 @@ namespace Ledger.Net.Tests
 
             var ledgerHidDevice = new WindowsHidDevice(retVal);
             await ledgerHidDevice.InitializeAsync();
-            var ledgerManager = new LedgerManager(ledgerHidDevice);
+            var ledgerManager = new LedgerManager(ledgerHidDevice, null, errorPrompt);
             return ledgerManager;
         }
     }
