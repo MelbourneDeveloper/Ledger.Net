@@ -15,13 +15,24 @@ namespace Ledger.Net
         private SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
         #endregion
 
+        #region Public Properties
+        public ReturnCodePromptDelegate ReturnCodePrompt { get; }
+        #endregion
+
         #region Constructor
-        public LedgerManager(IHidDevice ledgerHidDevice) : this(ledgerHidDevice, null)
+        public LedgerManager(IHidDevice ledgerHidDevice) : this(ledgerHidDevice, null, null)
         {
         }
 
-        public LedgerManager(IHidDevice ledgerHidDevice, ICoinUtility coinUtility)
+        public LedgerManager(IHidDevice ledgerHidDevice, ICoinUtility coinUtility) : this(ledgerHidDevice, coinUtility, null)
         {
+
+        }
+
+        public LedgerManager(IHidDevice ledgerHidDevice, ICoinUtility coinUtility, ReturnCodePromptDelegate returnCodePrompt)
+        {
+            ReturnCodePrompt = returnCodePrompt;
+
             LedgerHidDevice = ledgerHidDevice;
             CoinUtility = coinUtility;
 
