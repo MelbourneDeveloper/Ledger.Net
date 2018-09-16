@@ -134,7 +134,14 @@ namespace Ledger.Net
                 }
                 catch (Exception ex)
                 {
-                    await ReturnCodePrompt(null, ex);
+                    if (ReturnCodePrompt == null)
+                    {
+                        throw;
+                    }
+                    else
+                    {
+                        await ReturnCodePrompt(null, ex);
+                    }
                 }
             }
 
