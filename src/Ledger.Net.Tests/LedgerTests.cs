@@ -33,13 +33,34 @@ namespace Ledger.Net.Tests
 
         private async Task Prompt(int? returnCode, Exception exception, string member)
         {
-            System.Diagnostics.Debug.WriteLine("Something went wrong. Please open the correct app");
-            await Task.Delay(5000);
-
-            if (exception is IOException)
+            if (returnCode.HasValue)
             {
-                await _LedgerManager.LedgerHidDevice.InitializeAsync();
+                switch (returnCode.Value)
+                {
+                    case Constants.IncorrectLengthStatusCode:
+                        System.Diagnostics.Debug.WriteLine($"Please ensure the app { _LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
+                        break;
+                    case Constants.SecurityNotValidStatusCode:
+                        System.Diagnostics.Debug.WriteLine($"It appears that your Ledger pin has not been entered, or no app is open. Please ensure the app  {_LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
+                        break;
+                    case Constants.InstructionNotSupportedStatusCode:
+                        System.Diagnostics.Debug.WriteLine($"The current app is incorrect. Please ensure the app for {_LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
+                        break;
+                    default:
+                        System.Diagnostics.Debug.WriteLine($"Something went wrong. Please ensure the app  {_LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
+                        break;
+                }
             }
+            else
+            {
+                if (exception is IOException)
+                {
+                    await Task.Delay(3000);
+                    await _LedgerManager.LedgerHidDevice.InitializeAsync();
+                }
+            }
+
+            await Task.Delay(5000);
         }
 
         [Fact]
