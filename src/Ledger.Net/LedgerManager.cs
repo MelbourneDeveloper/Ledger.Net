@@ -109,6 +109,37 @@ namespace Ledger.Net
                 _SemaphoreSlim.Release();
             }
         }
+
+        private async Task<ResponseBase> CallAndPrompt<T>(Func<Task<T>> func, string memberName) where T : ResponseBase
+        {
+            for (var i = 0; i < PromptRetryCount; i++)
+            {
+                try
+                {
+                    var response = await func.Invoke();
+
+                    if (response.IsSuccess)
+                    {
+                        return response;
+                    }
+
+                    if (ReturnCodePrompt == null)
+                    {
+                        HandleErrorResponse(response);
+                    }
+                    else
+                    {
+                        await ReturnCodePrompt(response.ReturnCode, null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await ReturnCodePrompt(null, ex);
+                }
+            }
+
+            throw new TooManyPromptsException(PromptRetryCount, memberName);
+        }
         #endregion
 
         #region Private Static Methods
@@ -155,49 +186,38 @@ namespace Ledger.Net
             return await GetAddressAsync(account, false, index, false);
         }
 
+        private class asdasd
+        {
+            public ResponseBase rb { get; set; }
+            public object ReturnValue { get; set; }
+        }
+
         public async Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)
         {
-            byte[] data = Helpers.GetDerivationPathData(CurrentCoin.App, CurrentCoin.CoinNumber, account, index, isChange, CurrentCoin.IsSegwit);
-
-            var memberName = nameof(GetAddressAsync);
-
-            for (var i = 0; i < PromptRetryCount; i++)
+            var func = new Func<Task<GetPublicKeyResponseBase>>(async () =>
             {
-                try
+                byte[] data = Helpers.GetDerivationPathData(CurrentCoin.App, CurrentCoin.CoinNumber, account, index, isChange, CurrentCoin.IsSegwit);
+
+                GetPublicKeyResponseBase response;
+
+                switch (CurrentCoin.App)
                 {
-                    GetPublicKeyResponseBase response;
-                    if (CurrentCoin.App == App.Ethereum)
-                    {
+                    case App.Ethereum:
                         response = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(showDisplay, false, data));
-                    }
-                    else
-                    {
+                        break;
+                    case App.Bitcoin:
                         //TODO: Should we use the Coin's IsSegwit here?
                         response = await SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(showDisplay, BitcoinAddressType.Segwit, data));
-                    }
-
-                    if (response.IsSuccess)
-                    {
-                        return response.Address;
-                    }
-                    else if (ReturnCodePrompt == null)
-                    {
-                        HandleErrorResponse(response);
-                    }
-                    else
-                    {
-                        await ReturnCodePrompt(response.ReturnCode, null);
-                    }
-
-                    return response.Address;
+                        break;
+                    default:
+                        throw new NotImplementedException();
                 }
-                catch (Exception ex)
-                {
-                    await ReturnCodePrompt(null, ex);
-                }
-            }
 
-            throw new TooManyPromptsException(PromptRetryCount, memberName);
+                return response;
+            });
+
+            var returnResponse = (GetPublicKeyResponseBase)await CallAndPrompt(func, nameof(GetAddressAsync));
+            return returnResponse.Address;
         }
 
         public async Task<TResponse> SendRequestAsync<TResponse, TRequest>(TRequest request)
