@@ -51,6 +51,16 @@ namespace Ledger.Net.Tests
         }
 
         [Fact]
+        public async Task GetEthereumPublicKey()
+        {
+            var ledgerManager = await GetLedger();
+            ledgerManager.SetCoinNumber(60);
+            var addressPath = Helpers.GetDerivationPathData(ledgerManager.CurrentCoin.App, ledgerManager.CurrentCoin.CoinNumber, 0, 0, false, ledgerManager.CurrentCoin.IsSegwit);
+            var publicKey = await ledgerManager.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(true, false, addressPath));
+            Assert.True(!string.IsNullOrEmpty(publicKey.PublicKey));
+        }
+
+        [Fact]
         public async Task SignEthereumTransaction()
         {
             var ledgerManager = await GetLedger();
