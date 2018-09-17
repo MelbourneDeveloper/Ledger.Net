@@ -1,11 +1,25 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Ledger.Net.Responses
 {
     public class BitcoinAppGetPublicKeyResponse : GetPublicKeyResponseBase
     {
-        public override string PublicKey => GetBitcoinAddressStringFromBytes(PublicKeyData);
+        public override string PublicKey
+        {
+            get
+            {
+                var sb = new StringBuilder();
+                foreach (var @byte in PublicKeyData)
+                {
+                    sb.Append(@byte.ToString("X2").ToLower());
+                }
+
+                return sb.ToString();
+            }
+        }
 
         public BitcoinAppGetPublicKeyResponse(byte[] data) : base(data)
         {
