@@ -40,6 +40,16 @@ namespace Ledger.Net.Tests
             }
         }
 
+
+        [Fact]
+        public async Task GetBitcoinPublicKey()
+        {
+            var ledgerManager = await GetLedger();
+            var addressPath = Helpers.GetDerivationPathData(ledgerManager.CurrentCoin.App, ledgerManager.CurrentCoin.CoinNumber, 0, 0, false, ledgerManager.CurrentCoin.IsSegwit);
+            var publicKey = await ledgerManager.SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest (true, BitcoinAddressType.Legacy, addressPath));
+            Assert.True(!string.IsNullOrEmpty(publicKey.PublicKey));
+        }
+
         [Fact]
         public async Task SignEthereumTransaction()
         {
