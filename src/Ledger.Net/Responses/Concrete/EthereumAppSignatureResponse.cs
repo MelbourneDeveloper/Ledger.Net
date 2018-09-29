@@ -2,7 +2,7 @@
 
 namespace Ledger.Net.Responses
 {
-    public class EthereumAppSignTransactionResponse : ResponseBase
+    public class EthereumAppSignatureResponse : ResponseBase
     {
         public uint SignatureV { get; }
 
@@ -10,7 +10,7 @@ namespace Ledger.Net.Responses
 
         public byte[] SignatureS { get; }
 
-        public EthereumAppSignTransactionResponse(byte[] data) : base(data)
+        public EthereumAppSignatureResponse(byte[] data) : base(data)
         {
             if (!IsSuccess)
             {
