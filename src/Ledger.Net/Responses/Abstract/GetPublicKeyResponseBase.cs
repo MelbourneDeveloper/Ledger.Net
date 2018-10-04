@@ -4,12 +4,15 @@ namespace Ledger.Net.Responses
 {
     public abstract class GetPublicKeyResponseBase : ResponseBase
     {
-        public byte[] PublicKeyData;
-        public byte[] ChainCodeData;
-
         public string Address { get; }
 
-        public abstract string PublicKey { get; }
+        public byte[] AddressData { get; }
+
+        public string PublicKey { get; }
+
+        public byte[] PublicKeyData { get; }
+
+        public byte[] ChainCodeData { get; }
 
         protected GetPublicKeyResponseBase(byte[] data) : base(data)
         {
@@ -22,12 +25,18 @@ namespace Ledger.Net.Responses
             {
                 var publicKeyLength = memoryStream.ReadByte();
                 PublicKeyData = memoryStream.ReadAllBytes(publicKeyLength);
+                PublicKey = GetPublicKeyString(PublicKeyData);
+
                 var addressLength = memoryStream.ReadByte();
-                Address = GetAddressFromStream(memoryStream, addressLength);
+                AddressData = memoryStream.ReadAllBytes(addressLength);
+                Address = GetAddressString(AddressData);
+
                 ChainCodeData = memoryStream.ReadAllBytes(32);
             }
         }
 
-        protected abstract string GetAddressFromStream(Stream memoryStream, int addressLength);
+        protected abstract string GetPublicKeyString(byte[] publicKeyData);
+
+        protected abstract string GetAddressString(byte[] addressData);
     }
 }
