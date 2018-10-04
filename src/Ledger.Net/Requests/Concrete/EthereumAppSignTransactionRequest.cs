@@ -6,12 +6,17 @@
         public override byte Argument1 => 0;
         public override byte Argument2 => 0;
         public override byte Cla => Constants.CLA;
-        public override byte Ins => Constants.ETHEREUM_SIGN_TX;
+        public override byte Ins => SignTransaction ? Constants.ETHEREUM_SIGN_TX : Constants.ETHEREUM_SIGN_MESSAGE;
+        #endregion
+
+        #region Public Properties
+        public bool SignTransaction { get; }
         #endregion
 
         #region Constructor
-        public EthereumAppSignTransactionRequest(byte[] data) : base(data)
+        public EthereumAppSignTransactionRequest(bool signTransaction, byte[] data) : base(data)
         {
+            SignTransaction = signTransaction;
         }
         #endregion
     }
