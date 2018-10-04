@@ -71,6 +71,7 @@ namespace Ledger.Net.Tests
             var derivationData = Helpers.GetDerivationPathData(ledgerManager.CurrentCoin.App, ledgerManager.CurrentCoin.CoinNumber, 0, 0, false, ledgerManager.CurrentCoin.IsSegwit);
 
             // Create base class like GetPublicKeyResponseBase and make the method more like GetAddressAsync
+
             var firstRequest = new EthereumAppSignatureRequest(true, derivationData.Concat(rlpEncodedTransactionData).ToArray());
 
             var response = await ledgerManager.SendRequestAsync<EthereumAppSignatureResponse, EthereumAppSignatureRequest>(firstRequest);
