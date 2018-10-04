@@ -75,6 +75,26 @@ namespace Ledger.Net.Tests
             }
         }
 
+
+        [Fact]
+        public async Task GetBitcoinPublicKey()
+        {
+            var ledgerManager = await GetLedger();
+            var addressPath = Helpers.GetDerivationPathData(ledgerManager.CurrentCoin.App, ledgerManager.CurrentCoin.CoinNumber, 0, 0, false, ledgerManager.CurrentCoin.IsSegwit);
+            var publicKey = await ledgerManager.SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest (true, BitcoinAddressType.Legacy, addressPath));
+            Assert.True(!string.IsNullOrEmpty(publicKey.PublicKey));
+        }
+
+        [Fact]
+        public async Task GetEthereumPublicKey()
+        {
+            var ledgerManager = await GetLedger();
+            ledgerManager.SetCoinNumber(60);
+            var addressPath = Helpers.GetDerivationPathData(ledgerManager.CurrentCoin.App, ledgerManager.CurrentCoin.CoinNumber, 0, 0, false, ledgerManager.CurrentCoin.IsSegwit);
+            var publicKey = await ledgerManager.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(true, false, addressPath));
+            Assert.True(!string.IsNullOrEmpty(publicKey.PublicKey));
+        }
+
         [Fact]
         public async Task SignEthereumTransaction()
         {
@@ -86,7 +106,7 @@ namespace Ledger.Net.Tests
             var derivationData = Helpers.GetDerivationPathData(ledgerManager.CurrentCoin.App, ledgerManager.CurrentCoin.CoinNumber, 0, 0, false, ledgerManager.CurrentCoin.IsSegwit);
 
             // Create base class like GetPublicKeyResponseBase and make the method more like GetAddressAsync
-            var firstRequest = new EthereumAppSignTransactionRequest(derivationData.Concat(rlpEncodedTransactionData).ToArray());
+            var firstRequest = new EthereumAppSignTransactionRequest(true, derivationData.Concat(rlpEncodedTransactionData).ToArray());
 
             var response = await ledgerManager.SendRequestAsync<EthereumAppSignTransactionResponse, EthereumAppSignTransactionRequest>(firstRequest);
 
