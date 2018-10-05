@@ -3,14 +3,14 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
     <Description>A cross platform C# library for the Ledger hardwarewallet. To see the sample in a .NET Core unit test, please clone the repo. https://github.com/MelbourneDeveloper/Ledger.Net. Android, and UWP samples on their way. Support for all coins will come bit by bit, but you are able to add support by writing Request and Response messages.</Description>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://github.com/MelbourneDeveloper/Ledger.Net/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/MelbourneDeveloper/Ledger.Net</PackageProjectUrl>
-    <AssemblyVersion>1.3.1.0</AssemblyVersion>
-    <FileVersion>1.3.1.0</FileVersion>
+    <AssemblyVersion>1.4.0.0</AssemblyVersion>
+    <FileVersion>1.4.0.0</FileVersion>
     <Company>Christian Findlay</Company>
-    <Version>1.3.1</Version>
+    <Version>1.4.0</Version>
     <RepositoryUrl>https://github.com/MelbourneDeveloper/Ledger.Net</RepositoryUrl>
     <PackageReleaseNotes>Add ability to get Bitcoin and Ethereum public keys</PackageReleaseNotes>
     <Copyright>Copyright (c) 2018 Christian Findlay</Copyright>
