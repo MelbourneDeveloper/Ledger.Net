@@ -1,6 +1,6 @@
 ﻿namespace Ledger.Net.Requests
 {
-    public class EthereumAppSignTransactionRequest : RequestBase
+    public class EthereumAppSignatureRequest : RequestBase
     {
         #region Public Overrides
         public override byte Argument1 => 0;
@@ -14,7 +14,7 @@
         #endregion
 
         #region Constructor
-        public EthereumAppSignTransactionRequest(bool signTransaction, byte[] data) : base(data)
+        public EthereumAppSignatureRequest(bool signTransaction, byte[] data) : base(data)
         {
             SignTransaction = signTransaction;
         }
