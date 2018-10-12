@@ -193,12 +193,6 @@ namespace Ledger.Net
             return await GetAddressAsync(account, false, index, false);
         }
 
-        private class asdasd
-        {
-            public ResponseBase rb { get; set; }
-            public object ReturnValue { get; set; }
-        }
-
         public async Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)
         {
             var func = new Func<Task<GetPublicKeyResponseBase>>(async () =>
