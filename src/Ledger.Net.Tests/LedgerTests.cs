@@ -1,3 +1,4 @@
+using Hardwarewallets.Net.AddressManagement;
 using Hid.Net;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
@@ -79,7 +80,7 @@ namespace Ledger.Net.Tests
             {
                 LedgerManager = _LedgerManager,
                 MemberName = nameof(_GetPublicKeyFunc),
-                Args = new GetAddressArgs(0, 0, false, true)
+                Args = new GetAddressArgs(new AddressPath(true, 0, 0, false, 0), true)
             });
 
             Assert.True(!string.IsNullOrEmpty(returnResponse.PublicKey));
@@ -90,7 +91,7 @@ namespace Ledger.Net.Tests
         {
             await GetLedger();
             _LedgerManager.SetCoinNumber(60);
-            var addressPath = Helpers.GetDerivationPathData(_LedgerManager.CurrentCoin.App, _LedgerManager.CurrentCoin.CoinNumber, 0, 0, false, _LedgerManager.CurrentCoin.IsSegwit);
+            var addressPath = Helpers.GetDerivationPathData(_LedgerManager.CurrentCoin.App, new AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
             var publicKey = await _LedgerManager.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(true, false, addressPath));
             Assert.True(!string.IsNullOrEmpty(publicKey.PublicKey));
         }
@@ -103,7 +104,7 @@ namespace Ledger.Net.Tests
 
             byte[] rlpEncodedTransactionData = { 227, 128, 132, 59, 154, 202, 0, 130, 82, 8, 148, 139, 6, 158, 207, 123, 242, 48, 225, 83, 184, 237, 144, 59, 171, 242, 68, 3, 204, 162, 3, 128, 128, 4, 128, 128 };
 
-            var derivationData = Helpers.GetDerivationPathData(_LedgerManager.CurrentCoin.App, _LedgerManager.CurrentCoin.CoinNumber, 0, 0, false, _LedgerManager.CurrentCoin.IsSegwit);
+            var derivationData = Helpers.GetDerivationPathData(_LedgerManager.CurrentCoin.App, new AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
 
             // Create base class like GetPublicKeyResponseBase and make the method more like GetAddressAsync
 
