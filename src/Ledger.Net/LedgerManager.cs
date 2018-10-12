@@ -15,28 +15,28 @@ namespace Ledger.Net
         private SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
 
 
-        private readonly Func<CallAndPromptArgs, Task<GetPublicKeyResponseBase>> _GetAddressFunc = new Func<CallAndPromptArgs, Task<GetPublicKeyResponseBase>>(async (s) =>
+        private readonly Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>> _GetAddressFunc = new Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>>(async (s) =>
         {
-             var lm = s.LedgerManager;
+            var lm = s.LedgerManager;
 
-             var data = Helpers.GetDerivationPathData(lm.CurrentCoin.App, lm.CurrentCoin.CoinNumber, account, index, isChange, CurrentCoin.IsSegwit);
+            var data = Helpers.GetDerivationPathData(lm.CurrentCoin.App, lm.CurrentCoin.CoinNumber, s.Args.account, s.Args.index, s.Args.isChange, s.LedgerManager.CurrentCoin.IsSegwit);
 
-             GetPublicKeyResponseBase response;
+            GetPublicKeyResponseBase response;
 
-             switch (lm.CurrentCoin.App)
-             {
-                 case App.Ethereum:
-                     response = await lm.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(showDisplay, false, data));
-                     break;
-                 case App.Bitcoin:
-                     //TODO: Should we use the Coin's IsSegwit here?
-                     response = await lm.SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(showDisplay, BitcoinAddressType.Segwit, data));
-                     break;
-                 default:
-                     throw new NotImplementedException();
-             }
+            switch (lm.CurrentCoin.App)
+            {
+                case App.Ethereum:
+                    response = await lm.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(s.Args.showDisplay, false, data));
+                    break;
+                case App.Bitcoin:
+                    //TODO: Should we use the Coin's IsSegwit here?
+                    response = await lm.SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(s.Args.showDisplay, BitcoinAddressType.Segwit, data));
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
 
-             return response;
+            return response;
         });
         #endregion
 
@@ -135,14 +135,22 @@ namespace Ledger.Net
             }
         }
 
-        public class CallAndPromptArgs
+        public class CallAndPromptArgs<T>
         {
             public string MemberName { get; set; }
-            public object Args { get; }
+            public T Args { get; }
             public LedgerManager LedgerManager { get; set; }
         }
 
-        private async Task<ResponseBase> CallAndPrompt<T>(Func<Task<T>> func, CallAndPromptArgs state) where T : ResponseBase
+        public class GetAddressArgs
+        {
+            public uint account { get; set; }
+            public uint index { get; set; }
+            public bool isChange { get; set; }
+            public bool showDisplay { get; set; }
+        }
+
+        private async Task<ResponseBase> CallAndPrompt<T, T2>(Func<Task<T>> func, CallAndPromptArgs<T2> state) where T : ResponseBase
         {
             for (var i = 0; i < PromptRetryCount; i++)
             {
@@ -228,7 +236,7 @@ namespace Ledger.Net
         public async Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)
         {
 
-            var returnResponse = (GetPublicKeyResponseBase)await CallAndPrompt(_GetAddressFunc, this, nameof(GetAddressAsync));
+            var returnResponse = (GetPublicKeyResponseBase)await CallAndPrompt<string, GetAddressArgs>(_GetAddressFunc, new CallAndPromptArgs<GetAddressArgs> { LedgerManager = this, MemberName = nameof(GetAddressAsync) });
             return returnResponse.Address;
         }
 
