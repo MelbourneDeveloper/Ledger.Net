@@ -70,10 +70,8 @@ namespace Ledger.Net.Tests
             _LedgerManager = await GetLedger(Prompt);
 
             var address = await _LedgerManager.GetAddressAsync(0, false, 0, false);
-            if (address == null)
-            {
-                throw new Exception("Address not returned");
-            }
+
+            Assert.True(!string.IsNullOrEmpty(address));
         }
 
 
@@ -82,7 +80,7 @@ namespace Ledger.Net.Tests
         {
             var ledgerManager = await GetLedger();
             var addressPath = Helpers.GetDerivationPathData(ledgerManager.CurrentCoin.App, ledgerManager.CurrentCoin.CoinNumber, 0, 0, false, ledgerManager.CurrentCoin.IsSegwit);
-            var publicKey = await ledgerManager.SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest (true, BitcoinAddressType.Legacy, addressPath));
+            var publicKey = await ledgerManager.SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(true, BitcoinAddressType.Legacy, addressPath));
             Assert.True(!string.IsNullOrEmpty(publicKey.PublicKey));
         }
 
