@@ -13,6 +13,31 @@ namespace Ledger.Net
     {
         #region Fields
         private SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
+
+
+        private readonly Func<CallAndPromptArgs, Task<GetPublicKeyResponseBase>> _GetAddressFunc = new Func<CallAndPromptArgs, Task<GetPublicKeyResponseBase>>(async (s) =>
+        {
+             var lm = s.LedgerManager;
+
+             var data = Helpers.GetDerivationPathData(lm.CurrentCoin.App, lm.CurrentCoin.CoinNumber, account, index, isChange, CurrentCoin.IsSegwit);
+
+             GetPublicKeyResponseBase response;
+
+             switch (lm.CurrentCoin.App)
+             {
+                 case App.Ethereum:
+                     response = await lm.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(showDisplay, false, data));
+                     break;
+                 case App.Bitcoin:
+                     //TODO: Should we use the Coin's IsSegwit here?
+                     response = await lm.SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(showDisplay, BitcoinAddressType.Segwit, data));
+                     break;
+                 default:
+                     throw new NotImplementedException();
+             }
+
+             return response;
+        });
         #endregion
 
         #region Public Properties
@@ -110,7 +135,14 @@ namespace Ledger.Net
             }
         }
 
-        private async Task<ResponseBase> CallAndPrompt<T>(Func<Task<T>> func, string memberName) where T : ResponseBase
+        public class CallAndPromptArgs
+        {
+            public string MemberName { get; set; }
+            public object Args { get; }
+            public LedgerManager LedgerManager { get; set; }
+        }
+
+        private async Task<ResponseBase> CallAndPrompt<T>(Func<Task<T>> func, CallAndPromptArgs state) where T : ResponseBase
         {
             for (var i = 0; i < PromptRetryCount; i++)
             {
@@ -129,7 +161,7 @@ namespace Ledger.Net
                     }
                     else
                     {
-                        await ErrorPrompt(response.ReturnCode, null, memberName);
+                        await ErrorPrompt(response.ReturnCode, null, state.MemberName);
                     }
                 }
                 catch (Exception ex)
@@ -140,12 +172,12 @@ namespace Ledger.Net
                     }
                     else
                     {
-                        await ErrorPrompt(null, ex, memberName);
+                        await ErrorPrompt(null, ex, state.MemberName);
                     }
                 }
             }
 
-            throw new TooManyPromptsException(PromptRetryCount, memberName);
+            throw new TooManyPromptsException(PromptRetryCount, state.MemberName);
         }
         #endregion
 
@@ -195,29 +227,8 @@ namespace Ledger.Net
 
         public async Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)
         {
-            var func = new Func<Task<GetPublicKeyResponseBase>>(async () =>
-            {
-                byte[] data = Helpers.GetDerivationPathData(CurrentCoin.App, CurrentCoin.CoinNumber, account, index, isChange, CurrentCoin.IsSegwit);
 
-                GetPublicKeyResponseBase response;
-
-                switch (CurrentCoin.App)
-                {
-                    case App.Ethereum:
-                        response = await SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(showDisplay, false, data));
-                        break;
-                    case App.Bitcoin:
-                        //TODO: Should we use the Coin's IsSegwit here?
-                        response = await SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(showDisplay, BitcoinAddressType.Segwit, data));
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-
-                return response;
-            });
-
-            var returnResponse = (GetPublicKeyResponseBase)await CallAndPrompt(func, nameof(GetAddressAsync));
+            var returnResponse = (GetPublicKeyResponseBase)await CallAndPrompt(_GetAddressFunc, this, nameof(GetAddressAsync));
             return returnResponse.Address;
         }
 
