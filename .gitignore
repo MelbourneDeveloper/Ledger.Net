@@ -21,3 +21,4 @@ AppPackages
 *.props
 file_paths.xml
 *.Net.deps.json
+*.nupkg
