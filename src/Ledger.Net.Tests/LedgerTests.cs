@@ -8,12 +8,37 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using static Ledger.Net.LedgerManager;
 
 namespace Ledger.Net.Tests
 {
     public class LedgerTests
     {
         private static LedgerManager _LedgerManager;
+
+        private readonly Func<CallAndPromptArgs<LedgerManager.GetAddressArgs>, Task<GetPublicKeyResponseBase>> _GetAddressFunc = new Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>>(async (s) =>
+        {
+            var lm = s.LedgerManager;
+
+            var data = Helpers.GetDerivationPathData(lm.CurrentCoin.App, lm.CurrentCoin.CoinNumber, s.Args.Account, s.Args.Index, s.Args.IsChange, s.LedgerManager.CurrentCoin.IsSegwit);
+
+            GetPublicKeyResponseBase response;
+
+            switch (lm.CurrentCoin.App)
+            {
+                case App.Ethereum:
+                    response = await lm.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(s.Args.ShowDisplay, false, data));
+                    break;
+                case App.Bitcoin:
+                    //TODO: Should we use the Coin's IsSegwit here?
+                    response = await lm.SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(s.Args.ShowDisplay, BitcoinAddressType.Segwit, data));
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+
+            return response;
+        });
 
         public static VendorProductIds[] WellKnownLedgerWallets = new VendorProductIds[]
         {

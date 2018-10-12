@@ -9,11 +9,10 @@ using System.Threading.Tasks;
 
 namespace Ledger.Net
 {
-    public partial class LedgerManager
+    public class LedgerManager
     {
         #region Fields
         private SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
-
 
         private readonly Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>> _GetAddressFunc = new Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>>(async (s) =>
         {
