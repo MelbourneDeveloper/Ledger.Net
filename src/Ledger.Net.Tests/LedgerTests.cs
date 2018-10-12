@@ -155,10 +155,7 @@ namespace Ledger.Net.Tests
             _LedgerManager.SetCoinNumber(60);
             var address = await _LedgerManager.GetAddressAsync(0, 0);
 
-            if (address == null)
-            {
-                throw new Exception("Address not returned");
-            }
+            Assert.True(!string.IsNullOrEmpty(address));
         }
 
         private async Task GetLedger(ErrorPromptDelegate errorPrompt = null)
