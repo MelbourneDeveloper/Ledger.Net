@@ -24,7 +24,7 @@ namespace Ledger.Net.Tests
         {
             var lm = s.LedgerManager;
 
-            var data = Helpers.GetDerivationPathData(lm.CurrentCoin.App, s.Args.AddressPath);
+            var data = Helpers.GetDerivationPathData(s.Args.AddressPath);
 
             GetPublicKeyResponseBase response;
 
@@ -117,7 +117,7 @@ namespace Ledger.Net.Tests
         {
             await GetLedger();
             _LedgerManager.SetCoinNumber(60);
-            var addressPath = Helpers.GetDerivationPathData(_LedgerManager.CurrentCoin.App, new AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
+            var addressPath = Helpers.GetDerivationPathData(new AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
             var publicKey = await _LedgerManager.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(true, false, addressPath));
             Assert.True(!string.IsNullOrEmpty(publicKey.PublicKey));
         }
@@ -130,7 +130,7 @@ namespace Ledger.Net.Tests
 
             byte[] rlpEncodedTransactionData = { 227, 128, 132, 59, 154, 202, 0, 130, 82, 8, 148, 139, 6, 158, 207, 123, 242, 48, 225, 83, 184, 237, 144, 59, 171, 242, 68, 3, 204, 162, 3, 128, 128, 4, 128, 128 };
 
-            var derivationData = Helpers.GetDerivationPathData(_LedgerManager.CurrentCoin.App, new AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
+            var derivationData = Helpers.GetDerivationPathData(new AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
 
             // Create base class like GetPublicKeyResponseBase and make the method more like GetAddressAsync
 

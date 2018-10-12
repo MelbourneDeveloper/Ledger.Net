@@ -21,7 +21,7 @@ namespace Ledger.Net
         {
             var lm = s.LedgerManager;
 
-            var data = Helpers.GetDerivationPathData(lm.CurrentCoin.App, s.Args.AddressPath);
+            var data = Helpers.GetDerivationPathData(s.Args.AddressPath);
 
             GetPublicKeyResponseBase response;
 

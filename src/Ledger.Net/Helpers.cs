@@ -8,7 +8,7 @@ namespace Ledger.Net
     public static class Helpers
     {
         #region Public Methods
-        public static byte[] GetDerivationPathData(App app, IAddressPath addressPath)
+        public static byte[] GetDerivationPathData(IAddressPath addressPath)
         {
             return GetByteData(addressPath.ToHardenedArray());
         }
