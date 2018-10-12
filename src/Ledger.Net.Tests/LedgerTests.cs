@@ -51,6 +51,20 @@ namespace Ledger.Net.Tests
         #region Tests
 
         [Fact]
+        public async Task GetLiteCoinAddress()
+        {
+            await GetLedger();
+
+            _LedgerManager.SetCoinNumber(2);
+            var address = await _LedgerManager.GetAddressAsync(0, 0);
+
+            Assert.True(!string.IsNullOrEmpty(address));
+        }
+
+        /// <summary>
+        /// Note this hasn't been confirmed to be returning the correct address in Ledger live yet
+        /// </summary>
+        [Fact]
         public async Task GetBitcoinCashAddress()
         {
             await GetLedger();
