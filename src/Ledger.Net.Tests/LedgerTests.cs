@@ -60,11 +60,11 @@ namespace Ledger.Net.Tests
         }
 
         [Fact]
-        public async Task GetAddress()
+        public async Task DisplayAddress()
         {
             await GetLedger(Prompt);
 
-            var address = await _LedgerManager.GetAddressAsync(0, false, 0, false);
+            var address = await _LedgerManager.GetAddressAsync(0, false, 0, true);
 
             Assert.True(!string.IsNullOrEmpty(address));
         }
