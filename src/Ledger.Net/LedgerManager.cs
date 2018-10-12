@@ -1,4 +1,7 @@
-﻿using Hid.Net;
+﻿using Hardwarewallets.Net;
+using Hardwarewallets.Net.AddressManagement;
+using Hardwarewallets.Net.Model;
+using Hid.Net;
 using Ledger.Net.Exceptions;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
@@ -9,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Ledger.Net
 {
-    public class LedgerManager
+    public class LedgerManager : IAddressDeriver
     {
         #region Fields
         private SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
@@ -18,7 +21,7 @@ namespace Ledger.Net
         {
             var lm = s.LedgerManager;
 
-            var data = Helpers.GetDerivationPathData(lm.CurrentCoin.App, lm.CurrentCoin.CoinNumber, s.Args.Account, s.Args.Index, s.Args.IsChange, s.LedgerManager.CurrentCoin.IsSegwit);
+            var data = Helpers.GetDerivationPathData(lm.CurrentCoin.App, s.Args.AddressPath);
 
             GetPublicKeyResponseBase response;
 
@@ -179,7 +182,12 @@ namespace Ledger.Net
             return await GetAddressAsync(account, false, index, false);
         }
 
-        public async Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)
+        public Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)
+        {
+            return GetAddressAsync(new AddressPath(CurrentCoin.IsSegwit, CurrentCoin.CoinNumber, account, isChange, index), false, showDisplay);
+        }
+
+        public async Task<string> GetAddressAsync(IAddressPath addressPath, bool isPublicKey, bool display)
         {
 
             var returnResponse = (GetPublicKeyResponseBase)await CallAndPrompt(_GetAddressFunc,
@@ -187,9 +195,9 @@ namespace Ledger.Net
                 {
                     LedgerManager = this,
                     MemberName = nameof(GetAddressAsync),
-                    Args = new GetAddressArgs(account, index, isChange, showDisplay)
+                    Args = new GetAddressArgs(addressPath, display)
                 });
-            return returnResponse.Address;
+            return isPublicKey ? returnResponse.PublicKey : returnResponse.Address;
         }
 
         public async Task<TResponse> SendRequestAsync<TResponse, TRequest>(TRequest request)

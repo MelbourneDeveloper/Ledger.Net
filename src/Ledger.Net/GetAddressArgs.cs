@@ -1,17 +1,15 @@
-﻿namespace Ledger.Net
+﻿using Hardwarewallets.Net.Model;
+
+namespace Ledger.Net
 {
     public class GetAddressArgs
     {
-        public uint Account { get; set; }
-        public uint Index { get; set; }
-        public bool IsChange { get; set; }
+        public IAddressPath AddressPath { get; set; }
         public bool ShowDisplay { get; set; }
 
-        public GetAddressArgs(uint account, uint index, bool isChange, bool showDisplay)
+        public GetAddressArgs(IAddressPath addressPath, bool showDisplay)
         {
-            Account = account;
-            Index = index;
-            IsChange = isChange;
+            AddressPath = addressPath;
             ShowDisplay = showDisplay;
         }
     }

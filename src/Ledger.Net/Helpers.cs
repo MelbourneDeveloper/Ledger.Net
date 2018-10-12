@@ -1,4 +1,5 @@
-﻿using Ledger.Net.Exceptions;
+﻿using Hardwarewallets.Net.Model;
+using Ledger.Net.Exceptions;
 using System;
 using System.IO;
 
@@ -7,9 +8,9 @@ namespace Ledger.Net
     public static class Helpers
     {
         #region Public Methods
-        public static byte[] GetDerivationPathData(App app, uint coinNumber, uint account, uint index, bool isChange, bool isSegwit)
+        public static byte[] GetDerivationPathData(App app, IAddressPath addressPath)
         {
-            return GetByteData(GetDerivationIndices(app, coinNumber, account, index, isChange, isSegwit));
+            return GetByteData(addressPath.ToUnhardenedArray());
         }
         #endregion
 
