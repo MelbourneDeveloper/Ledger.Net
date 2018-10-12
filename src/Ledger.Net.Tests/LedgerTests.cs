@@ -71,7 +71,7 @@ namespace Ledger.Net.Tests
 
 
         [Fact]
-        public async Task DisplayBitcoinPublicKey()
+        public async Task GetBitcoinPublicKey()
         {
             await GetLedger(Prompt);
 
@@ -80,7 +80,7 @@ namespace Ledger.Net.Tests
             {
                 LedgerManager = _LedgerManager,
                 MemberName = nameof(_GetPublicKeyFunc),
-                Args = new GetAddressArgs(new AddressPath(true, 0, 0, false, 0), true)
+                Args = new GetAddressArgs(new AddressPath(true, 0, 0, false, 0), false)
             });
 
             Assert.True(!string.IsNullOrEmpty(returnResponse.PublicKey));
