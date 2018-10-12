@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using static Ledger.Net.LedgerManager;
 
 namespace Ledger.Net.Tests
 {
@@ -16,7 +15,7 @@ namespace Ledger.Net.Tests
     {
         private static LedgerManager _LedgerManager;
 
-        private readonly Func<CallAndPromptArgs<LedgerManager.GetAddressArgs>, Task<GetPublicKeyResponseBase>> _GetAddressFunc = new Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>>(async (s) =>
+        private readonly Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>> _GetPublicKeyFunc = new Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>>(async (s) =>
         {
             var lm = s.LedgerManager;
 
@@ -50,11 +49,11 @@ namespace Ledger.Net.Tests
         [Fact]
         public async Task GetAddressAnyBitcoinApp()
         {
-            var ledgerManager = await GetLedger();
+            await GetLedger();
 
-            await ledgerManager.SetCoinNumber();
+            await _LedgerManager.SetCoinNumber();
 
-            var address = await ledgerManager.GetAddressAsync(0, false, 0, false);
+            var address = await _LedgerManager.GetAddressAsync(0, false, 0, false);
         }
 
         private async Task Prompt(int? returnCode, Exception exception, string member)
@@ -92,7 +91,7 @@ namespace Ledger.Net.Tests
         [Fact]
         public async Task GetAddress()
         {
-            _LedgerManager = await GetLedger(Prompt);
+            await GetLedger(Prompt);
 
             var address = await _LedgerManager.GetAddressAsync(0, false, 0, false);
 
@@ -101,39 +100,46 @@ namespace Ledger.Net.Tests
 
 
         [Fact]
-        public async Task GetBitcoinPublicKey()
+        public async Task DisplayBitcoinPublicKey()
         {
-            var ledgerManager = await GetLedger();
-            var addressPath = Helpers.GetDerivationPathData(ledgerManager.CurrentCoin.App, ledgerManager.CurrentCoin.CoinNumber, 0, 0, false, ledgerManager.CurrentCoin.IsSegwit);
-            var publicKey = await ledgerManager.SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(true, BitcoinAddressType.Legacy, addressPath));
-            Assert.True(!string.IsNullOrEmpty(publicKey.PublicKey));
+            await GetLedger(Prompt);
+
+            var returnResponse = (GetPublicKeyResponseBase)await _LedgerManager.CallAndPrompt(_GetPublicKeyFunc,
+            new CallAndPromptArgs<GetAddressArgs>
+            {
+                LedgerManager = _LedgerManager,
+                MemberName = nameof(_GetPublicKeyFunc),
+                Args = new GetAddressArgs(0, 0, false, true)
+            });
+
+            Assert.True(!string.IsNullOrEmpty(returnResponse.PublicKey));
         }
 
         [Fact]
         public async Task GetEthereumPublicKey()
         {
-            var ledgerManager = await GetLedger();
-            ledgerManager.SetCoinNumber(60);
-            var addressPath = Helpers.GetDerivationPathData(ledgerManager.CurrentCoin.App, ledgerManager.CurrentCoin.CoinNumber, 0, 0, false, ledgerManager.CurrentCoin.IsSegwit);
-            var publicKey = await ledgerManager.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(true, false, addressPath));
+            await GetLedger();
+            _LedgerManager.SetCoinNumber(60);
+            var addressPath = Helpers.GetDerivationPathData(_LedgerManager.CurrentCoin.App, _LedgerManager.CurrentCoin.CoinNumber, 0, 0, false, _LedgerManager.CurrentCoin.IsSegwit);
+            var publicKey = await _LedgerManager.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(true, false, addressPath));
             Assert.True(!string.IsNullOrEmpty(publicKey.PublicKey));
         }
 
         [Fact]
         public async Task SignEthereumTransaction()
         {
-            var ledgerManager = await GetLedger();
-            ledgerManager.SetCoinNumber(60);
+            await GetLedger();
+            _LedgerManager.SetCoinNumber(60);
 
             byte[] rlpEncodedTransactionData = { 227, 128, 132, 59, 154, 202, 0, 130, 82, 8, 148, 139, 6, 158, 207, 123, 242, 48, 225, 83, 184, 237, 144, 59, 171, 242, 68, 3, 204, 162, 3, 128, 128, 4, 128, 128 };
 
-            var derivationData = Helpers.GetDerivationPathData(ledgerManager.CurrentCoin.App, ledgerManager.CurrentCoin.CoinNumber, 0, 0, false, ledgerManager.CurrentCoin.IsSegwit);
+            var derivationData = Helpers.GetDerivationPathData(_LedgerManager.CurrentCoin.App, _LedgerManager.CurrentCoin.CoinNumber, 0, 0, false, _LedgerManager.CurrentCoin.IsSegwit);
 
             // Create base class like GetPublicKeyResponseBase and make the method more like GetAddressAsync
 
             var firstRequest = new EthereumAppSignatureRequest(true, derivationData.Concat(rlpEncodedTransactionData).ToArray());
 
-            var response = await ledgerManager.SendRequestAsync<EthereumAppSignatureResponse, EthereumAppSignatureRequest>(firstRequest);
+            var response = await _LedgerManager.SendRequestAsync<EthereumAppSignatureResponse, EthereumAppSignatureRequest>(firstRequest);
 
             Assert.True(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
 
@@ -144,10 +150,10 @@ namespace Ledger.Net.Tests
         [Fact]
         public async Task GetEthereumAddress()
         {
-            var ledgerManager = await GetLedger();
+            await GetLedger();
 
-            ledgerManager.SetCoinNumber(60);
-            var address = await ledgerManager.GetAddressAsync(0, 0);
+            _LedgerManager.SetCoinNumber(60);
+            var address = await _LedgerManager.GetAddressAsync(0, 0);
 
             if (address == null)
             {
@@ -155,7 +161,7 @@ namespace Ledger.Net.Tests
             }
         }
 
-        private static async Task<LedgerManager> GetLedger(ErrorPromptDelegate errorPrompt = null)
+        private async Task GetLedger(ErrorPromptDelegate errorPrompt = null)
         {
             var devices = new List<DeviceInformation>();
 
@@ -181,8 +187,7 @@ namespace Ledger.Net.Tests
 
             var ledgerHidDevice = new WindowsHidDevice(retVal);
             await ledgerHidDevice.InitializeAsync();
-            var ledgerManager = new LedgerManager(ledgerHidDevice, null, errorPrompt);
-            return ledgerManager;
+            _LedgerManager = new LedgerManager(ledgerHidDevice, null, Prompt);
         }
     }
 

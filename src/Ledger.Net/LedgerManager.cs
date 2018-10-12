@@ -133,44 +133,6 @@ namespace Ledger.Net
                 _SemaphoreSlim.Release();
             }
         }
-
-        private async Task<ResponseBase> CallAndPrompt<T, T2>(Func<CallAndPromptArgs<T2>, Task<T>> func, CallAndPromptArgs<T2> state) where T : ResponseBase
-        {
-            for (var i = 0; i < PromptRetryCount; i++)
-            {
-                try
-                {
-                    var response = await func.Invoke(state);
-
-                    if (response.IsSuccess)
-                    {
-                        return response;
-                    }
-
-                    if (ErrorPrompt == null)
-                    {
-                        HandleErrorResponse(response);
-                    }
-                    else
-                    {
-                        await ErrorPrompt(response.ReturnCode, null, state.MemberName);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    if (ErrorPrompt == null)
-                    {
-                        throw;
-                    }
-                    else
-                    {
-                        await ErrorPrompt(null, ex, state.MemberName);
-                    }
-                }
-            }
-
-            throw new TooManyPromptsException(PromptRetryCount, state.MemberName);
-        }
         #endregion
 
         #region Private Static Methods
@@ -236,6 +198,45 @@ namespace Ledger.Net
         {
             return await SendRequestAsync<TResponse>(request);
         }
+
+        public async Task<ResponseBase> CallAndPrompt<T, T2>(Func<CallAndPromptArgs<T2>, Task<T>> func, CallAndPromptArgs<T2> state) where T : ResponseBase
+        {
+            for (var i = 0; i < PromptRetryCount; i++)
+            {
+                try
+                {
+                    var response = await func.Invoke(state);
+
+                    if (response.IsSuccess)
+                    {
+                        return response;
+                    }
+
+                    if (ErrorPrompt == null)
+                    {
+                        HandleErrorResponse(response);
+                    }
+                    else
+                    {
+                        await ErrorPrompt(response.ReturnCode, null, state.MemberName);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (ErrorPrompt == null)
+                    {
+                        throw;
+                    }
+                    else
+                    {
+                        await ErrorPrompt(null, ex, state.MemberName);
+                    }
+                }
+            }
+
+            throw new TooManyPromptsException(PromptRetryCount, state.MemberName);
+        }
+
         #endregion
     }
 }
