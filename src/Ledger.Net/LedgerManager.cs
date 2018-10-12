@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Ledger.Net
 {
-    public class LedgerManager
+    public partial class LedgerManager
     {
         #region Fields
         private SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
@@ -19,18 +19,18 @@ namespace Ledger.Net
         {
             var lm = s.LedgerManager;
 
-            var data = Helpers.GetDerivationPathData(lm.CurrentCoin.App, lm.CurrentCoin.CoinNumber, s.Args.account, s.Args.index, s.Args.isChange, s.LedgerManager.CurrentCoin.IsSegwit);
+            var data = Helpers.GetDerivationPathData(lm.CurrentCoin.App, lm.CurrentCoin.CoinNumber, s.Args.Account, s.Args.Index, s.Args.IsChange, s.LedgerManager.CurrentCoin.IsSegwit);
 
             GetPublicKeyResponseBase response;
 
             switch (lm.CurrentCoin.App)
             {
                 case App.Ethereum:
-                    response = await lm.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(s.Args.showDisplay, false, data));
+                    response = await lm.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(s.Args.ShowDisplay, false, data));
                     break;
                 case App.Bitcoin:
                     //TODO: Should we use the Coin's IsSegwit here?
-                    response = await lm.SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(s.Args.showDisplay, BitcoinAddressType.Segwit, data));
+                    response = await lm.SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(s.Args.ShowDisplay, BitcoinAddressType.Segwit, data));
                     break;
                 default:
                     throw new NotImplementedException();
@@ -135,21 +135,6 @@ namespace Ledger.Net
             }
         }
 
-        public class CallAndPromptArgs<T>
-        {
-            public string MemberName { get; set; }
-            public T Args { get; }
-            public LedgerManager LedgerManager { get; set; }
-        }
-
-        public class GetAddressArgs
-        {
-            public uint account { get; set; }
-            public uint index { get; set; }
-            public bool isChange { get; set; }
-            public bool showDisplay { get; set; }
-        }
-
         private async Task<ResponseBase> CallAndPrompt<T, T2>(Func<CallAndPromptArgs<T2>, Task<T>> func, CallAndPromptArgs<T2> state) where T : ResponseBase
         {
             for (var i = 0; i < PromptRetryCount; i++)
@@ -236,7 +221,13 @@ namespace Ledger.Net
         public async Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)
         {
 
-            var returnResponse = (GetPublicKeyResponseBase)await CallAndPrompt(_GetAddressFunc, new CallAndPromptArgs<GetAddressArgs> { LedgerManager = this, MemberName = nameof(GetAddressAsync) });
+            var returnResponse = (GetPublicKeyResponseBase)await CallAndPrompt(_GetAddressFunc,
+                new CallAndPromptArgs<GetAddressArgs>
+                {
+                    LedgerManager = this,
+                    MemberName = nameof(GetAddressAsync),
+                    Args = new GetAddressArgs(account, index, isChange, showDisplay)
+                });
             return returnResponse.Address;
         }
 
