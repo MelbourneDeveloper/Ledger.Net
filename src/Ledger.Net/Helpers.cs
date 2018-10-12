@@ -108,44 +108,6 @@ namespace Ledger.Net
             throw new ManagerException($"Reading from the Ledger failed. The {bytePosition} byte was incorrect. Expected: {expected} Actual: {actual} Packet Index: {packetIndex}. It is possible that the incorrect Hid device has been used. Please check that the Hid device with the correct UsagePage was selected");
         }
 
-
-        private static uint[] GetDerivationIndices(App app, uint coinNumber, uint account, uint index, bool isChange, bool isSegwit)
-        {
-            //BIP 44 - https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
-            //Except for Ethereum (https://ledger.readthedocs.io/en/latest/background/hd_use_cases.html)
-            //Coin Numbers here: https://github.com/satoshilabs/slips/blob/master/slip-0044.md
-
-            var isEthereumRelated = app == App.Ethereum;
-
-            var indices = new uint[isEthereumRelated ? 4 : 5];
-
-            //Purpose
-            indices[0] = ((isSegwit ? (uint)49 : 44) | Constants.HARDENING_CONSTANT) >> 0;
-
-            //Coin type (Coin Number)
-            indices[1] = (coinNumber | Constants.HARDENING_CONSTANT) >> 0;
-
-            //Account
-            indices[2] = (account | Constants.HARDENING_CONSTANT) >> 0;
-
-            if (isEthereumRelated)
-            {
-                //BIP44 Deviation for Ledger
-                //Index
-                indices[3] = index;
-            }
-            else
-            {
-                //Change
-                indices[3] = isChange ? 1 : (uint)0;
-
-                //Index
-                indices[4] = index;
-            }
-
-            return indices;
-        }
-
         private static byte[] GetByteData(uint[] indices)
         {
             byte[] addressIndicesData;
