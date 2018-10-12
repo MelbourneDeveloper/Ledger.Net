@@ -236,7 +236,7 @@ namespace Ledger.Net
         public async Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)
         {
 
-            var returnResponse = (GetPublicKeyResponseBase)await CallAndPrompt<GetPublicKeyResponseBase, GetAddressArgs>(_GetAddressFunc, new CallAndPromptArgs<GetAddressArgs> { LedgerManager = this, MemberName = nameof(GetAddressAsync) });
+            var returnResponse = (GetPublicKeyResponseBase)await CallAndPrompt(_GetAddressFunc, new CallAndPromptArgs<GetAddressArgs> { LedgerManager = this, MemberName = nameof(GetAddressAsync) });
             return returnResponse.Address;
         }
 
