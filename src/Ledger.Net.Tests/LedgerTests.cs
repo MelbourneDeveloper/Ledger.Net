@@ -13,13 +13,17 @@ namespace Ledger.Net.Tests
 {
     public class LedgerTests
     {
-        private static LedgerManager _LedgerManager;
+        #region Private Fields
+        private LedgerManager _LedgerManager;
 
+        /// <summary>
+        /// This func is not necessary, but it is an example of how to make a call so that the user can be prompted with UI prompts based on the current state of the Ledger device
+        /// </summary>
         private readonly Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>> _GetPublicKeyFunc = new Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>>(async (s) =>
         {
             var lm = s.LedgerManager;
 
-            var data = Helpers.GetDerivationPathData(lm.CurrentCoin.App, lm.CurrentCoin.CoinNumber, s.Args.Account, s.Args.Index, s.Args.IsChange, s.LedgerManager.CurrentCoin.IsSegwit);
+            var data = Helpers.GetDerivationPathData(lm.CurrentCoin.App, s.Args.AddressPath);
 
             GetPublicKeyResponseBase response;
 
@@ -39,13 +43,11 @@ namespace Ledger.Net.Tests
             return response;
         });
 
-        public static VendorProductIds[] WellKnownLedgerWallets = new VendorProductIds[]
-        {
-            new VendorProductIds(0x2c97),
-            new VendorProductIds(0x2581, 0x3b7c)
-        };
+        public static VendorProductIds[] WellKnownLedgerWallets = new VendorProductIds[] { new VendorProductIds(0x2c97), new VendorProductIds(0x2581, 0x3b7c) };
         private static readonly UsageSpecification[] _UsageSpecification = new[] { new UsageSpecification(0xffa0, 0x01) };
+        #endregion
 
+        #region Tests
         [Fact]
         public async Task GetAddressAnyBitcoinApp()
         {
@@ -54,38 +56,6 @@ namespace Ledger.Net.Tests
             await _LedgerManager.SetCoinNumber();
 
             var address = await _LedgerManager.GetAddressAsync(0, false, 0, false);
-        }
-
-        private async Task Prompt(int? returnCode, Exception exception, string member)
-        {
-            if (returnCode.HasValue)
-            {
-                switch (returnCode.Value)
-                {
-                    case Constants.IncorrectLengthStatusCode:
-                        Debug.WriteLine($"Please ensure the app { _LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
-                        break;
-                    case Constants.SecurityNotValidStatusCode:
-                        Debug.WriteLine($"It appears that your Ledger pin has not been entered, or no app is open. Please ensure the app  {_LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
-                        break;
-                    case Constants.InstructionNotSupportedStatusCode:
-                        Debug.WriteLine($"The current app is incorrect. Please ensure the app for {_LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
-                        break;
-                    default:
-                        Debug.WriteLine($"Something went wrong. Please ensure the app  {_LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
-                        break;
-                }
-            }
-            else
-            {
-                if (exception is IOException)
-                {
-                    await Task.Delay(3000);
-                    await _LedgerManager.LedgerHidDevice.InitializeAsync();
-                }
-            }
-
-            await Task.Delay(5000);
         }
 
         [Fact]
@@ -157,6 +127,40 @@ namespace Ledger.Net.Tests
 
             Assert.True(!string.IsNullOrEmpty(address));
         }
+        #endregion
+
+        #region Other 
+        private async Task Prompt(int? returnCode, Exception exception, string member)
+        {
+            if (returnCode.HasValue)
+            {
+                switch (returnCode.Value)
+                {
+                    case Constants.IncorrectLengthStatusCode:
+                        Debug.WriteLine($"Please ensure the app { _LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
+                        break;
+                    case Constants.SecurityNotValidStatusCode:
+                        Debug.WriteLine($"It appears that your Ledger pin has not been entered, or no app is open. Please ensure the app  {_LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
+                        break;
+                    case Constants.InstructionNotSupportedStatusCode:
+                        Debug.WriteLine($"The current app is incorrect. Please ensure the app for {_LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
+                        break;
+                    default:
+                        Debug.WriteLine($"Something went wrong. Please ensure the app  {_LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
+                        break;
+                }
+            }
+            else
+            {
+                if (exception is IOException)
+                {
+                    await Task.Delay(3000);
+                    await _LedgerManager.LedgerHidDevice.InitializeAsync();
+                }
+            }
+
+            await Task.Delay(5000);
+        }
 
         private async Task GetLedger(ErrorPromptDelegate errorPrompt = null)
         {
@@ -186,44 +190,6 @@ namespace Ledger.Net.Tests
             await ledgerHidDevice.InitializeAsync();
             _LedgerManager = new LedgerManager(ledgerHidDevice, null, Prompt);
         }
-    }
-
-    public class VendorProductIds
-    {
-        public VendorProductIds(int vendorId)
-        {
-            VendorId = vendorId;
-        }
-        public VendorProductIds(int vendorId, int? productId)
-        {
-            VendorId = vendorId;
-            ProductId = productId;
-        }
-        public int VendorId
-        {
-            get;
-        }
-        public int? ProductId
-        {
-            get;
-        }
-    }
-
-    public class UsageSpecification
-    {
-        public UsageSpecification(ushort usagePage, ushort usage)
-        {
-            UsagePage = usagePage;
-            Usage = usage;
-        }
-
-        public ushort Usage
-        {
-            get;
-        }
-        public ushort UsagePage
-        {
-            get;
-        }
+        #endregion
     }
 }
