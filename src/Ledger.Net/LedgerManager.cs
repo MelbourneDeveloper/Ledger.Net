@@ -30,6 +30,7 @@ namespace Ledger.Net
                 case App.Ethereum:
                     response = await lm.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(s.Args.ShowDisplay, false, data));
                     break;
+                case App.BitcoinGold:
                 case App.Bitcoin:
                     //TODO: Should we use the Coin's IsSegwit here?
                     response = await lm.SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(s.Args.ShowDisplay, BitcoinAddressType.Segwit, data));

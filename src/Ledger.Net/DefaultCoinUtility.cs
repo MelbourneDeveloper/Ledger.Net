@@ -10,6 +10,7 @@ namespace Ledger.Net
         public readonly static CoinInfo Ethereum = new CoinInfo(App.Ethereum, "ETH", "Ethereum", 60, false);
         public readonly static CoinInfo EthereumClassic = new CoinInfo(App.Ethereum, "ETC", "Ethereum Classic", 61, false);
         public readonly static CoinInfo BitcoinGold = new CoinInfo(App.BitcoinGold, "BTG", "Bitcoin Gold", 156, false);
+        public readonly static CoinInfo BitcoinCash = new CoinInfo(App.Bitcoin, "BCH", "Bitcoin Gold", 145, false);
 
         public CoinInfo GetCoinInfo(uint coinNumber)
         {
@@ -23,6 +24,8 @@ namespace Ledger.Net
                     return Ethereum;
                 case 61:
                     return EthereumClassic;
+                case 145:
+                    return BitcoinCash;
                 case 156:
                     return BitcoinGold;
                 default:

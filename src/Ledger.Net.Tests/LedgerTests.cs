@@ -49,6 +49,18 @@ namespace Ledger.Net.Tests
         #endregion
 
         #region Tests
+
+        [Fact]
+        public async Task GetBitcoinCashAddress()
+        {
+            await GetLedger();
+
+            _LedgerManager.SetCoinNumber(145);
+            var address = await _LedgerManager.GetAddressAsync(0, 0);
+
+            Assert.True(!string.IsNullOrEmpty(address));
+        }
+
         [Fact]
         public async Task GetAddressAnyBitcoinApp()
         {
