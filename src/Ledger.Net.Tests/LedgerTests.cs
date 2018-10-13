@@ -2,6 +2,7 @@ using Hardwarewallets.Net.AddressManagement;
 using Hid.Net;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
+using NBitcoin;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -154,6 +155,18 @@ namespace Ledger.Net.Tests
 
             Assert.True(!string.IsNullOrEmpty(address));
         }
+
+        [Fact]
+        public async Task GetEthereumAddressParsed()
+        {
+            await GetLedger();
+            var path = KeyPath.Parse("m/44'/60'/0'/0").Derive(0);
+            var addressPath = new KeyPathAddressPath(path);
+            _LedgerManager.SetCoinNumber(60);
+            var address = await _LedgerManager.GetAddressAsync(addressPath, false, true);
+            Assert.True(!string.IsNullOrEmpty(address));
+        }
+
         #endregion
 
         #region Other 
