@@ -1,3 +1,4 @@
+using Hardwarewallets.Net;
 using Hardwarewallets.Net.AddressManagement;
 using Hid.Net;
 using Ledger.Net.Requests;
@@ -174,6 +175,29 @@ namespace Ledger.Net.Tests
             addressPath = new KeyPathAddressPath(path);
             address = await _LedgerManager.GetAddressAsync(addressPath, false, false);
             Assert.True(!string.IsNullOrEmpty(address));
+        }
+
+        [Fact]
+        public async Task GetEthereumAddresses()
+        {
+            await GetLedger();
+
+            _LedgerManager.SetCoinNumber(60);
+
+            var addressManager = new AddressManager(_LedgerManager, new AddressPathFactory(false, 60));
+
+            //Get 10 addresses with all the trimming
+            const int numberOfAddresses = 3;
+            const int numberOfAccounts = 2;
+            var addresses = await addressManager.GetAddressesAsync(0, numberOfAddresses, numberOfAccounts, true, true);
+
+            Assert.True(addresses != null);
+            Assert.True(addresses.Accounts != null);
+            Assert.True(addresses.Accounts.Count == numberOfAccounts);
+            Assert.True(addresses.Accounts[0].Addresses.Count == numberOfAddresses);
+            Assert.True(addresses.Accounts[1].Addresses.Count == numberOfAddresses);
+            Assert.True(addresses.Accounts[0].ChangeAddresses.Count == numberOfAddresses);
+            Assert.True(addresses.Accounts[1].ChangeAddresses.Count == numberOfAddresses);
         }
 
         #endregion
