@@ -160,10 +160,19 @@ namespace Ledger.Net.Tests
         public async Task GetEthereumAddressParsed()
         {
             await GetLedger();
+
+            _LedgerManager.SetCoinNumber(60);
+
+            //Modern Path
             var path = KeyPath.Parse("m/44'/60'/0'/0").Derive(0);
             var addressPath = new KeyPathAddressPath(path);
-            _LedgerManager.SetCoinNumber(60);
-            var address = await _LedgerManager.GetAddressAsync(addressPath, false, true);
+            var address = await _LedgerManager.GetAddressAsync(addressPath, false, false);
+            Assert.True(!string.IsNullOrEmpty(address));
+
+            //Legacy Path
+            path = KeyPath.Parse("m/44'/60'/0'").Derive(0);
+            addressPath = new KeyPathAddressPath(path);
+            address = await _LedgerManager.GetAddressAsync(addressPath, false, false);
             Assert.True(!string.IsNullOrEmpty(address));
         }
 

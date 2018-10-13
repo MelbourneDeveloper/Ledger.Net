@@ -63,14 +63,14 @@ namespace Ledger.Net
                         ThrowReadException("third", Constants.TAG_APDU, thirdByte, packetIndex);
                     }
 
-                    int fourthByte = input.ReadByte();
+                    var fourthByte = input.ReadByte();
                     var expectedResult = (packetIndex >> 8) & 0xff;
                     if (fourthByte != expectedResult)
                     {
                         ThrowReadException("fourth", expectedResult, fourthByte, packetIndex);
                     }
 
-                    int fifthByte = input.ReadByte();
+                    var fifthByte = input.ReadByte();
                     expectedResult = packetIndex & 0xff;
                     if (fifthByte != expectedResult)
                     {

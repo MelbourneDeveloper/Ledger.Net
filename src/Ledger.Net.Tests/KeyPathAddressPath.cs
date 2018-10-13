@@ -14,9 +14,9 @@ namespace Ledger.Net.Tests
 
         public uint Account => AddressUtilities.UnhardenNumber(KeyPath.Indexes[2]);
 
-        public uint Change => KeyPath.Indexes[3];
+        public uint Change => KeyPath.Indexes.Length == 5 ? KeyPath.Indexes[3] : 0;
 
-        public uint AddressIndex => KeyPath.Indexes[4];
+        public uint AddressIndex => KeyPath.Indexes.Length == 4 ? KeyPath.Indexes[3] : KeyPath.Indexes[4];
 
         public KeyPathAddressPath(KeyPath keyPath)
         {
@@ -25,12 +25,26 @@ namespace Ledger.Net.Tests
 
         public uint[] ToUnhardenedArray()
         {
-            return new uint[5] { Purpose, CoinType, Account, Change, AddressIndex };
+            if (KeyPath.Indexes.Length == 5)
+            {
+                return new uint[5] { Purpose, CoinType, Account, Change, AddressIndex };
+            }
+            else
+            {
+                return new uint[4] { Purpose, CoinType, Account, AddressIndex };
+            }
         }
 
         public uint[] ToHardenedArray()
         {
-            return new uint[5] { KeyPath.Indexes[0], KeyPath.Indexes[1], KeyPath.Indexes[2], KeyPath.Indexes[3], KeyPath.Indexes[4] };
+            if (KeyPath.Indexes.Length == 5)
+            {
+                return new uint[5] { KeyPath.Indexes[0], KeyPath.Indexes[1], KeyPath.Indexes[2], KeyPath.Indexes[3], KeyPath.Indexes[4] };
+            }
+            else
+            {
+                return new uint[4] { KeyPath.Indexes[0], KeyPath.Indexes[1], KeyPath.Indexes[2], KeyPath.Indexes[3] };
+            }
         }
     }
 }
