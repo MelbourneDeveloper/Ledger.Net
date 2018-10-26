@@ -1,5 +1,6 @@
 using Hardwarewallets.Net;
 using Hardwarewallets.Net.AddressManagement;
+using Hardwarewallets.Net.Model;
 using Hid.Net;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
@@ -178,6 +179,44 @@ namespace Ledger.Net.Tests
         }
 
         [Fact]
+        public async Task GetEthereumAddressCustomPath()
+        {
+            await GetLedger();
+
+            _LedgerManager.SetCoinNumber(60);
+
+            //Three elements
+            var path = new uint[] { AddressUtilities.HardenNumber(44), AddressUtilities.HardenNumber(60), 0 };
+            var address = await _LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
+            Assert.True(!string.IsNullOrEmpty(address));
+
+            //Four elements
+            path = new uint[] { AddressUtilities.HardenNumber(44), AddressUtilities.HardenNumber(60), 0, 1 };
+            address = await _LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
+            Assert.True(!string.IsNullOrEmpty(address));
+
+            //Two elements
+            path = new uint[] { AddressUtilities.HardenNumber(44), AddressUtilities.HardenNumber(60) };
+            address = await _LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
+            Assert.True(!string.IsNullOrEmpty(address));
+
+            _LedgerManager.ErrorPrompt = ThrowErrorInsteadOfPrompt;
+
+            Exception exception = null; ;
+            try
+            {
+                //The ethereum app doesn't like this Purpose (49)
+                path = new uint[] { AddressUtilities.HardenNumber(49), AddressUtilities.HardenNumber(60), AddressUtilities.HardenNumber(0), 0, 0 };
+                address = await _LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+            }
+            Assert.True(exception != null);
+        }
+
+        [Fact]
         public async Task GetEthereumAddresses()
         {
             await GetLedger();
@@ -203,6 +242,12 @@ namespace Ledger.Net.Tests
         #endregion
 
         #region Other 
+
+        private async Task ThrowErrorInsteadOfPrompt(int? returnCode, Exception exception, string member)
+        {
+            throw new Exception("Ouch!");
+        }
+
         private async Task Prompt(int? returnCode, Exception exception, string member)
         {
             if (returnCode.HasValue)
@@ -264,5 +309,35 @@ namespace Ledger.Net.Tests
             _LedgerManager = new LedgerManager(ledgerHidDevice, null, Prompt);
         }
         #endregion
+    }
+
+    public class CustomAddressPath : IAddressPath
+    {
+        public uint Purpose => throw new NotImplementedException();
+
+        public uint CoinType => throw new NotImplementedException();
+
+        public uint Account => throw new NotImplementedException();
+
+        public uint Change => throw new NotImplementedException();
+
+        public uint AddressIndex => throw new NotImplementedException();
+
+        public uint[] Path { get; }
+
+        public CustomAddressPath(uint[] path)
+        {
+            Path = path;
+        }
+
+        public uint[] ToHardenedArray()
+        {
+            return Path;
+        }
+
+        public uint[] ToUnhardenedArray()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

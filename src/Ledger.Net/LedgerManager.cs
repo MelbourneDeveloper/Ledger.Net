@@ -44,7 +44,7 @@ namespace Ledger.Net
         #endregion
 
         #region Public Properties
-        public ErrorPromptDelegate ErrorPrompt { get; }
+        public ErrorPromptDelegate ErrorPrompt { get; set; }
         public int PromptRetryCount { get; set; } = 6;
         #endregion
 
