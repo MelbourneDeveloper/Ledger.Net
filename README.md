@@ -1,6 +1,9 @@
 # Ledger.Net
 Cross Platform C# Library For Ledger Hardwarewallet
 
+Join us on Slack:
+https://hardwarewallets.slack.com
+
 Currently supports:
 * Android
 * Windows
