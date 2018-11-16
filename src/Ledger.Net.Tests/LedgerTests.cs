@@ -147,6 +147,11 @@ namespace Ledger.Net.Tests
             Assert.True(response.SignatureS?.Length == 32);
         }
 
+        /// <summary>
+        /// This unit test hangs
+        /// https://github.com/MelbourneDeveloper/Ledger.Net/issues/13
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task SignChunkedEthereumTransaction()
         {
