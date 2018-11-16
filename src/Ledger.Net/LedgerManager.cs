@@ -5,6 +5,7 @@ using Hid.Net;
 using Ledger.Net.Exceptions;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
+using Ledger.Net.Devices;
 using System;
 using System.IO;
 using System.Threading;
@@ -62,7 +63,7 @@ namespace Ledger.Net
         {
             ErrorPrompt = errorPrompt;
 
-            LedgerHidDevice = ledgerHidDevice;
+            LedgerHidDevice = Device.GetDevice(ledgerHidDevice);
             CoinUtility = coinUtility;
 
             if (CoinUtility == null)
@@ -75,7 +76,7 @@ namespace Ledger.Net
         #endregion
 
         #region Public Properties
-        public IHidDevice LedgerHidDevice { get; }
+        public Device LedgerHidDevice { get; }
         public ICoinUtility CoinUtility { get; }
         public ICoinInfo CurrentCoin { get; private set; }
         #endregion
@@ -83,16 +84,27 @@ namespace Ledger.Net
         #region Private Methods
         private async Task WriteRequestAsync<TWrite>(TWrite message) where TWrite : RequestBase
         {
-            var packetIndex = 0;
-            byte[] data = null;
-            using (var memoryStream = new MemoryStream(message.ToAPDU()))
+            int index = 0;
+            foreach(var apduMessage in message.ToAPDU(LedgerHidDevice))
             {
-                do
+                // Intermediate commands responses 
+                // return SW12
+                if (index > 0)
                 {
-                    data = Helpers.GetRequestDataPacket(memoryStream, packetIndex);
-                    packetIndex++;
-                    await LedgerHidDevice.WriteAsync(data);
-                } while (memoryStream.Position != memoryStream.Length);
+                    await ReadResponseAsync();
+                }
+                var packetIndex = 0;
+                byte[] data = null;
+                using (var memoryStream = new MemoryStream(apduMessage))
+                {
+                    do
+                    {
+                        data = Helpers.GetRequestDataPacket(memoryStream, packetIndex);
+                        packetIndex++;
+                        await LedgerHidDevice.WriteAsync(data);
+                    } while (memoryStream.Position != memoryStream.Length);
+                }
+                index++;
             }
         }
 

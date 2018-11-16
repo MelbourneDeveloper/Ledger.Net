@@ -14,6 +14,13 @@
         public BitcoinAddressType BitcoinAddressType { get; }
         #endregion
 
+        #region Protected Methods
+        protected override byte[] GetApduChain(ref int offset)
+        {
+            throw new System.NotImplementedException();
+        }
+        #endregion
+
         #region Constructor
         public BitcoinAppGetPublicKeyRequest(bool display, BitcoinAddressType bitcoinAddressType, byte[] data) : base(data)
         {

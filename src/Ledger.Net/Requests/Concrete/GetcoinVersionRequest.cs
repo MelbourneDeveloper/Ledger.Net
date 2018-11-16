@@ -8,7 +8,12 @@
         public override byte Cla => Constants.CLA;
         public override byte Ins => Constants.BTCHIP_INS_GET_COIN_VER;
         #endregion
-
+        #region Protected Methods
+        protected override byte[] GetApduChain(ref int offset)
+        {
+            throw new System.NotImplementedException();
+        }
+        #endregion
         #region Constructor
         public GetCoinVersionRequest() : base(new byte[0])
         {

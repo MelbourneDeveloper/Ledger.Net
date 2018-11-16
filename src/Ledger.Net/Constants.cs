@@ -18,6 +18,7 @@
         public const byte ETHEREUM_GET_WALLET_PUBLIC_KEY = 0x02;
         public const byte ETHEREUM_SIGN_TX = 0x04;
         public const byte ETHEREUM_SIGN_MESSAGE = 0x08;
+        public const byte ETHEREUM_MAX_CHUNK_SIZE = 0x96;
         #endregion
 
         #region Other Constants
@@ -28,6 +29,10 @@
         public const int SecurityNotValidStatusCode = 0x6982;
         public const int InstructionNotSupportedStatusCode = 0x6D00;
         public const int IncorrectLengthStatusCode = 0x6700;
+        #endregion
+
+        #region Device Ids
+        public static readonly int[] LedgerVendorIds = { 0x2c97 };
         #endregion
     }
 }

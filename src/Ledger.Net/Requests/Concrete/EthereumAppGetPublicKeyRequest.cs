@@ -16,6 +16,13 @@
         public override byte Ins => Constants.ETHEREUM_GET_WALLET_PUBLIC_KEY;
         #endregion
 
+        #region Protected Methods
+        protected override byte[] GetApduChain(ref int offset)
+        {
+            throw new System.NotImplementedException();
+        }
+        #endregion
+
         #region Public Properties
         public bool Display { get; }
         public bool UseChainCode { get; }
