@@ -114,7 +114,7 @@ namespace Ledger.Net.Tests
         }
 
         [Fact]
-        public async Task GetEthereumPublicKey()
+        public async Task DisplayEthereumPublicKey()
         {
             await GetLedger();
             _LedgerManager.SetCoinNumber(60);
