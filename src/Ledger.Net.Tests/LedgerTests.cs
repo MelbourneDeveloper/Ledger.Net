@@ -1,10 +1,8 @@
 using Hardwarewallets.Net;
 using Hardwarewallets.Net.AddressManagement;
-using Hardwarewallets.Net.Model;
 using Hid.Net;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
-using NBitcoin;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -109,7 +107,7 @@ namespace Ledger.Net.Tests
             {
                 LedgerManager = _LedgerManager,
                 MemberName = nameof(_GetPublicKeyFunc),
-                Args = new GetAddressArgs(new AddressPath(true, 0, 0, false, 0), false)
+                Args = new GetAddressArgs(new BIP44AddressPath(true, 0, 0, false, 0), false)
             });
 
             Assert.True(!string.IsNullOrEmpty(returnResponse.PublicKey));
@@ -120,7 +118,7 @@ namespace Ledger.Net.Tests
         {
             await GetLedger();
             _LedgerManager.SetCoinNumber(60);
-            var addressPath = Helpers.GetDerivationPathData(new AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
+            var addressPath = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
             var publicKey = await _LedgerManager.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(true, false, addressPath));
             Assert.True(!string.IsNullOrEmpty(publicKey.PublicKey));
         }
@@ -133,7 +131,7 @@ namespace Ledger.Net.Tests
 
             byte[] rlpEncodedTransactionData = { 227, 128, 132, 59, 154, 202, 0, 130, 82, 8, 148, 139, 6, 158, 207, 123, 242, 48, 225, 83, 184, 237, 144, 59, 171, 242, 68, 3, 204, 162, 3, 128, 128, 4, 128, 128 };
 
-            var derivationData = Helpers.GetDerivationPathData(new AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
+            var derivationData = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
 
             // Create base class like GetPublicKeyResponseBase and make the method more like GetAddressAsync
 
@@ -198,7 +196,7 @@ namespace Ledger.Net.Tests
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x00, 0x00};
 
-            var derivationData = Helpers.GetDerivationPathData(new AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
+            var derivationData = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
 
             // Create base class like GetPublicKeyResponseBase and make the method more like GetAddressAsync
 
@@ -231,15 +229,13 @@ namespace Ledger.Net.Tests
             _LedgerManager.SetCoinNumber(60);
 
             //Modern Path
-            var path = KeyPath.Parse("m/44'/60'/0'/0").Derive(0);
-            var addressPath = new KeyPathAddressPath(path);
-            var address = await _LedgerManager.GetAddressAsync(addressPath, false, false);
+            var path = AddressPathBase.Parse<CustomAddressPath>("m/44'/60'/0'/0/0");
+            var address = await _LedgerManager.GetAddressAsync(path, false, false);
             Assert.True(!string.IsNullOrEmpty(address));
 
             //Legacy Path
-            path = KeyPath.Parse("m/44'/60'/0'").Derive(0);
-            addressPath = new KeyPathAddressPath(path);
-            address = await _LedgerManager.GetAddressAsync(addressPath, false, false);
+            path = AddressPathBase.Parse<CustomAddressPath>("m/44'/60'/0'/0");
+            address = await _LedgerManager.GetAddressAsync(path, false, false);
             Assert.True(!string.IsNullOrEmpty(address));
         }
 
@@ -288,7 +284,7 @@ namespace Ledger.Net.Tests
 
             _LedgerManager.SetCoinNumber(60);
 
-            var addressManager = new AddressManager(_LedgerManager, new AddressPathFactory(false, 60));
+            var addressManager = new AddressManager(_LedgerManager, new BIP44AddressPathFactory(false, 60));
 
             //Get 10 addresses with all the trimming
             const int numberOfAddresses = 3;
@@ -374,35 +370,5 @@ namespace Ledger.Net.Tests
             _LedgerManager = new LedgerManager(ledgerHidDevice, null, Prompt);
         }
         #endregion
-    }
-
-    public class CustomAddressPath : IAddressPath
-    {
-        public uint Purpose => throw new NotImplementedException();
-
-        public uint CoinType => throw new NotImplementedException();
-
-        public uint Account => throw new NotImplementedException();
-
-        public uint Change => throw new NotImplementedException();
-
-        public uint AddressIndex => throw new NotImplementedException();
-
-        public uint[] Path { get; }
-
-        public CustomAddressPath(uint[] path)
-        {
-            Path = path;
-        }
-
-        public uint[] ToHardenedArray()
-        {
-            return Path;
-        }
-
-        public uint[] ToUnhardenedArray()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
