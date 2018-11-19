@@ -1,6 +1,8 @@
-﻿namespace Ledger.Net.Responses
+﻿using Ledger.Net.Exceptions;
+
+namespace Ledger.Net.Responses
 {
-    public abstract class ResponseBase
+    public class ResponseBase
     {
         #region Constants
         private const int HardeningConstant = 0xff;
@@ -44,8 +46,12 @@
         #endregion
 
         #region Constructor
-        protected ResponseBase(byte[] data)
+        internal ResponseBase(byte[] data)
         {
+            if (data == null || data.Length < 2)
+                throw new InvalidAPDUResponseException(
+                    string.Format("Invalid APDU response. Data lenth greater than 2 is expected, received {0}", data != null ? data.Length : 0),
+                    data);
             Data = data;
             ReturnCode = ((data[data.Length - 2] & HardeningConstant) << 8) | data[data.Length - 1] & HardeningConstant;
         }
