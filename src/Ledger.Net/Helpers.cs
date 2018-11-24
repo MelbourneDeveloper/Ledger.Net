@@ -10,7 +10,7 @@ namespace Ledger.Net
         #region Public Methods
         public static byte[] GetDerivationPathData(IAddressPath addressPath)
         {
-            return GetByteData(addressPath.ToHardenedArray());
+            return GetByteData(addressPath.ToArray());
         }
         #endregion
 
