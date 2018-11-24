@@ -1,6 +1,7 @@
 using Hardwarewallets.Net;
 using Hardwarewallets.Net.AddressManagement;
 using Hid.Net;
+using Hid.Net.UWP;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -346,32 +347,44 @@ namespace Ledger.Net.Tests
         {
             await GetPin();
 
-            var devices = new List<DeviceInformation>();
+            var ledgerHidDevice = GetLedgerDevice();
 
-            var collection = WindowsHidDevice.GetConnectedDeviceInformations();
-
-            foreach (var ids in WellKnownLedgerWallets)
-            {
-                if (ids.ProductId == null)
-                {
-                    devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId));
-                }
-                else
-                {
-                    devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId && c.ProductId == ids.ProductId));
-                }
-            }
-
-            var retVal = devices
-                .FirstOrDefault(d =>
-                _UsageSpecification == null ||
-                _UsageSpecification.Length == 0 ||
-                _UsageSpecification.Any(u => d.UsagePage == u.UsagePage && d.Usage == u.Usage));
-
-            var ledgerHidDevice = new WindowsHidDevice(retVal);
             await ledgerHidDevice.InitializeAsync();
             _LedgerManager = new LedgerManager(ledgerHidDevice, null, Prompt);
         }
+
+        private static IHidDevice GetLedgerDevice()
+        {
+            return new UWPHidDevice(0x2c97, 1);
+        }
+
+        //private static WindowsHidDevice GetLedgerDevice()
+        //{
+        //    var devices = new List<DeviceInformation>();
+
+        //    var collection = WindowsHidDevice.GetConnectedDeviceInformations();
+
+        //    foreach (var ids in WellKnownLedgerWallets)
+        //    {
+        //        if (ids.ProductId == null)
+        //        {
+        //            devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId));
+        //        }
+        //        else
+        //        {
+        //            devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId && c.ProductId == ids.ProductId));
+        //        }
+        //    }
+
+        //    var retVal = devices
+        //        .FirstOrDefault(d =>
+        //        _UsageSpecification == null ||
+        //        _UsageSpecification.Length == 0 ||
+        //        _UsageSpecification.Any(u => d.UsagePage == u.UsagePage && d.Usage == u.Usage));
+
+        //    var ledgerHidDevice = new WindowsHidDevice(retVal);
+        //    return ledgerHidDevice;
+        //}
 
         private static async Task<bool> GetPin()
         {
