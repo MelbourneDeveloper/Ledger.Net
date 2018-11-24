@@ -1,8 +1,8 @@
 ﻿<Application
-    x:Class="Trezor.Net.UWPUnitTest.App"
+    x:Class="LedgerWallet.Net.UWPUnitTest.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Trezor.Net.UWPUnitTest">
+    xmlns:local="using:LedgerWallet.Net.UWPUnitTest">
 
     
 </Application>
