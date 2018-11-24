@@ -15,7 +15,7 @@ namespace Ledger.Net.Tests
         {
             foreach (var value in path)
             {
-                AddressPathElements.Add(new AddressPathElement { UnhardenedValue = value });
+                AddressPathElements.Add(new AddressPathElement { Value = value });
             }
         }
     }
