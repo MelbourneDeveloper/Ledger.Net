@@ -3,16 +3,17 @@ using Hardwarewallets.Net.AddressManagement;
 using Hid.Net;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Xunit;
 
 namespace Ledger.Net.Tests
 {
+    [TestClass]
     public class LedgerTests
     {
         #region Private Fields
@@ -51,7 +52,7 @@ namespace Ledger.Net.Tests
 
         #region Tests
 
-        [Fact]
+        [TestMethod]
         public async Task GetLiteCoinAddress()
         {
             await GetLedger();
@@ -59,13 +60,13 @@ namespace Ledger.Net.Tests
             _LedgerManager.SetCoinNumber(2);
             var address = await _LedgerManager.GetAddressAsync(0, 0);
 
-            Assert.True(!string.IsNullOrEmpty(address));
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
 
         /// <summary>
         /// Note this hasn't been confirmed to be returning the correct address in Ledger live yet
         /// </summary>
-        [Fact]
+        [TestMethod]
         public async Task GetBitcoinCashAddress()
         {
             await GetLedger();
@@ -73,10 +74,10 @@ namespace Ledger.Net.Tests
             _LedgerManager.SetCoinNumber(145);
             var address = await _LedgerManager.GetAddressAsync(0, 0);
 
-            Assert.True(!string.IsNullOrEmpty(address));
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetAddressAnyBitcoinApp()
         {
             await GetLedger();
@@ -86,18 +87,18 @@ namespace Ledger.Net.Tests
             var address = await _LedgerManager.GetAddressAsync(0, false, 0, false);
         }
 
-        [Fact]
+        [TestMethod]
         public async Task DisplayAddress()
         {
             await GetLedger(Prompt);
 
             var address = await _LedgerManager.GetAddressAsync(0, false, 0, true);
 
-            Assert.True(!string.IsNullOrEmpty(address));
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
 
 
-        [Fact]
+        [TestMethod]
         public async Task GetBitcoinPublicKey()
         {
             await GetLedger(Prompt);
@@ -110,20 +111,20 @@ namespace Ledger.Net.Tests
                 Args = new GetAddressArgs(new BIP44AddressPath(true, 0, 0, false, 0), false)
             });
 
-            Assert.True(!string.IsNullOrEmpty(returnResponse.PublicKey));
+            Assert.IsTrue(!string.IsNullOrEmpty(returnResponse.PublicKey));
         }
 
-        [Fact]
+        [TestMethod]
         public async Task DisplayEthereumPublicKey()
         {
             await GetLedger();
             _LedgerManager.SetCoinNumber(60);
             var addressPath = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
             var publicKey = await _LedgerManager.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(true, false, addressPath));
-            Assert.True(!string.IsNullOrEmpty(publicKey.PublicKey));
+            Assert.IsTrue(!string.IsNullOrEmpty(publicKey.PublicKey));
         }
 
-        [Fact]
+        [TestMethod]
         public async Task SignEthereumTransaction()
         {
             await GetLedger();
@@ -139,10 +140,10 @@ namespace Ledger.Net.Tests
 
             var response = await _LedgerManager.SendRequestAsync<EthereumAppSignatureResponse, EthereumAppSignatureRequest>(firstRequest);
 
-            Assert.True(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
+            Assert.IsTrue(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
 
-            Assert.True(response.SignatureR?.Length == 32);
-            Assert.True(response.SignatureS?.Length == 32);
+            Assert.IsTrue(response.SignatureR?.Length == 32);
+            Assert.IsTrue(response.SignatureS?.Length == 32);
         }
 
         /// <summary>
@@ -150,7 +151,7 @@ namespace Ledger.Net.Tests
         /// https://github.com/MelbourneDeveloper/Ledger.Net/issues/13
         /// </summary>
         /// <returns></returns>
-        [Fact]
+        [TestMethod]
         public async Task SignChunkedEthereumTransaction()
         {
             await GetLedger();
@@ -204,13 +205,13 @@ namespace Ledger.Net.Tests
 
             var response = await _LedgerManager.SendRequestAsync<EthereumAppSignatureResponse, EthereumAppSignatureRequest>(firstRequest);
 
-            Assert.True(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
+            Assert.IsTrue(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
 
-            Assert.True(response.SignatureR?.Length == 32);
-            Assert.True(response.SignatureS?.Length == 32);
+            Assert.IsTrue(response.SignatureR?.Length == 32);
+            Assert.IsTrue(response.SignatureS?.Length == 32);
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetEthereumAddress()
         {
             await GetLedger();
@@ -218,10 +219,10 @@ namespace Ledger.Net.Tests
             _LedgerManager.SetCoinNumber(60);
             var address = await _LedgerManager.GetAddressAsync(0, 0);
 
-            Assert.True(!string.IsNullOrEmpty(address));
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetEthereumAddressParsed()
         {
             await GetLedger();
@@ -231,15 +232,15 @@ namespace Ledger.Net.Tests
             //Modern Path
             var path = AddressPathBase.Parse<CustomAddressPath>("m/44'/60'/0'/0/0");
             var address = await _LedgerManager.GetAddressAsync(path, false, false);
-            Assert.True(!string.IsNullOrEmpty(address));
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
 
             //Legacy Path
             path = AddressPathBase.Parse<CustomAddressPath>("m/44'/60'/0'/0");
             address = await _LedgerManager.GetAddressAsync(path, false, false);
-            Assert.True(!string.IsNullOrEmpty(address));
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetEthereumAddressCustomPath()
         {
             await GetLedger();
@@ -249,17 +250,17 @@ namespace Ledger.Net.Tests
             //Three elements
             var path = new uint[] { AddressUtilities.HardenNumber(44), AddressUtilities.HardenNumber(60), 0 };
             var address = await _LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
-            Assert.True(!string.IsNullOrEmpty(address));
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
 
             //Four elements
             path = new uint[] { AddressUtilities.HardenNumber(44), AddressUtilities.HardenNumber(60), 0, 1 };
             address = await _LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
-            Assert.True(!string.IsNullOrEmpty(address));
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
 
             //Two elements
             path = new uint[] { AddressUtilities.HardenNumber(44), AddressUtilities.HardenNumber(60) };
             address = await _LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
-            Assert.True(!string.IsNullOrEmpty(address));
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
 
             _LedgerManager.ErrorPrompt = ThrowErrorInsteadOfPrompt;
 
@@ -274,10 +275,10 @@ namespace Ledger.Net.Tests
             {
                 exception = ex;
             }
-            Assert.True(exception != null);
+            Assert.IsTrue(exception != null);
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetEthereumAddresses()
         {
             await GetLedger();
@@ -291,13 +292,13 @@ namespace Ledger.Net.Tests
             const int numberOfAccounts = 2;
             var addresses = await addressManager.GetAddressesAsync(0, numberOfAddresses, numberOfAccounts, true, true);
 
-            Assert.True(addresses != null);
-            Assert.True(addresses.Accounts != null);
-            Assert.True(addresses.Accounts.Count == numberOfAccounts);
-            Assert.True(addresses.Accounts[0].Addresses.Count == numberOfAddresses);
-            Assert.True(addresses.Accounts[1].Addresses.Count == numberOfAddresses);
-            Assert.True(addresses.Accounts[0].ChangeAddresses.Count == numberOfAddresses);
-            Assert.True(addresses.Accounts[1].ChangeAddresses.Count == numberOfAddresses);
+            Assert.IsTrue(addresses != null);
+            Assert.IsTrue(addresses.Accounts != null);
+            Assert.IsTrue(addresses.Accounts.Count == numberOfAccounts);
+            Assert.IsTrue(addresses.Accounts[0].Addresses.Count == numberOfAddresses);
+            Assert.IsTrue(addresses.Accounts[1].Addresses.Count == numberOfAddresses);
+            Assert.IsTrue(addresses.Accounts[0].ChangeAddresses.Count == numberOfAddresses);
+            Assert.IsTrue(addresses.Accounts[1].ChangeAddresses.Count == numberOfAddresses);
         }
 
         #endregion
@@ -343,6 +344,8 @@ namespace Ledger.Net.Tests
 
         private async Task GetLedger(ErrorPromptDelegate errorPrompt = null)
         {
+            await GetPin();
+
             var devices = new List<DeviceInformation>();
 
             var collection = WindowsHidDevice.GetConnectedDeviceInformations();
@@ -368,6 +371,17 @@ namespace Ledger.Net.Tests
             var ledgerHidDevice = new WindowsHidDevice(retVal);
             await ledgerHidDevice.InitializeAsync();
             _LedgerManager = new LedgerManager(ledgerHidDevice, null, Prompt);
+        }
+
+        private static async Task<bool> GetPin()
+        {
+            var pinCompletionSource = new TaskCompletionSource<bool>();
+            LedgerWallet.Net.UWPUnitTest.App.PinSelected += (a, b) =>
+            {
+                pinCompletionSource.SetResult(true);
+            };
+            var retVal = await pinCompletionSource.Task;
+            return retVal;
         }
         #endregion
     }
