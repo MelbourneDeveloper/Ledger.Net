@@ -7,8 +7,8 @@
     <ProjectGuid>{97924306-CC9E-4D40-B121-1040ECE2347E}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Trezor.Net.UWPUnitTest</RootNamespace>
-    <AssemblyName>Trezor.Net.UWPUnitTest</AssemblyName>
+    <RootNamespace>Ledger.Net.UWPUnitTest</RootNamespace>
+    <AssemblyName>Ledger.Net.UWPUnitTest</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.17134.0</TargetPlatformVersion>
