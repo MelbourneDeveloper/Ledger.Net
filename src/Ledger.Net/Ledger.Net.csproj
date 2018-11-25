@@ -16,6 +16,7 @@
     <Copyright>Copyright (c) 2018 Christian Findlay</Copyright>
     <Title>Ledger.Net</Title>
     <Summary>A cross platform C# library for the Ledger hardwarewallet.</Summary>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
