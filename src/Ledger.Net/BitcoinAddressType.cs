@@ -7,6 +7,6 @@ namespace Ledger.Net
     {
         Legacy = 0x00,
         Segwit = 0x01,
-        NativeSegwit = 0x02,
+        NativeSegwit = 0x02
     }
 }

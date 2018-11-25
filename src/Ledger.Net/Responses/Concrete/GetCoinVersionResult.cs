@@ -1,5 +1,4 @@
-﻿using Ledger.Net.Responses;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 
 namespace Ledger.Net.Responses
@@ -12,8 +11,8 @@ namespace Ledger.Net.Responses
 		#endregion
 
 		#region Public Properties
-		public string CoinName { get; private set; }
-		public string ShortCoinName { get; private set; }
+		public string CoinName { get; }
+		public string ShortCoinName { get; }
 		#endregion
 
 		#region Constructor

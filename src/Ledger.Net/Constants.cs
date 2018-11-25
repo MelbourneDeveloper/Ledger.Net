@@ -20,10 +20,6 @@
         public const byte ETHEREUM_SIGN_MESSAGE = 0x08;
         #endregion
 
-        #region Other Constants
-        public const uint HARDENING_CONSTANT = 0x80000000;
-        #endregion
-
         #region Error Codes
         public const int SecurityNotValidStatusCode = 0x6982;
         public const int InstructionNotSupportedStatusCode = 0x6D00;

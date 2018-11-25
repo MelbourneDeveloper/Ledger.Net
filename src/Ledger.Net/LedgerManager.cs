@@ -15,9 +15,9 @@ namespace Ledger.Net
     public class LedgerManager : IAddressDeriver
     {
         #region Fields
-        private SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
 
-        private readonly Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>> _GetAddressFunc = new Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>>(async (s) =>
+        private readonly Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>> _GetAddressFunc = async s =>
         {
             var lm = s.LedgerManager;
 
@@ -40,7 +40,7 @@ namespace Ledger.Net
             }
 
             return response;
-        });
+        };
         #endregion
 
         #region Public Properties
@@ -63,12 +63,8 @@ namespace Ledger.Net
             ErrorPrompt = errorPrompt;
 
             LedgerHidDevice = ledgerHidDevice;
-            CoinUtility = coinUtility;
 
-            if (CoinUtility == null)
-            {
-                CoinUtility = new DefaultCoinUtility();
-            }
+            CoinUtility = coinUtility ?? new DefaultCoinUtility();
 
             SetCoinNumber(0);
         }
@@ -84,12 +80,11 @@ namespace Ledger.Net
         private async Task WriteRequestAsync<TWrite>(TWrite message) where TWrite : RequestBase
         {
             var packetIndex = 0;
-            byte[] data = null;
             using (var memoryStream = new MemoryStream(message.ToAPDU()))
             {
                 do
                 {
-                    data = Helpers.GetRequestDataPacket(memoryStream, packetIndex);
+                    var data = Helpers.GetRequestDataPacket(memoryStream, packetIndex);
                     packetIndex++;
                     await LedgerHidDevice.WriteAsync(data);
                 } while (memoryStream.Position != memoryStream.Length);
@@ -236,10 +231,8 @@ namespace Ledger.Net
                     {
                         throw;
                     }
-                    else
-                    {
-                        await ErrorPrompt(null, ex, state.MemberName);
-                    }
+
+                    await ErrorPrompt(null, ex, state.MemberName);
                 }
             }
 

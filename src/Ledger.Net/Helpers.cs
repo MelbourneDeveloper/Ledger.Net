@@ -89,7 +89,7 @@ namespace Ledger.Net
                     var commandPart = new byte[blockSize];
                     if (input.Read(commandPart, 0, commandPart.Length) != commandPart.Length)
                     {
-                        throw new ManagerException($"Reading from the Ledger failed. The data read was not of the correct size. It is possible that the incorrect Hid device has been used. Please check that the Hid device with the correct UsagePage was selected");
+                        throw new ManagerException("Reading from the Ledger failed. The data read was not of the correct size. It is possible that the incorrect Hid device has been used. Please check that the Hid device with the correct UsagePage was selected");
                     }
 
                     returnStream.Write(commandPart, 0, commandPart.Length);
