@@ -148,14 +148,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Hid.Net\Hid.Net.UWP\Hid.Net.UWP.csproj">
-      <Project>{7618db72-5741-48eb-a2dc-0823c1817795}</Project>
-      <Name>Hid.Net.UWP</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Hid.Net\Hid.Net\Hid.Net.csproj">
-      <Project>{5c2fa4c2-cc2e-4e9d-aae1-e8dac6bb458a}</Project>
-      <Name>Hid.Net</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Ledger.Net\Ledger.Net.csproj">
       <Project>{19d6b93a-7cd3-4e2c-858f-de453b280acb}</Project>
       <Name>Ledger.Net</Name>
