@@ -1,7 +1,5 @@
 using Hardwarewallets.Net;
 using Hardwarewallets.Net.AddressManagement;
-using Hid.Net;
-using Hid.Net.UWP;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,7 +12,7 @@ using System.Threading.Tasks;
 namespace Ledger.Net.Tests
 {
     [TestClass]
-    public class LedgerTests
+    public partial class LedgerTests
     {
         #region Private Fields
         private LedgerManager _LedgerManager;
@@ -348,19 +346,6 @@ namespace Ledger.Net.Tests
             _LedgerManager = new LedgerManager(ledgerHidDevice, null, Prompt);
         }
 
-
-
-
-        private static async Task<bool> GetPin()
-        {
-            var pinCompletionSource = new TaskCompletionSource<bool>();
-            LedgerWallet.Net.UWPUnitTest.App.PinSelected += (a, b) =>
-            {
-                pinCompletionSource.SetResult(true);
-            };
-            var retVal = await pinCompletionSource.Task;
-            return retVal;
-        }
         #endregion
     }
 }

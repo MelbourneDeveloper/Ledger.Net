@@ -1,12 +1,13 @@
 ﻿using Hid.Net;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Ledger.Net.Tests
 {
-    public partial class LedgerTests
+    public  partial class LedgerTests
     {
-        private static WindowsHidDevice GetLedgerDevice()
+        private async static Task<WindowsHidDevice> GetLedgerDevice()
         {
             var devices = new List<DeviceInformation>();
 
@@ -31,6 +32,7 @@ namespace Ledger.Net.Tests
                 _UsageSpecification.Any(u => d.UsagePage == u.UsagePage && d.Usage == u.Usage));
 
             var ledgerHidDevice = new WindowsHidDevice(retVal);
+
             return ledgerHidDevice;
         }
     }
