@@ -12,17 +12,9 @@ namespace LedgerWallet.Net.UWPUnitTest
     /// </summary>
     internal sealed partial class App : Application
     {
-        #region Events
-        public static event EventHandler PinSelected;
-        #endregion  
-
-        #region Public Static Properties
-        public static string Pin { get; private set; }
-        #endregion
-
+ 
         #region Fields
-        private TextBlock InstructionsTextBlock = new TextBlock { Margin = new Thickness(2), Text="To run unit tests:\r\n1) Run the test\r\n2) Plug in the device (or have it plugged in already).\r\n3) Wait for the pin display on the device (if it is not unlocked yet).\r\n4) Enter the pin as displayed on the device\r\n5) Click OK." };
-        private Button PinButton = new Button { Content = "OK" };
+        private TextBlock InstructionsTextBlock = new TextBlock { Margin = new Thickness(2), Text= "Try the DisplayAddress test. It should display the address on the device" };
         private StackPanel StackPanel = new StackPanel { Orientation = Orientation.Vertical, HorizontalAlignment= HorizontalAlignment.Center, VerticalAlignment= VerticalAlignment.Center };
         #endregion
 
@@ -36,14 +28,6 @@ namespace LedgerWallet.Net.UWPUnitTest
             Suspending += OnSuspending;
 
             StackPanel.Children.Add(InstructionsTextBlock);
-            StackPanel.Children.Add(PinButton);
-
-            PinButton.Click += PinButton_Click;
-        }
-
-        private void PinButton_Click(object sender, RoutedEventArgs e)
-        {
-            PinSelected?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
