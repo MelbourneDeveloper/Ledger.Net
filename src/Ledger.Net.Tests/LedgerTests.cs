@@ -345,22 +345,16 @@ namespace Ledger.Net.Tests
         private async Task GetLedger(ErrorPromptDelegate errorPrompt = null)
         {
             var ledgerHidDevice = await GetLedgerDevice();
-            //await ledgerHidDevice.InitializeAsync();
             _LedgerManager = new LedgerManager(ledgerHidDevice, null, Prompt);
         }
 
-        private async static Task<IHidDevice> GetLedgerDevice()
+        private static Task<IHidDevice> GetLedgerDevice()
         {
-            //var taskCompletionSource = new TaskCompletionSource<IHidDevice>();
-            //var uwpHidDevice = new UWPHidDevice();
-            //var uwpHidDevicePoller = new UWPHidDevicePoller(1, 0x2c97, uwpHidDevice);
-            //uwpHidDevice.Connected += (a, b) => taskCompletionSource.SetResult(uwpHidDevice);
-            //return taskCompletionSource.Task;
-
-            var asdasd =  new UWPHidDevice(0x2c97, 1);
-            await asdasd.InitializeAsync();
-
-            return asdasd;
+            var taskCompletionSource = new TaskCompletionSource<IHidDevice>();
+            var uwpHidDevice = new UWPHidDevice();
+            var uwpHidDevicePoller = new UWPHidDevicePoller(1, 0x2c97, uwpHidDevice);
+            uwpHidDevice.Connected += (a, b) => taskCompletionSource.SetResult(uwpHidDevice);
+            return taskCompletionSource.Task;
         }
 
         //private static WindowsHidDevice GetLedgerDevice()
