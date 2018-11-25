@@ -10,7 +10,7 @@
     <AssemblyVersion>2.2.0.0</AssemblyVersion>
     <FileVersion>2.2.0.0</FileVersion>
     <Company>Christian Findlay</Company>
-    <Version>2.1.0</Version>
+    <Version>2.2.0</Version>
     <RepositoryUrl>https://github.com/MelbourneDeveloper/Ledger.Net</RepositoryUrl>
     <PackageReleaseNotes>Add ability to get Bitcoin and Ethereum public keys</PackageReleaseNotes>
     <Copyright>Copyright (c) 2018 Christian Findlay</Copyright>
