@@ -107,6 +107,7 @@
     <Compile Include="..\Ledger.Net.Tests\VendorProductIds.cs">
       <Link>VendorProductIds.cs</Link>
     </Compile>
+    <Compile Include="LedgerTests - UWP.cs" />
     <Compile Include="UnitTestApp.xaml.cs">
       <DependentUpon>UnitTestApp.xaml</DependentUpon>
     </Compile>

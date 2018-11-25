@@ -348,42 +348,8 @@ namespace Ledger.Net.Tests
             _LedgerManager = new LedgerManager(ledgerHidDevice, null, Prompt);
         }
 
-        private static Task<IHidDevice> GetLedgerDevice()
-        {
-            var taskCompletionSource = new TaskCompletionSource<IHidDevice>();
-            var uwpHidDevice = new UWPHidDevice();
-            var uwpHidDevicePoller = new UWPHidDevicePoller(1, 0x2c97, uwpHidDevice);
-            uwpHidDevice.Connected += (a, b) => taskCompletionSource.SetResult(uwpHidDevice);
-            return taskCompletionSource.Task;
-        }
 
-        //private static WindowsHidDevice GetLedgerDevice()
-        //{
-        //    var devices = new List<DeviceInformation>();
 
-        //    var collection = WindowsHidDevice.GetConnectedDeviceInformations();
-
-        //    foreach (var ids in WellKnownLedgerWallets)
-        //    {
-        //        if (ids.ProductId == null)
-        //        {
-        //            devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId));
-        //        }
-        //        else
-        //        {
-        //            devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId && c.ProductId == ids.ProductId));
-        //        }
-        //    }
-
-        //    var retVal = devices
-        //        .FirstOrDefault(d =>
-        //        _UsageSpecification == null ||
-        //        _UsageSpecification.Length == 0 ||
-        //        _UsageSpecification.Any(u => d.UsagePage == u.UsagePage && d.Usage == u.Usage));
-
-        //    var ledgerHidDevice = new WindowsHidDevice(retVal);
-        //    return ledgerHidDevice;
-        //}
 
         private static async Task<bool> GetPin()
         {
