@@ -33,6 +33,8 @@ namespace Ledger.Net.Tests
 
             var ledgerHidDevice = new WindowsHidDevice(retVal);
 
+            await ledgerHidDevice.InitializeAsync();
+
             return ledgerHidDevice;
         }
     }
