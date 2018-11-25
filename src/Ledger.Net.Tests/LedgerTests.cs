@@ -6,7 +6,6 @@ using Ledger.Net.Requests;
 using Ledger.Net.Responses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -345,17 +344,23 @@ namespace Ledger.Net.Tests
 
         private async Task GetLedger(ErrorPromptDelegate errorPrompt = null)
         {
-            await GetPin();
-
-            var ledgerHidDevice = GetLedgerDevice();
-
-            await ledgerHidDevice.InitializeAsync();
+            var ledgerHidDevice = await GetLedgerDevice();
+            //await ledgerHidDevice.InitializeAsync();
             _LedgerManager = new LedgerManager(ledgerHidDevice, null, Prompt);
         }
 
-        private static IHidDevice GetLedgerDevice()
+        private async static Task<IHidDevice> GetLedgerDevice()
         {
-            return new UWPHidDevice(0x2c97, 1);
+            //var taskCompletionSource = new TaskCompletionSource<IHidDevice>();
+            //var uwpHidDevice = new UWPHidDevice();
+            //var uwpHidDevicePoller = new UWPHidDevicePoller(1, 0x2c97, uwpHidDevice);
+            //uwpHidDevice.Connected += (a, b) => taskCompletionSource.SetResult(uwpHidDevice);
+            //return taskCompletionSource.Task;
+
+            var asdasd =  new UWPHidDevice(0x2c97, 1);
+            await asdasd.InitializeAsync();
+
+            return asdasd;
         }
 
         //private static WindowsHidDevice GetLedgerDevice()

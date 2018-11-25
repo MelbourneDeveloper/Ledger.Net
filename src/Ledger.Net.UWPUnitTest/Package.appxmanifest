@@ -29,7 +29,8 @@
     <DeviceCapability Name="humaninterfacedevice">
       
       <Device Id="vidpid:2C97 0001">
-        <Function Type="usage:F1D0 0001" />
+        <Function Type="usage:0005 *" />
+        <Function Type="usage:FFA0 *" />
       </Device>
 
       <!--<Device Id="vidpid:2581 3B7C">
