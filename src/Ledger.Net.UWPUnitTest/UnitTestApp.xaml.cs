@@ -14,7 +14,7 @@ namespace LedgerWallet.Net.UWPUnitTest
     {
  
         #region Fields
-        private TextBlock InstructionsTextBlock = new TextBlock { Margin = new Thickness(2), Text= "Try the DisplayAddress test. It should display the address on the device" };
+        private TextBlock InstructionsTextBlock = new TextBlock { Margin = new Thickness(2), Text= "Tests are configured for Ledger Nano. Adjust package manifest and GetLedgerDevice for other Ledgers. Try the DisplayAddress test. It should display the address on the device" };
         private StackPanel StackPanel = new StackPanel { Orientation = Orientation.Vertical, HorizontalAlignment= HorizontalAlignment.Center, VerticalAlignment= VerticalAlignment.Center };
         #endregion
 
