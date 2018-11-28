@@ -24,7 +24,7 @@ For any instructions that are not implemented you will need to create a RequestB
 
 Install-Package Ledger.Net
 
-##Hardwarewallets.Net
+## Hardwarewallets.Net
 
 This library is part of the Hardwarewallets.Net suite of libraries. It is an ambitious project aimed toward putting a set of common C# interfaces across all hardwarewallets
 
