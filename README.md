@@ -1,35 +1,34 @@
 # Ledger.Net
-Cross Platform C# Library For Ledger Hardwarewallet
+Cross Platform C# Library for the Ledger Cryptocurrency Hardwarewallet
 
 Join us on Slack:
 https://hardwarewallets.slack.com
 
 Currently supports:
+* .NET Framework
+* .NET Core
 * Android
-* Windows
-* UWP (Except the UWP Package Manifest has a bug that won't allow the Ledger Vendor Id)
+* UWP 
 
 ## Quick Start
 
+- Clone the repo and open the solution
 - Connect Ledger and enter pin
-- Open Bitcoin app
-- Clone the repo and run the GetAddress unit test
+- Open Bitcoin app on the device
+- Run the GetAddress unit test
 - Repeat for Ethereum
 
 For any instructions that are not implemented you will need to create a RequestBase, and ResponseBase class. Then, you will need to call SendRequestAsync. See the see also section.
 
-**Would love to see some samples for UWP or Android**
-
-## Store App Production Usage (Not Yet In Production)
-
-This app currently only Supports Trezor (https://github.com/MelbourneDeveloper/Trezor.Net) but it will soon support Ledger with this library.
-
-https://play.google.com/store/apps/details?id=com.Hardfolio (Android)
-
-https://www.microsoft.com/en-au/p/hardfolio/9p8xx70n5d2j (UWP)
-
 ## NuGet
+
 Install-Package Ledger.Net
+
+##Hardwarewallets.Net
+
+This library is part of the Hardwarewallets.Net suite of libraries. It is an ambitious project aimed toward putting a set of common C# interfaces across all hardwarewallets
+
+https://github.com/MelbourneDeveloper/Hardwarewallets.Net
 
 ## Contribution
 
@@ -46,6 +45,20 @@ Bitcoin: 33LrG1p81kdzNUHoCnsYGj6EHRprTKWu3U
 Ethereum: 0x7ba0ea9975ac0efb5319886a287dcf5eecd3038e
 
 Litecoin: MVAbLaNPq7meGXvZMU4TwypUsDEuU6stpY
+
+## Store App Production Usage (Not Yet In Production)
+
+This app currently only Supports Trezor (https://github.com/MelbourneDeveloper/Trezor.Net) but it will soon support Ledger with this library.
+
+https://play.google.com/store/apps/details?id=com.Hardfolio (Android)
+
+https://www.microsoft.com/en-au/p/hardfolio/9p8xx70n5d2j (UWP)
+
+## Hid.Net
+
+Ledger.Net communicates with the device via the Hid.Net library. You can see the repo for this library here:
+
+https://github.com/MelbourneDeveloper/Hid.Net
 
 ## See Also
 
