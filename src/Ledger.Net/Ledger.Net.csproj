@@ -17,6 +17,7 @@
     <Title>Ledger.Net</Title>
     <Summary>A cross platform C# library for the Ledger hardwarewallet.</Summary>
     <LangVersion>7.3</LangVersion>
+    <PackageTags>C# USB Hid Ledger Hardwarewallet Bitcoin Ethereum SatoshiLabs BitcoinCash Litecoin Cryptocurrency Security</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
