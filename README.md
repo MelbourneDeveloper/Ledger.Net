@@ -70,6 +70,10 @@ https://github.com/MelbourneDeveloper/Hid.Net
 
 ## See Also
 
+[Trezor.Net](https://github.com/MelbourneDeveloper/Trezor.Net) - Trezor Hardwarewallet Library
+
+[KeepKey.Net](https://github.com/MelbourneDeveloper/KeepKey.Net) - KeepKey Hardwarewallet Library
+
 This library has more instructions implemented out of the box.
 
 https://github.com/LedgerHQ/ledger-dotnet-api
