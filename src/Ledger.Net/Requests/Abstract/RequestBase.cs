@@ -22,17 +22,32 @@ namespace Ledger.Net.Requests
         }
         #endregion
 
-        #region Internal Methods
-        internal byte[] ToAPDU()
+        #region Private Methods
+        private byte[] GetNextApduCommand(ref int offset)
         {
-            var apdu = new byte[Data.Length + 5];
-            apdu[0] = Cla;
-            apdu[1] = Ins;
-            apdu[2] = Argument1;
-            apdu[3] = Argument2;
-            apdu[4] = (byte)(Data.Length);
-            Array.Copy(Data, 0, apdu, 5, Data.Length);
-            return apdu;
+            var chunkSize = offset + Constants.LEDGER_MAX_DATA_SIZE > Data.Length ?
+                Data.Length - offset :
+                Constants.LEDGER_MAX_DATA_SIZE;
+
+            byte[] buffer = new byte[5 + chunkSize];
+            buffer[0] = Cla;
+            buffer[1] = Ins;
+            buffer[2] = (byte)(offset == 0 ? Argument1 : Constants.P1_MORE);
+            buffer[3] = Argument2;
+            buffer[4] = (byte)(chunkSize);
+            Array.Copy(Data, offset, buffer, 5, chunkSize);
+
+            offset += chunkSize;
+            return buffer;
+        }
+        #endregion
+
+        #region Internal Methods
+        internal System.Collections.Generic.IEnumerable<byte[]> ToAPDU()
+        {
+            int offset = 0;
+            while (offset < Data.Length - 1)
+                yield return GetNextApduCommand(ref offset);
         }
         #endregion
     }

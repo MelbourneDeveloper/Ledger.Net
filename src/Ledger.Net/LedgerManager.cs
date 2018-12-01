@@ -79,15 +79,32 @@ namespace Ledger.Net
         #region Private Methods
         private async Task WriteRequestAsync<TWrite>(TWrite message) where TWrite : RequestBase
         {
-            var packetIndex = 0;
-            using (var memoryStream = new MemoryStream(message.ToAPDU()))
+            var commandIndex = 0;
+            foreach (var apduCommand in message.ToAPDU())
             {
-                do
+                if (commandIndex > 0)
                 {
-                    var data = Helpers.GetRequestDataPacket(memoryStream, packetIndex);
-                    packetIndex++;
-                    await LedgerHidDevice.WriteAsync(data);
-                } while (memoryStream.Position != memoryStream.Length);
+                    //Read intermediates response codes
+                    ResponseBase response = new ResponseBase(await ReadResponseAsync());
+                    if (!response.IsSuccess)
+                    {
+                        HandleErrorResponse(response);
+                    }
+                }
+
+                var packetIndex = 0;
+                byte[] data = null;
+                using (var memoryStream = new MemoryStream(apduCommand))
+                {
+                    do
+                    {
+                        data = Helpers.GetRequestDataPacket(memoryStream, packetIndex);
+                        packetIndex++;
+                        await LedgerHidDevice.WriteAsync(data);
+                    } while (memoryStream.Position != memoryStream.Length);
+                }
+
+                commandIndex++;
             }
         }
 
