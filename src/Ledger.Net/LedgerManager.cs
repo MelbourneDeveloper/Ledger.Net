@@ -77,10 +77,10 @@ namespace Ledger.Net
         #endregion
 
         #region Private Methods
-        private async Task WriteRequestAsync<TWrite>(TWrite message) where TWrite : RequestBase
+        private async Task WriteRequestAsync<TRequest>(TRequest request) where TRequest : RequestBase
         {
             var commandIndex = 0;
-            foreach (var apduCommandChunk in message.ToAPDUChunks())
+            foreach (var apduCommandChunk in request.ToAPDUChunks())
             {
                 if (commandIndex > 0)
                 {
