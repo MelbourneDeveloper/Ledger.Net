@@ -80,7 +80,7 @@ namespace Ledger.Net
         private async Task WriteRequestAsync<TWrite>(TWrite message) where TWrite : RequestBase
         {
             var commandIndex = 0;
-            foreach (var apduCommand in message.ToAPDU())
+            foreach (var apduCommandChunk in message.ToAPDUChunks())
             {
                 if (commandIndex > 0)
                 {
@@ -94,7 +94,7 @@ namespace Ledger.Net
 
                 var packetIndex = 0;
                 byte[] data = null;
-                using (var memoryStream = new MemoryStream(apduCommand))
+                using (var memoryStream = new MemoryStream(apduCommandChunk))
                 {
                     do
                     {

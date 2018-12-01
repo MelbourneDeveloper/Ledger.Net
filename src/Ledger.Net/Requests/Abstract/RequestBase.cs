@@ -42,7 +42,7 @@ namespace Ledger.Net.Requests
         #endregion
 
         #region Internal Methods
-        internal IEnumerable<byte[]> ToAPDU()
+        internal IEnumerable<byte[]> ToAPDUChunks()
         {
             var offset = 0;
             while (offset < Data.Length - 1) yield return GetNextApduCommand(ref offset);
