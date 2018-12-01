@@ -48,10 +48,6 @@ namespace Ledger.Net.Responses
         #region Constructor
         protected ResponseBase(byte[] data)
         {
-            if (data == null || data.Length < 2)
-                throw new InvalidAPDUResponseException(
-                    string.Format("Invalid APDU response. Data lenth greater than 2 is expected, received {0}", data != null ? data.Length : 0),
-                    data);
             Data = data;
             ReturnCode = ((data[data.Length - 2] & HardeningConstant) << 8) | data[data.Length - 1] & HardeningConstant;
         }
