@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Ledger.Net.Requests
 {
@@ -25,14 +26,12 @@ namespace Ledger.Net.Requests
         #region Private Methods
         private byte[] GetNextApduCommand(ref int offset)
         {
-            var chunkSize = offset + Constants.LEDGER_MAX_DATA_SIZE > Data.Length ?
-                Data.Length - offset :
-                Constants.LEDGER_MAX_DATA_SIZE;
+            var chunkSize = offset + Constants.LEDGER_MAX_DATA_SIZE > Data.Length ? Data.Length - offset : Constants.LEDGER_MAX_DATA_SIZE;
 
-            byte[] buffer = new byte[5 + chunkSize];
+            var buffer = new byte[5 + chunkSize];
             buffer[0] = Cla;
             buffer[1] = Ins;
-            buffer[2] = (byte)(offset == 0 ? Argument1 : Constants.P1_MORE);
+            buffer[2] = offset == 0 ? Argument1 : Constants.P1_MORE;
             buffer[3] = Argument2;
             buffer[4] = (byte)(chunkSize);
             Array.Copy(Data, offset, buffer, 5, chunkSize);
@@ -43,11 +42,10 @@ namespace Ledger.Net.Requests
         #endregion
 
         #region Internal Methods
-        internal System.Collections.Generic.IEnumerable<byte[]> ToAPDU()
+        internal IEnumerable<byte[]> ToAPDU()
         {
-            int offset = 0;
-            while (offset < Data.Length - 1)
-                yield return GetNextApduCommand(ref offset);
+            var offset = 0;
+            while (offset < Data.Length - 1) yield return GetNextApduCommand(ref offset);
         }
         #endregion
     }
