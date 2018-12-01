@@ -2,7 +2,7 @@
 
 namespace Ledger.Net.Responses
 {
-    public class ResponseBase
+    public abstract class ResponseBase
     {
         #region Constants
         private const int HardeningConstant = 0xff;
@@ -46,7 +46,7 @@ namespace Ledger.Net.Responses
         #endregion
 
         #region Constructor
-        internal ResponseBase(byte[] data)
+        protected ResponseBase(byte[] data)
         {
             if (data == null || data.Length < 2)
                 throw new InvalidAPDUResponseException(

@@ -144,7 +144,12 @@ namespace Ledger.Net.Tests
             Assert.IsTrue(response.SignatureS?.Length == 32);
         }
 
-        [Fact]
+        /// <summary>
+        /// This unit test hangs
+        /// https://github.com/MelbourneDeveloper/Ledger.Net/issues/13
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
         public async Task SignChunkedEthereumTransaction()
         {
             await GetLedger();
@@ -190,7 +195,7 @@ namespace Ledger.Net.Tests
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x00, 0x00};
 
-            var derivationData = Helpers.GetDerivationPathData(new AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
+            var derivationData = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
 
             // Create base class like GetPublicKeyResponseBase and make the method more like GetAddressAsync
 
@@ -198,13 +203,13 @@ namespace Ledger.Net.Tests
 
             var response = await _LedgerManager.SendRequestAsync<EthereumAppSignatureResponse, EthereumAppSignatureRequest>(firstRequest);
 
-            Assert.True(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
+            Assert.IsTrue(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
 
-            Assert.True(response.SignatureR?.Length == 32);
-            Assert.True(response.SignatureS?.Length == 32);
+            Assert.IsTrue(response.SignatureR?.Length == 32);
+            Assert.IsTrue(response.SignatureS?.Length == 32);
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetEthereumAddress()
         {
             await GetLedger();
