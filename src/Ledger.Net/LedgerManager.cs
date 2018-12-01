@@ -15,9 +15,9 @@ namespace Ledger.Net
     public class LedgerManager : IAddressDeriver
     {
         #region Fields
-        private SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
 
-        private readonly Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>> _GetAddressFunc = new Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>>(async (s) =>
+        private readonly Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>> _GetAddressFunc = async s =>
         {
             var lm = s.LedgerManager;
 
@@ -40,7 +40,7 @@ namespace Ledger.Net
             }
 
             return response;
-        });
+        };
         #endregion
 
         #region Public Properties
@@ -63,12 +63,8 @@ namespace Ledger.Net
             ErrorPrompt = errorPrompt;
 
             LedgerHidDevice = ledgerHidDevice;
-            CoinUtility = coinUtility;
 
-            if (CoinUtility == null)
-            {
-                CoinUtility = new DefaultCoinUtility();
-            }
+            CoinUtility = coinUtility ?? new DefaultCoinUtility();
 
             SetCoinNumber(0);
         }
@@ -201,7 +197,7 @@ namespace Ledger.Net
 
         public Task<string> GetAddressAsync(uint account, bool isChange, uint index, bool showDisplay)
         {
-            return GetAddressAsync(new AddressPath(CurrentCoin.IsSegwit, CurrentCoin.CoinNumber, account, isChange, index), false, showDisplay);
+            return GetAddressAsync(new BIP44AddressPath(CurrentCoin.IsSegwit, CurrentCoin.CoinNumber, account, isChange, index), false, showDisplay);
         }
 
         public async Task<string> GetAddressAsync(IAddressPath addressPath, bool isPublicKey, bool display)
@@ -252,10 +248,8 @@ namespace Ledger.Net
                     {
                         throw;
                     }
-                    else
-                    {
-                        await ErrorPrompt(null, ex, state.MemberName);
-                    }
+
+                    await ErrorPrompt(null, ex, state.MemberName);
                 }
             }
 

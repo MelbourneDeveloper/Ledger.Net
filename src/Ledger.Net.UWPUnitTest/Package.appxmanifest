@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
+  <Identity Name="0874db7e-418a-4788-ae2f-6cf42c7ac5f6" Publisher="CN=ChristianFindlay" Version="1.0.0.0" />
+  <mp:PhoneIdentity PhoneProductId="ffd46810-7ead-4110-b2d5-791f54d0ff35" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Properties>
+    <DisplayName>Ledger.Net.UWPUnitTest</DisplayName>
+    <PublisherDisplayName>ChristianFindlay</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="vstest.executionengine.universal.App" Executable="$targetnametoken$.exe" EntryPoint="Trezor.Net.UWPUnitTest.App">
+      <uap:VisualElements DisplayName="Ledger UWP Unit Test" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Ledger UWP Unit Test" BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
+        </uap:DefaultTile>
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClientServer" />
+    <uap:Capability Name="removableStorage" />
+    
+    <DeviceCapability Name="humaninterfacedevice">
+      
+      <!--Ledger Nano Standard Usage Page-->
+      <Device Id="vidpid:2C97 0001">
+        <Function Type="usage:0005 *" />
+        <Function Type="usage:FFA0 *" />
+      </Device>
+
+    </DeviceCapability>
+    
+  </Capabilities>
+</Package>

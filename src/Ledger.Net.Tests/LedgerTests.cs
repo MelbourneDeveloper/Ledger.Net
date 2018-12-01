@@ -1,21 +1,18 @@
 using Hardwarewallets.Net;
 using Hardwarewallets.Net.AddressManagement;
-using Hardwarewallets.Net.Model;
-using Hid.Net;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
-using NBitcoin;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Xunit;
 
 namespace Ledger.Net.Tests
 {
-    public class LedgerTests
+    [TestClass]
+    public partial class LedgerTests
     {
         #region Private Fields
         private LedgerManager _LedgerManager;
@@ -53,7 +50,7 @@ namespace Ledger.Net.Tests
 
         #region Tests
 
-        [Fact]
+        [TestMethod]
         public async Task GetLiteCoinAddress()
         {
             await GetLedger();
@@ -61,13 +58,13 @@ namespace Ledger.Net.Tests
             _LedgerManager.SetCoinNumber(2);
             var address = await _LedgerManager.GetAddressAsync(0, 0);
 
-            Assert.True(!string.IsNullOrEmpty(address));
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
 
         /// <summary>
         /// Note this hasn't been confirmed to be returning the correct address in Ledger live yet
         /// </summary>
-        [Fact]
+        [TestMethod]
         public async Task GetBitcoinCashAddress()
         {
             await GetLedger();
@@ -75,10 +72,10 @@ namespace Ledger.Net.Tests
             _LedgerManager.SetCoinNumber(145);
             var address = await _LedgerManager.GetAddressAsync(0, 0);
 
-            Assert.True(!string.IsNullOrEmpty(address));
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetAddressAnyBitcoinApp()
         {
             await GetLedger();
@@ -88,18 +85,18 @@ namespace Ledger.Net.Tests
             var address = await _LedgerManager.GetAddressAsync(0, false, 0, false);
         }
 
-        [Fact]
+        [TestMethod]
         public async Task DisplayAddress()
         {
             await GetLedger(Prompt);
 
             var address = await _LedgerManager.GetAddressAsync(0, false, 0, true);
 
-            Assert.True(!string.IsNullOrEmpty(address));
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
 
 
-        [Fact]
+        [TestMethod]
         public async Task GetBitcoinPublicKey()
         {
             await GetLedger(Prompt);
@@ -109,23 +106,23 @@ namespace Ledger.Net.Tests
             {
                 LedgerManager = _LedgerManager,
                 MemberName = nameof(_GetPublicKeyFunc),
-                Args = new GetAddressArgs(new AddressPath(true, 0, 0, false, 0), false)
+                Args = new GetAddressArgs(new BIP44AddressPath(true, 0, 0, false, 0), false)
             });
 
-            Assert.True(!string.IsNullOrEmpty(returnResponse.PublicKey));
+            Assert.IsTrue(!string.IsNullOrEmpty(returnResponse.PublicKey));
         }
 
-        [Fact]
-        public async Task GetEthereumPublicKey()
+        [TestMethod]
+        public async Task DisplayEthereumPublicKey()
         {
             await GetLedger();
             _LedgerManager.SetCoinNumber(60);
-            var addressPath = Helpers.GetDerivationPathData(new AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
+            var addressPath = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
             var publicKey = await _LedgerManager.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(true, false, addressPath));
-            Assert.True(!string.IsNullOrEmpty(publicKey.PublicKey));
+            Assert.IsTrue(!string.IsNullOrEmpty(publicKey.PublicKey));
         }
 
-        [Fact]
+        [TestMethod]
         public async Task SignEthereumTransaction()
         {
             await GetLedger();
@@ -133,7 +130,7 @@ namespace Ledger.Net.Tests
 
             byte[] rlpEncodedTransactionData = { 227, 128, 132, 59, 154, 202, 0, 130, 82, 8, 148, 139, 6, 158, 207, 123, 242, 48, 225, 83, 184, 237, 144, 59, 171, 242, 68, 3, 204, 162, 3, 128, 128, 4, 128, 128 };
 
-            var derivationData = Helpers.GetDerivationPathData(new AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
+            var derivationData = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
 
             // Create base class like GetPublicKeyResponseBase and make the method more like GetAddressAsync
 
@@ -141,10 +138,10 @@ namespace Ledger.Net.Tests
 
             var response = await _LedgerManager.SendRequestAsync<EthereumAppSignatureResponse, EthereumAppSignatureRequest>(firstRequest);
 
-            Assert.True(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
+            Assert.IsTrue(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
 
-            Assert.True(response.SignatureR?.Length == 32);
-            Assert.True(response.SignatureS?.Length == 32);
+            Assert.IsTrue(response.SignatureR?.Length == 32);
+            Assert.IsTrue(response.SignatureS?.Length == 32);
         }
 
         [Fact]
@@ -215,10 +212,10 @@ namespace Ledger.Net.Tests
             _LedgerManager.SetCoinNumber(60);
             var address = await _LedgerManager.GetAddressAsync(0, 0);
 
-            Assert.True(!string.IsNullOrEmpty(address));
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetEthereumAddressParsed()
         {
             await GetLedger();
@@ -226,19 +223,17 @@ namespace Ledger.Net.Tests
             _LedgerManager.SetCoinNumber(60);
 
             //Modern Path
-            var path = KeyPath.Parse("m/44'/60'/0'/0").Derive(0);
-            var addressPath = new KeyPathAddressPath(path);
-            var address = await _LedgerManager.GetAddressAsync(addressPath, false, false);
-            Assert.True(!string.IsNullOrEmpty(address));
+            var path = AddressPathBase.Parse<CustomAddressPath>("m/44'/60'/0'/0/0");
+            var address = await _LedgerManager.GetAddressAsync(path, false, false);
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
 
             //Legacy Path
-            path = KeyPath.Parse("m/44'/60'/0'").Derive(0);
-            addressPath = new KeyPathAddressPath(path);
-            address = await _LedgerManager.GetAddressAsync(addressPath, false, false);
-            Assert.True(!string.IsNullOrEmpty(address));
+            path = AddressPathBase.Parse<CustomAddressPath>("m/44'/60'/0'/0");
+            address = await _LedgerManager.GetAddressAsync(path, false, false);
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetEthereumAddressCustomPath()
         {
             await GetLedger();
@@ -248,17 +243,17 @@ namespace Ledger.Net.Tests
             //Three elements
             var path = new uint[] { AddressUtilities.HardenNumber(44), AddressUtilities.HardenNumber(60), 0 };
             var address = await _LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
-            Assert.True(!string.IsNullOrEmpty(address));
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
 
             //Four elements
             path = new uint[] { AddressUtilities.HardenNumber(44), AddressUtilities.HardenNumber(60), 0, 1 };
             address = await _LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
-            Assert.True(!string.IsNullOrEmpty(address));
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
 
             //Two elements
             path = new uint[] { AddressUtilities.HardenNumber(44), AddressUtilities.HardenNumber(60) };
             address = await _LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
-            Assert.True(!string.IsNullOrEmpty(address));
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
 
             _LedgerManager.ErrorPrompt = ThrowErrorInsteadOfPrompt;
 
@@ -273,30 +268,30 @@ namespace Ledger.Net.Tests
             {
                 exception = ex;
             }
-            Assert.True(exception != null);
+            Assert.IsTrue(exception != null);
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetEthereumAddresses()
         {
             await GetLedger();
 
             _LedgerManager.SetCoinNumber(60);
 
-            var addressManager = new AddressManager(_LedgerManager, new AddressPathFactory(false, 60));
+            var addressManager = new AddressManager(_LedgerManager, new BIP44AddressPathFactory(false, 60));
 
             //Get 10 addresses with all the trimming
             const int numberOfAddresses = 3;
             const int numberOfAccounts = 2;
             var addresses = await addressManager.GetAddressesAsync(0, numberOfAddresses, numberOfAccounts, true, true);
 
-            Assert.True(addresses != null);
-            Assert.True(addresses.Accounts != null);
-            Assert.True(addresses.Accounts.Count == numberOfAccounts);
-            Assert.True(addresses.Accounts[0].Addresses.Count == numberOfAddresses);
-            Assert.True(addresses.Accounts[1].Addresses.Count == numberOfAddresses);
-            Assert.True(addresses.Accounts[0].ChangeAddresses.Count == numberOfAddresses);
-            Assert.True(addresses.Accounts[1].ChangeAddresses.Count == numberOfAddresses);
+            Assert.IsTrue(addresses != null);
+            Assert.IsTrue(addresses.Accounts != null);
+            Assert.IsTrue(addresses.Accounts.Count == numberOfAccounts);
+            Assert.IsTrue(addresses.Accounts[0].Addresses.Count == numberOfAddresses);
+            Assert.IsTrue(addresses.Accounts[1].Addresses.Count == numberOfAddresses);
+            Assert.IsTrue(addresses.Accounts[0].ChangeAddresses.Count == numberOfAddresses);
+            Assert.IsTrue(addresses.Accounts[1].ChangeAddresses.Count == numberOfAddresses);
         }
 
         #endregion
@@ -342,62 +337,10 @@ namespace Ledger.Net.Tests
 
         private async Task GetLedger(ErrorPromptDelegate errorPrompt = null)
         {
-            var devices = new List<DeviceInformation>();
-
-            var collection = WindowsHidDevice.GetConnectedDeviceInformations();
-
-            foreach (var ids in WellKnownLedgerWallets)
-            {
-                if (ids.ProductId == null)
-                {
-                    devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId));
-                }
-                else
-                {
-                    devices.AddRange(collection.Where(c => c.VendorId == ids.VendorId && c.ProductId == ids.ProductId));
-                }
-            }
-
-            var retVal = devices
-                .FirstOrDefault(d =>
-                _UsageSpecification == null ||
-                _UsageSpecification.Length == 0 ||
-                _UsageSpecification.Any(u => d.UsagePage == u.UsagePage && d.Usage == u.Usage));
-
-            var ledgerHidDevice = new WindowsHidDevice(retVal);
-            await ledgerHidDevice.InitializeAsync();
+            var ledgerHidDevice = await GetLedgerDevice();
             _LedgerManager = new LedgerManager(ledgerHidDevice, null, Prompt);
         }
+
         #endregion
-    }
-
-    public class CustomAddressPath : IAddressPath
-    {
-        public uint Purpose => throw new NotImplementedException();
-
-        public uint CoinType => throw new NotImplementedException();
-
-        public uint Account => throw new NotImplementedException();
-
-        public uint Change => throw new NotImplementedException();
-
-        public uint AddressIndex => throw new NotImplementedException();
-
-        public uint[] Path { get; }
-
-        public CustomAddressPath(uint[] path)
-        {
-            Path = path;
-        }
-
-        public uint[] ToHardenedArray()
-        {
-            return Path;
-        }
-
-        public uint[] ToUnhardenedArray()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -6,7 +6,7 @@ namespace Ledger.Net.Exceptions
     {
         public byte[] ResponseData { get; }
 
-        public ResponseExceptionBase(string message, byte[] responseData) : base(message)
+        protected ResponseExceptionBase(string message, byte[] responseData) : base(message)
         {
             ResponseData = responseData;
         }
