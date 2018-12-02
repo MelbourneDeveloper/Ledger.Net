@@ -8,6 +8,7 @@ using Ledger.Net.Responses;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -135,7 +136,7 @@ namespace Ledger.Net
             try
             {
                 var responseDataChunks = await WriteRequestAndReadAsync(request);
-                return (TResponse)Activator.CreateInstance(typeof(TResponse), responseData);
+                return (TResponse)Activator.CreateInstance(typeof(TResponse), responseDataChunks.Last());
             }
             finally
             {
