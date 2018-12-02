@@ -6,6 +6,7 @@ using Ledger.Net.Exceptions;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -77,20 +78,12 @@ namespace Ledger.Net
         #endregion
 
         #region Private Methods
-        private async Task WriteRequestAsync<TRequest>(TRequest request) where TRequest : RequestBase
+        private async Task<IEnumerable<byte[]>> WriteRequestAndReadAsync<TRequest>(TRequest request) where  TRequest : RequestBase
         {
-            var commandIndex = 0;
+            var responseData = new List<byte[]>();
+
             foreach (var apduCommandChunk in request.ToAPDUChunks())
             {
-                if (commandIndex > 0)
-                {
-                    //Read intermediates response codes
-                    ResponseBase response = new ResponseBase(await ReadResponseAsync());
-                    if (!response.IsSuccess)
-                    {
-                        HandleErrorResponse(response);
-                    }
-                }
 
                 var packetIndex = 0;
                 byte[] data = null;
@@ -104,11 +97,12 @@ namespace Ledger.Net
                     } while (memoryStream.Position != memoryStream.Length);
                 }
 
-                commandIndex++;
+                responseData.Add(await ReadAsync());
             }
+            return responseData;
         }
 
-        private async Task<byte[]> ReadResponseAsync()
+        private async Task<byte[]> ReadAsync()
         {
             var remaining = 0;
             var packetIndex = 0;
@@ -140,8 +134,7 @@ namespace Ledger.Net
 
             try
             {
-                await WriteRequestAsync(request);
-                var responseData = await ReadResponseAsync();
+                var responseDataChunks = await WriteRequestAndReadAsync(request);
                 return (TResponse)Activator.CreateInstance(typeof(TResponse), responseData);
             }
             finally
