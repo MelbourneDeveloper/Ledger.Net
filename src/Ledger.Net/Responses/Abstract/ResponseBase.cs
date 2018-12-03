@@ -1,16 +1,15 @@
-﻿using Ledger.Net.Exceptions;
-
-namespace Ledger.Net.Responses
+﻿namespace Ledger.Net.Responses
 {
     public abstract class ResponseBase
     {
         #region Constants
         private const int HardeningConstant = 0xff;
+        private const int V = 0x9000;
         #endregion
 
         #region Public Properties
         public byte[] Data { get; }
-        public bool IsSuccess => ReturnCode == 0x9000;
+        public bool IsSuccess => ReturnCode == Constants.SuccessStatusCode;
         public int ReturnCode { get; }
         public string StatusMessage
         {
@@ -18,7 +17,7 @@ namespace Ledger.Net.Responses
             {
                 switch (ReturnCode)
                 {
-                    case 0x9000:
+                    case Constants.SuccessStatusCode:
                         return "Success";
                     case Constants.InstructionNotSupportedStatusCode:
                         return "Instruction not supported in current app or there is no app running";
@@ -49,7 +48,15 @@ namespace Ledger.Net.Responses
         protected ResponseBase(byte[] data)
         {
             Data = data;
-            ReturnCode = ((data[data.Length - 2] & HardeningConstant) << 8) | data[data.Length - 1] & HardeningConstant;
+            var returnCode = GetReturnCode(data);
+            ReturnCode = returnCode;
+        }
+        #endregion
+
+        #region Public Static Methods
+        public static int GetReturnCode(byte[] data)
+        {
+            return ((data[data.Length - 2] & HardeningConstant) << 8) | data[data.Length - 1] & HardeningConstant;
         }
         #endregion
     }

@@ -22,7 +22,8 @@
         public const byte ETHEREUM_SIGN_MESSAGE = 0x08;
         #endregion
 
-        #region Error Codes
+        #region Status Codes
+        public const int SuccessStatusCode = 0x9000;
         public const int SecurityNotValidStatusCode = 0x6982;
         public const int InstructionNotSupportedStatusCode = 0x6D00;
         public const int IncorrectLengthStatusCode = 0x6700;

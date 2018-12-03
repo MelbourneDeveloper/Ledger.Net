@@ -79,7 +79,7 @@ namespace Ledger.Net
         #endregion
 
         #region Private Methods
-        private async Task<IEnumerable<byte[]>> WriteRequestAndReadAsync<TRequest>(TRequest request) where  TRequest : RequestBase
+        private async Task<IEnumerable<byte[]>> WriteRequestAndReadAsync<TRequest>(TRequest request) where TRequest : RequestBase
         {
             var responseData = new List<byte[]>();
 
@@ -98,7 +98,16 @@ namespace Ledger.Net
                     } while (memoryStream.Position != memoryStream.Length);
                 }
 
-                responseData.Add(await ReadAsync());
+                var responseDataChunk = await ReadAsync();
+
+                responseData.Add(responseDataChunk);
+
+                var returnCode = ResponseBase.GetReturnCode(responseDataChunk);
+
+                if (returnCode != Constants.SuccessStatusCode)
+                {
+                    return responseData;
+                }
             }
             return responseData;
         }
