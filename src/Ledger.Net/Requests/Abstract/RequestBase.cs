@@ -46,8 +46,15 @@ namespace Ledger.Net.Requests
         internal System.Collections.Generic.IEnumerable<byte[]> ToAPDU()
         {
             int offset = 0;
-            while (offset < Data.Length - 1)
+            if (Data.Length > 0)
+            {
+                while (offset < Data.Length - 1)
+                    yield return GetNextApduCommand(ref offset);
+            } 
+            else
+            {
                 yield return GetNextApduCommand(ref offset);
+            }
         }
         #endregion
     }
