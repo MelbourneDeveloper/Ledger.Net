@@ -1,4 +1,4 @@
-﻿using Hid.Net;
+﻿using Hid.Net.Windows;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +9,7 @@ namespace Ledger.Net.Tests
     {
         private async static Task<WindowsHidDevice> GetLedgerDevice()
         {
-            var devices = new List<DeviceInformation>();
+            var devices = new List<WindowsHidDeviceInformation>();
 
             var collection = WindowsHidDevice.GetConnectedDeviceInformations();
 

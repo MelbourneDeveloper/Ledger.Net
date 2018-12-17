@@ -1,7 +1,7 @@
-﻿using Hardwarewallets.Net;
+﻿using Device.Net;
+using Hardwarewallets.Net;
 using Hardwarewallets.Net.AddressManagement;
 using Hardwarewallets.Net.Model;
-using Hid.Net;
 using Ledger.Net.Exceptions;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
@@ -51,16 +51,16 @@ namespace Ledger.Net
         #endregion
 
         #region Constructor
-        public LedgerManager(IHidDevice ledgerHidDevice) : this(ledgerHidDevice, null, null)
+        public LedgerManager(IDevice ledgerHidDevice) : this(ledgerHidDevice, null, null)
         {
         }
 
-        public LedgerManager(IHidDevice ledgerHidDevice, ICoinUtility coinUtility) : this(ledgerHidDevice, coinUtility, null)
+        public LedgerManager(IDevice ledgerHidDevice, ICoinUtility coinUtility) : this(ledgerHidDevice, coinUtility, null)
         {
 
         }
 
-        public LedgerManager(IHidDevice ledgerHidDevice, ICoinUtility coinUtility, ErrorPromptDelegate errorPrompt)
+        public LedgerManager(IDevice ledgerHidDevice, ICoinUtility coinUtility, ErrorPromptDelegate errorPrompt)
         {
             ErrorPrompt = errorPrompt;
 
@@ -73,7 +73,7 @@ namespace Ledger.Net
         #endregion
 
         #region Public Properties
-        public IHidDevice LedgerHidDevice { get; }
+        public IDevice LedgerHidDevice { get; }
         public ICoinUtility CoinUtility { get; }
         public ICoinInfo CurrentCoin { get; private set; }
         #endregion
