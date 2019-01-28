@@ -47,7 +47,7 @@ namespace Ledger.Net
         #endregion
 
         #region Constructor
-        protected LedgerManagerBrokeer(int? pollInterval, ICoinUtility coinUtility, ErrorPromptDelegate errorPromptDelegate)
+        public LedgerManagerBroker(int? pollInterval, ICoinUtility coinUtility, ErrorPromptDelegate errorPromptDelegate)
         {
             CoinUtility = coinUtility;
             PollInterval = pollInterval;
