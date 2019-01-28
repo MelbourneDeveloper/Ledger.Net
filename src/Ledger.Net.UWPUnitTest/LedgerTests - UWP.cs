@@ -6,7 +6,7 @@ namespace Ledger.Net.Tests
 {
     public partial class LedgerTests
     {
-        private static Task<IDevice> GetLedgerDevice()
+        private static Task<LedgerManager> GetLedgerDevice()
         {
             var taskCompletionSource = new TaskCompletionSource<IDevice>();
             var uwpHidDevice = new UWPHidDevice();

@@ -14,9 +14,11 @@ using System.Threading.Tasks;
 
 namespace Ledger.Net
 {
-    public class LedgerManager : IAddressDeriver
+    public class LedgerManager : IAddressDeriver, IDisposable
     {
         #region Fields
+        private bool _IsDisposed;
+
         private readonly SemaphoreSlim _SemaphoreSlim = new SemaphoreSlim(1, 1);
 
         private readonly Func<CallAndPromptArgs<GetAddressArgs>, Task<GetPublicKeyResponseBase>> _GetAddressFunc = async s =>
@@ -257,6 +259,15 @@ namespace Ledger.Net
             }
 
             throw new TooManyPromptsException(PromptRetryCount, state.MemberName);
+        }
+
+        public void Dispose()
+        {
+            if (_IsDisposed) return;
+            _IsDisposed = true;
+
+            _SemaphoreSlim.Dispose();
+            LedgerHidDevice?.Dispose();
         }
 
         #endregion
