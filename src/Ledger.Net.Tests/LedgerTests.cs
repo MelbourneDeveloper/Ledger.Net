@@ -342,7 +342,7 @@ namespace Ledger.Net.Tests
 
         private async Task GetLedgerBase(ErrorPromptDelegate errorPrompt = null)
         {
-            var ledgerManagerBroker = new LedgerManagerBroker(null, null, Prompt);
+            var ledgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt);
             _LedgerManager = await ledgerManagerBroker.WaitForFirstDeviceAsync();
         }
 

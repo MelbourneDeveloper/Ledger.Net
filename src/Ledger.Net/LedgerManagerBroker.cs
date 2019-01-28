@@ -13,11 +13,11 @@ namespace Ledger.Net
         #region Protected Abstract Properties
         protected List<FilterDeviceDefinition> DeviceDefinitions { get; } = new List<FilterDeviceDefinition>
         {
-            new FilterDeviceDefinition{ DeviceType= DeviceType.Hid, VendorId= 0x2c97 },
-            new FilterDeviceDefinition{ DeviceType= DeviceType.Hid, VendorId= 0x2581, ProductId=0x3b7c },
+            new FilterDeviceDefinition{ DeviceType= DeviceType.Hid, VendorId= 0x2c97, UsagePage=0xf1d0 },
+            new FilterDeviceDefinition{ DeviceType= DeviceType.Hid, VendorId= 0x2581, ProductId=0x3b7c, UsagePage=0xf1d0 },
             //Android only
-            new FilterDeviceDefinition{ DeviceType= DeviceType.Usb, VendorId= 0x2c97 },
-            new FilterDeviceDefinition{ DeviceType= DeviceType.Usb, VendorId= 0x2581, ProductId=0x3b7c },
+            new FilterDeviceDefinition{ DeviceType= DeviceType.Usb, VendorId= 0x2c97, UsagePage=0xf1d0 },
+            new FilterDeviceDefinition{ DeviceType= DeviceType.Usb, VendorId= 0x2581, ProductId=0x3b7c, UsagePage=0xf1d0 },
        };
 
         #endregion
