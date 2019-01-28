@@ -88,7 +88,7 @@ namespace Ledger.Net.Tests
         [TestMethod]
         public async Task DisplayAddress()
         {
-            await GetLedger(Prompt);
+            await GetLedger();
 
             var address = await _LedgerManager.GetAddressAsync(0, false, 0, true);
 
@@ -99,7 +99,7 @@ namespace Ledger.Net.Tests
         [TestMethod]
         public async Task GetBitcoinPublicKey()
         {
-            await GetLedger(Prompt);
+            await GetLedger();
 
             var returnResponse = (GetPublicKeyResponseBase)await _LedgerManager.CallAndPrompt(_GetPublicKeyFunc,
             new CallAndPromptArgs<GetAddressArgs>
@@ -340,10 +340,10 @@ namespace Ledger.Net.Tests
             await Task.Delay(5000);
         }
 
-        private async Task GetLedger(ErrorPromptDelegate errorPrompt = null)
+        private async Task GetLedgerBase(ErrorPromptDelegate errorPrompt = null)
         {
-            var ledgerHidDevice = await GetLedgerDevice();
-            _LedgerManager = new LedgerManager(ledgerHidDevice, null, Prompt);
+            var ledgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt);
+            _LedgerManager = await ledgerManagerBroker.WaitForFirstDeviceAsync();
         }
 
         #endregion

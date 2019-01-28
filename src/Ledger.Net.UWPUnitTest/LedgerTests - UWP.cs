@@ -6,13 +6,10 @@ namespace Ledger.Net.Tests
 {
     public partial class LedgerTests
     {
-        private static Task<IDevice> GetLedgerDevice()
+        private Task GetLedger()
         {
-            var taskCompletionSource = new TaskCompletionSource<IDevice>();
-            var uwpHidDevice = new UWPHidDevice();
-            var uwpHidDevicePoller = new UWPHidDevicePoller(1, 0x2c97, uwpHidDevice);
-            uwpHidDevice.Connected += (a, b) => taskCompletionSource.SetResult(uwpHidDevice);
-            return taskCompletionSource.Task;
+            UWPHidDeviceFactory.Register();
+            return GetLedgerBase();
         }
     }
 }
