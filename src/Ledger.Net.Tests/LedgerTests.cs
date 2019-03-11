@@ -35,7 +35,7 @@ namespace Ledger.Net.Tests
                     break;
                 case App.Bitcoin:
                     //TODO: Should we use the Coin's IsSegwit here?
-                    response = await lm.SendRequestAsync<BitcoinAppGetPublicKeyResponse, TronAppGetPublicKeyRequest>(new TronAppGetPublicKeyRequest(data));
+                    response = await lm.SendRequestAsync<BitcoinAppGetPublicKeyResponse, TronAppGetPublicKeyRequest>(new TronAppGetPublicKeyRequest(s.Args.ShowDisplay, data));
                     break;
                 default:
                     throw new NotImplementedException();
@@ -51,12 +51,12 @@ namespace Ledger.Net.Tests
         #region Tests
 
         [TestMethod]
-        public async Task GetTronixAddress()
+        public async Task DisplayTronAddress()
         {
             await GetLedger();
 
             _LedgerManager.SetCoinNumber(195);
-            var address = await _LedgerManager.GetAddressAsync(0, 0);
+            var address = await _LedgerManager.GetAddressAsync(0, false, 0, true);
 
             Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
