@@ -35,7 +35,7 @@ namespace Ledger.Net.Tests
                     break;
                 case App.Bitcoin:
                     //TODO: Should we use the Coin's IsSegwit here?
-                    response = await lm.SendRequestAsync<BitcoinAppGetPublicKeyResponse, TronAppGetPublicKeyRequest>(new TronAppGetPublicKeyRequest(s.Args.ShowDisplay, data));
+                    response = await lm.SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(s.Args.ShowDisplay, BitcoinAddressType.Segwit, data));
                     break;
                 default:
                     throw new NotImplementedException();
