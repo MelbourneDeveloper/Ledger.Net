@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ledger.Net.Requests
+﻿namespace Ledger.Net.Requests
 {
     public class GetCoinVersionRequest : RequestBase
     {
@@ -12,7 +10,7 @@ namespace Ledger.Net.Requests
         #endregion
 
         #region Constructor
-        public GetCoinVersionRequest() : base(Array.Empty<byte>())
+        public GetCoinVersionRequest() : base(new byte[0])
         {
         }
         #endregion

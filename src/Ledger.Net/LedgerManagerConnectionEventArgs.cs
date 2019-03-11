@@ -1,6 +1,8 @@
-﻿namespace Ledger.Net
+﻿using System;
+
+namespace Ledger.Net
 {
-    public class LedgerManagerConnectionEventArgs
+    public class LedgerManagerConnectionEventArgs : EventArgs
     {
         public LedgerManager LedgerManager { get; }
 

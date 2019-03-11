@@ -1254,7 +1254,7 @@
     <Rule Id="CA1601" Action="Error" />
     <Rule Id="CA1810" Action="Error" />
     <Rule Id="CA1824" Action="Error" />
-    <Rule Id="CA1825" Action="Error" />
+    <Rule Id="CA1825" Action="Warning" />
     <Rule Id="CA2010" Action="Error" />
     <Rule Id="CA2205" Action="Error" />
     <Rule Id="CA2207" Action="Error" />
@@ -1264,7 +1264,7 @@
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.VisualBasic.Analyzers" RuleNamespace="Microsoft.NetCore.VisualBasic.Analyzers">
     <Rule Id="CA1810" Action="Error" />
-    <Rule Id="CA1825" Action="Error" />
+    <Rule Id="CA1825" Action="Warning" />
     <Rule Id="CA2207" Action="Error" />
   </Rules>
   <Rules AnalyzerId="Microsoft.NetFramework.Analyzers" RuleNamespace="Microsoft.NetFramework.Analyzers">
