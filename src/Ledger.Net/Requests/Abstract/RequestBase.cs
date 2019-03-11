@@ -33,7 +33,7 @@ namespace Ledger.Net.Requests
             buffer[1] = Ins;
             buffer[2] = offset == 0 ? Argument1 : Constants.P1_MORE;
             buffer[3] = Argument2;
-            buffer[4] = (byte)(chunkSize);
+            buffer[4] = (byte)chunkSize;
             Array.Copy(Data, offset, buffer, 5, chunkSize);
 
             offset += chunkSize;
@@ -44,7 +44,7 @@ namespace Ledger.Net.Requests
         #region Internal Methods
         internal IEnumerable<byte[]> ToAPDUChunks()
         {
-            int offset = 0;
+            var offset = 0;
             if (Data.Length > 0)
             {
                 while (offset < Data.Length - 1)

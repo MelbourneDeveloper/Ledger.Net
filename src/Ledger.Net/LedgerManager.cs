@@ -39,6 +39,9 @@ namespace Ledger.Net
                     //TODO: Should we use the Coin's IsSegwit here?
                     response = await lm.SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(s.Args.ShowDisplay, BitcoinAddressType.Segwit, data));
                     break;
+                case App.Tron:
+                    response = await lm.SendRequestAsync<TronAppGetPublicKeyResponse, TronAppGetPublicKeyRequest>(new TronAppGetPublicKeyRequest(s.Args.ShowDisplay, data));
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -268,8 +271,14 @@ namespace Ledger.Net
 
             _SemaphoreSlim.Dispose();
             LedgerHidDevice?.Dispose();
+
+            GC.SuppressFinalize(this);
         }
 
+        ~LedgerManager()
+        {
+            Dispose();
+        }
         #endregion
     }
 }

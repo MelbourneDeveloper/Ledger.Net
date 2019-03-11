@@ -4,6 +4,7 @@
     {
         Bitcoin,
         Ethereum,
-        BitcoinGold
+        BitcoinGold,
+        Tron
     }
 }
