@@ -4,7 +4,6 @@
     {
         #region Constants
         private const int HardeningConstant = 0xff;
-        private const int V = 0x9000;
         #endregion
 
         #region Public Properties
@@ -56,7 +55,7 @@
         #region Public Static Methods
         public static int GetReturnCode(byte[] data)
         {
-            return ((data[data.Length - 2] & HardeningConstant) << 8) | data[data.Length - 1] & HardeningConstant;
+            return ((data[data.Length - 2] & HardeningConstant) << 8) | (data[data.Length - 1] & HardeningConstant);
         }
         #endregion
     }

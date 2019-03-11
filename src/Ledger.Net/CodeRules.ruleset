@@ -68,8 +68,8 @@
     <Rule Id="CA1301" Action="Error" />
     <Rule Id="CA1302" Action="Error" />
     <Rule Id="CA1303" Action="Error" />
-    <Rule Id="CA1304" Action="Error" />
-    <Rule Id="CA1305" Action="Error" />
+    <Rule Id="CA1304" Action="Warning" />
+    <Rule Id="CA1305" Action="Warning" />
     <Rule Id="CA1306" Action="Error" />
     <Rule Id="CA1307" Action="Error" />
     <Rule Id="CA1308" Action="Error" />
@@ -200,7 +200,7 @@
     <Rule Id="CA2211" Action="Error" />
     <Rule Id="CA2212" Action="Error" />
     <Rule Id="CA2213" Action="Error" />
-    <Rule Id="CA2214" Action="Error" />
+    <Rule Id="CA2214" Action="Warning" />
     <Rule Id="CA2215" Action="Error" />
     <Rule Id="CA2216" Action="Error" />
     <Rule Id="CA2217" Action="Error" />
@@ -1190,7 +1190,7 @@
     <Rule Id="CA1823" Action="Error" />
     <Rule Id="CA2119" Action="Error" />
     <Rule Id="CA2211" Action="Error" />
-    <Rule Id="CA2214" Action="Error" />
+    <Rule Id="CA2214" Action="Warning" />
     <Rule Id="CA2217" Action="Error" />
     <Rule Id="CA2219" Action="Error" />
     <Rule Id="CA2222" Action="Error" />
@@ -1229,8 +1229,8 @@
     <Rule Id="CA1821" Action="Error" />
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
-    <Rule Id="CA1304" Action="Error" />
-    <Rule Id="CA1305" Action="Error" />
+    <Rule Id="CA1304" Action="Warning" />
+    <Rule Id="CA1305" Action="Warning" />
     <Rule Id="CA1307" Action="Error" />
     <Rule Id="CA1308" Action="Error" />
     <Rule Id="CA1813" Action="Error" />

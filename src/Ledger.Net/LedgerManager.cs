@@ -268,8 +268,14 @@ namespace Ledger.Net
 
             _SemaphoreSlim.Dispose();
             LedgerHidDevice?.Dispose();
+
+            GC.SuppressFinalize(this);
         }
 
+        ~LedgerManager()
+        {
+            Dispose();
+        }
         #endregion
     }
 }
