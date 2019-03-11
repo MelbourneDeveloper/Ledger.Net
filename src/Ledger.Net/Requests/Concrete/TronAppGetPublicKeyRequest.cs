@@ -3,22 +3,16 @@
     public class TronAppGetPublicKeyRequest : RequestBase
     {
         #region Public Overrides
-        public override byte Argument1 => (byte)(Display ? 1 : 0);
-        public override byte Argument2 => (byte)BitcoinAddressType;
+        //From test_getPublicKey.py
+        public override byte Argument1 => 0x00;
+        public override byte Argument2 => 0x00;
         public override byte Cla => Constants.CLA;
-        public override byte Ins => Constants.BTCHIP_INS_GET_WALLET_PUBLIC_KEY;
-        #endregion
-
-        #region Public Properties
-        public bool Display { get; }
-        public BitcoinAddressType BitcoinAddressType { get; }
+        public override byte Ins => 0x02;
         #endregion
 
         #region Constructor
-        public TronAppGetPublicKeyRequest(bool display, BitcoinAddressType bitcoinAddressType, byte[] data) : base(data)
+        public TronAppGetPublicKeyRequest(byte[] data) : base(data)
         {
-            Display = display;
-            BitcoinAddressType = bitcoinAddressType;
         }
         #endregion
     }
