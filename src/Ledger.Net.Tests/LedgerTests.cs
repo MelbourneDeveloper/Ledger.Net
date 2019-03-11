@@ -51,6 +51,17 @@ namespace Ledger.Net.Tests
         #region Tests
 
         [TestMethod]
+        public async Task GetTronixAddress()
+        {
+            await GetLedger();
+
+            _LedgerManager.SetCoinNumber(195);
+            var address = await _LedgerManager.GetAddressAsync(0, 0);
+
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
+        }
+
+        [TestMethod]
         public async Task GetLiteCoinAddress()
         {
             await GetLedger();
