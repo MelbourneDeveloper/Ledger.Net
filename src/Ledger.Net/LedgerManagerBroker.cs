@@ -21,10 +21,12 @@ namespace Ledger.Net
        };
 
         #endregion
+
         #region Fields
         private DeviceListener _DeviceListener;
         private SemaphoreSlim _Lock = new SemaphoreSlim(1, 1);
         private TaskCompletionSource<LedgerManager> _FirstLedgerTaskCompletionSource = new TaskCompletionSource<LedgerManager>();
+        private bool disposed;
         #endregion
 
         #region Events
@@ -162,6 +164,9 @@ namespace Ledger.Net
 
         public void Dispose()
         {
+            if (disposed) return;
+            disposed = true;
+
             _DeviceListener.Stop();
             _DeviceListener.Dispose();
 
@@ -169,6 +174,13 @@ namespace Ledger.Net
             {
                 LedgerManager.Dispose();
             }
+
+            GC.SuppressFinalize(this);
+        }
+
+        ~LedgerManagerBroker()
+        {
+            Dispose();
         }
         #endregion
     }

@@ -34,7 +34,7 @@
     <Rule Id="CA1028" Action="Error" />
     <Rule Id="CA1030" Action="Error" />
     <Rule Id="CA1031" Action="Error" />
-    <Rule Id="CA1032" Action="Error" />
+    <Rule Id="CA1032" Action="Warning" />
     <Rule Id="CA1033" Action="Error" />
     <Rule Id="CA1034" Action="Error" />
     <Rule Id="CA1035" Action="Error" />
@@ -223,6 +223,7 @@
     <Rule Id="CA2234" Action="Error" />
     <Rule Id="CA2235" Action="Error" />
     <Rule Id="CA2236" Action="Error" />
+    <Rule Id="CA2237" Action="Warning" />
     <Rule Id="CA2238" Action="Error" />
     <Rule Id="CA2239" Action="Error" />
     <Rule Id="CA2240" Action="Error" />
@@ -1210,7 +1211,7 @@
     <Rule Id="CA1001" Action="Error" />
     <Rule Id="CA1003" Action="Error" />
     <Rule Id="CA1019" Action="Error" />
-    <Rule Id="CA1032" Action="Error" />
+    <Rule Id="CA1032" Action="Warning" />
     <Rule Id="CA1065" Action="Error" />
     <Rule Id="CA1200" Action="Error" />
     <Rule Id="CA1500" Action="Error" />
@@ -1224,7 +1225,7 @@
     <Rule Id="CA2234" Action="Error" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeQuality.VisualBasic.Analyzers" RuleNamespace="Microsoft.CodeQuality.VisualBasic.Analyzers">
-    <Rule Id="CA1032" Action="Error" />
+    <Rule Id="CA1032" Action="Warning" />
     <Rule Id="CA1821" Action="Error" />
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
@@ -1271,7 +1272,7 @@
     <Rule Id="CA2153" Action="Error" />
     <Rule Id="CA2229" Action="Error" />
     <Rule Id="CA2235" Action="Error" />
-    <Rule Id="CA2237" Action="None" />
+    <Rule Id="CA2237" Action="Warning" />
     <Rule Id="CA3075" Action="Error" />
     <Rule Id="CA3147" Action="Error" />
     <Rule Id="CA9999" Action="Error" />

@@ -9,3 +9,4 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "<Pending>", Scope = "member", Target = "~P:Ledger.Net.Responses.GetPublicKeyResponseBase.PublicKeyData")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "<Pending>", Scope = "member", Target = "~P:Ledger.Net.Responses.EthereumAppSignatureResponse.SignatureR")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "<Pending>", Scope = "member", Target = "~P:Ledger.Net.Responses.EthereumAppSignatureResponse.SignatureS")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "<Pending>", Scope = "member", Target = "~P:Ledger.Net.Responses.ResponseBase.Data")]
