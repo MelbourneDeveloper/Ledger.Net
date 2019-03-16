@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <Description>A cross platform C# library for the Ledger hardwarewallet. To see the sample in a .NET Core unit test, please clone the repo. https://github.com/MelbourneDeveloper/Ledger.Net. Android, and UWP samples on their way. Support for all coins will come bit by bit, but you are able to add support by writing Request and Response messages.</Description>
+    <Description>A cross platform C# library for the Ledger hardwarewallet. To see the samples, please clone the repo at the project Url.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://github.com/MelbourneDeveloper/Ledger.Net/blob/master/LICENSE</PackageLicenseUrl>
