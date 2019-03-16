@@ -4,14 +4,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" Height="300" Width="800">
+        Title="MainWindow" Height="320" Width="800">
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="120"/>
             <RowDefinition Height="200"/>
         </Grid.RowDefinitions>
 
@@ -23,7 +23,7 @@
         <Label x:Name="label_Copy" Content="Outputted Address" HorizontalAlignment="Left" Height="30" Margin="37,82,0,0" Grid.Row="1" VerticalAlignment="Top" Width="270"/>
         <TextBox IsReadOnly="True" x:Name="PromptBox" Grid.Column="1"  Margin="2,30,2,2" TextWrapping="Wrap" AcceptsReturn="True"  />
         <Label  Content="Message: " HorizontalAlignment="Left" Height="30" Margin="10,5,0,0" VerticalAlignment="Top" Width="270" Grid.Column="1"/>
-        <TextBox TextWrapping="Wrap" AcceptsReturn="False" IsReadOnly="True" x:Name="label1" Text="Connect your device and open the Tron app. Then, wait for this check box to become checked"  Margin="2,53,2,2"  />
+        <TextBox TextWrapping="Wrap" AcceptsReturn="False" IsReadOnly="True" x:Name="label1" Text="Connect your device, enter pin, and open the Tron app. Then, wait for this check box to become checked. Note: error recovery is very flaky on Ledger. You mostly have to keep trying until it works. Any PRs that improve error recovery are very welcome."  Margin="2,53,2,2"  />
         <ProgressBar Name="TheProgressBar" Visibility="Collapsed" HorizontalAlignment="Left" Height="45" Margin="152,55,0,0" IsIndeterminate="True" Grid.Row="1" VerticalAlignment="Top" Width="174" Grid.Column="1"/>
 
     </Grid>
