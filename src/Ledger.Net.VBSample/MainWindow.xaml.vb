@@ -77,7 +77,6 @@ Class MainWindow
         Else
 
             If TypeOf exception Is Exception Then
-                Await Task.Delay(3000)
                 PromptBox.Text = exception.Message
             End If
         End If
