@@ -1,4 +1,5 @@
-﻿Imports Hid.Net.Windows
+﻿Imports Hardwarewallets.Net.AddressManagement
+Imports Hid.Net.Windows
 
 Class MainWindow
 
@@ -29,7 +30,19 @@ Class MainWindow
 
     End Sub
 
-    Private Sub GetAddressButton_Click(sender As Object, e As RoutedEventArgs) Handles GetAddressButton.Click
+    Private Async Sub GetAddressButton_Click(sender As Object, e As RoutedEventArgs) Handles GetAddressButton.Click
+
+        Dim _LedgerManager As LedgerManager = GetLedger()
+
+        Dim coinNumber As UInteger = 195
+        Dim isSegwit = False
+        Dim isChange = False
+        Dim index = 0
+        _LedgerManager.SetCoinNumber(coinNumber)
+        Dim path = $"m/{(If(isSegwit, 49, 44))}'/{coinNumber}'/{(If(isChange, 1, 0))}'/{0}/{index}"
+        Dim addressPath = AddressPathBase.Parse(Of BIP44AddressPath)(path)
+        Dim address = Await _LedgerManager.GetAddressAsync(addressPath, False, True)
+        AddressBox.Text = address
 
     End Sub
 

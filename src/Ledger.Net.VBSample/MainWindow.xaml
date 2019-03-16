@@ -5,18 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid ShowGridLines="True">
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="100"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <Button x:Name="GetAddressButton" Content="Button" HorizontalAlignment="Left" Height="58" Margin="500,54.128,0,0" VerticalAlignment="Top" Width="132" Grid.Row="1"/>
-        <Button x:Name="button1" Content="Button" HorizontalAlignment="Left" Height="73" Margin="515,62,0,0" Grid.Row="2" VerticalAlignment="Top" Width="142"/>
-        <TextBox x:Name="AddressPathBox" HorizontalAlignment="Left" Height="26" Margin="59,21.128,0,0" TextWrapping="Wrap" Text="m/44'/195'/0'/0/0" VerticalAlignment="Top" Width="270" Grid.Row="1"/>
-        <TextBox x:Name="AddressBox" IsReadOnly="True" HorizontalAlignment="Left" Height="26" Margin="59,114.128,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="270" Grid.Row="1"/>
-        <CheckBox x:Name="IsConnectedBox" Content="Is Connected" HorizontalAlignment="Left" Height="17" Margin="244,10,0,0" VerticalAlignment="Top" Width="164" IsEnabled="False" />
+        <Button x:Name="GetAddressButton" Content="Get Address" HorizontalAlignment="Left" Height="98" Margin="344,40,0,0" VerticalAlignment="Top" Width="121" Grid.Row="1" Grid.ColumnSpan="2"/>
+        <Button x:Name="button1" Content="Button" HorizontalAlignment="Left" Height="73" Margin="130.277,62,0,0" Grid.Row="2" VerticalAlignment="Top" Width="142" Grid.Column="1"/>
+        <TextBox x:Name="AddressPathBox" HorizontalAlignment="Left" Height="26" Margin="37,40,0,0" TextWrapping="Wrap" Text="m/44'/195'/0'/0/0" VerticalAlignment="Top" Width="270" Grid.Row="1"/>
+        <TextBox x:Name="AddressBox" IsReadOnly="True" HorizontalAlignment="Left" Height="26" Margin="37,112,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="270" Grid.Row="1"/>
+        <CheckBox x:Name="IsConnectedBox" Content="Is Connected" HorizontalAlignment="Left" Height="17" Margin="27,23,0,0" VerticalAlignment="Top" Width="106" IsEnabled="False" />
+        <Label x:Name="label" Content="Address Path" HorizontalAlignment="Left" Height="30" Margin="37,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="270"/>
+        <Label x:Name="label_Copy" Content="Outputted Address" HorizontalAlignment="Left" Height="30" Margin="37,82,0,0" Grid.Row="1" VerticalAlignment="Top" Width="270"/>
+        <TextBox IsReadOnly="True" x:Name="textBox" Grid.Column="1"  Margin="2,30,2,2" TextWrapping="Wrap" AcceptsReturn="True"  />
+        <Label  Content="Message: " HorizontalAlignment="Left" Height="30" Margin="10,5,0,0" VerticalAlignment="Top" Width="270" Grid.Column="1"/>
 
     </Grid>
 </Window>
