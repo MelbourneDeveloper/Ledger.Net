@@ -1,4 +1,6 @@
-﻿Class MainWindow
+﻿Imports Hid.Net.Windows
+
+Class MainWindow
 
     Dim _LedgerManagerBroker As LedgerManagerBroker
 
@@ -6,19 +8,25 @@
 
         If _LedgerManagerBroker.LedgerManagers.Count = 0 Then Return Nothing
 
-        Return _LedgerManagerBroker.LedgerManagers(1)
+        Return _LedgerManagerBroker.LedgerManagers.First()
 
     End Function
 
-    Public Sub MainWindow()
+    Public Sub New()
+
+        WindowsHidDeviceFactory.Register()
+
         _LedgerManagerBroker = New LedgerManagerBroker(3000, New DefaultCoinUtility(), New ErrorPromptDelegate(AddressOf Prompt))
         AddHandler _LedgerManagerBroker.LedgerInitialized, AddressOf LedgerManagerBroker_LedgerInitialized
         _LedgerManagerBroker.Start()
+
     End Sub
 
-
     Private Sub LedgerManagerBroker_LedgerInitialized(ByVal sender As Object, ByVal e As LedgerManagerConnectionEventArgs)
-        IsConnectedBox.IsChecked = Not GetLedger() Is Nothing
+
+        Dispatcher.BeginInvoke(Sub() IsConnectedBox.IsChecked = Not GetLedger() Is Nothing)
+
+
     End Sub
 
     Private Sub GetAddressButton_Click(sender As Object, e As RoutedEventArgs) Handles GetAddressButton.Click

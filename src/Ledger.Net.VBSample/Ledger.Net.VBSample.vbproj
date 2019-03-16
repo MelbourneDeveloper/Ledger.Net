@@ -49,6 +49,12 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Device.Net, Version=2.6.0.0, Culture=neutral, PublicKeyToken=918542c6e3a3318a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Device.Net.2.6.0\lib\net45\Device.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Hid.Net, Version=2.6.0.0, Culture=neutral, PublicKeyToken=918542c6e3a3318a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hid.Net.2.6.0\lib\net45\Hid.Net.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -127,6 +133,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

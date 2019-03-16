@@ -124,6 +124,7 @@ namespace Ledger.Net
             if (_DeviceListener == null)
             {
                 _DeviceListener = new DeviceListener(DeviceDefinitions, PollInterval);
+                _DeviceListener.Logger = new DebugLogger();
                 _DeviceListener.DeviceDisconnected += DevicePoller_DeviceDisconnected;
                 _DeviceListener.DeviceInitialized += DevicePoller_DeviceInitialized;
                 _DeviceListener.Start();
