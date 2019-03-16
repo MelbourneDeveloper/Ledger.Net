@@ -24,11 +24,21 @@ Class MainWindow
     End Sub
 
     Private Sub LedgerManagerBroker_LedgerInitialized(ByVal sender As Object, ByVal e As LedgerManagerConnectionEventArgs)
-
-        Dispatcher.BeginInvoke(Sub() IsConnectedBox.IsChecked = Not GetLedger() Is Nothing)
-
+        ToggleConnected()
 
     End Sub
+
+    Private Sub ToggleConnected()
+        Dispatcher.BeginInvoke(ToggleConnectedDelegate())
+    End Sub
+
+    Private Function ToggleConnectedDelegate() As [Delegate]
+        Return Sub()
+                   Dim isConnected As Boolean = Not GetLedger() Is Nothing
+                   IsConnectedBox.IsChecked = isConnected
+                   GetAddressButton.IsEnabled = isConnected
+               End Sub
+    End Function
 
     Private Async Sub GetAddressButton_Click(sender As Object, e As RoutedEventArgs) Handles GetAddressButton.Click
 
@@ -41,7 +51,7 @@ Class MainWindow
         _LedgerManager.SetCoinNumber(coinNumber)
         Dim path = $"m/{(If(isSegwit, 49, 44))}'/{coinNumber}'/{(If(isChange, 1, 0))}'/{0}/{index}"
         Dim addressPath = AddressPathBase.Parse(Of BIP44AddressPath)(path)
-        Dim address = Await _LedgerManager.GetAddressAsync(addressPath, False, True)
+        Dim address = Await _LedgerManager.GetAddressAsync(addressPath, False, False)
         AddressBox.Text = address
 
     End Sub
@@ -56,22 +66,20 @@ Class MainWindow
 
             Select Case returnCode.Value
                 Case Constants.IncorrectLengthStatusCode
-                    Debug.WriteLine($"Please ensure the app {ledgerManager.CurrentCoin.App} is open on the Ledger, and press OK")
+                    PromptBox.Text = $"Please ensure the app {ledgerManager.CurrentCoin.App} is open on the Ledger, and press OK"
                 Case Constants.SecurityNotValidStatusCode
-                    Debug.WriteLine($"It appears that your Ledger pin has not been entered, or no app is open. Please ensure the app  {ledgerManager.CurrentCoin.App} is open on the Ledger, and press OK")
+                    PromptBox.Text = $"It appears that your Ledger pin has not been entered, or no app is open. Please ensure the app  {ledgerManager.CurrentCoin.App} is open on the Ledger, and press OK"
                 Case Constants.InstructionNotSupportedStatusCode
-                    Debug.WriteLine($"The current app is incorrect. Please ensure the app for {ledgerManager.CurrentCoin.App} is open on the Ledger, and press OK")
+                    PromptBox.Text = $"The current app is incorrect. Please ensure the app for {ledgerManager.CurrentCoin.App} is open on the Ledger, and press OK"
                 Case Else
-                    Debug.WriteLine($"Something went wrong. Please ensure the app  {ledgerManager.CurrentCoin.App} is open on the Ledger, and press OK")
+                    PromptBox.Text = $"Something went wrong. Please ensure the app  {ledgerManager.CurrentCoin.App} is open on the Ledger, and press OK"
             End Select
         Else
 
-            ''TODO: Deal with IO errors
-
-            'If TypeOf exception Is IOException Then
-            '    Await Task.Delay(3000)
-            '    Await _LedgerManager.LedgerHidDevice.InitializeAsync()
-            'End If
+            If TypeOf exception Is Exception Then
+                Await Task.Delay(3000)
+                PromptBox.Text = exception.Message
+            End If
         End If
 
         Await Task.Delay(5000)
