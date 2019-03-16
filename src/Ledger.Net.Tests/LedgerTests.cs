@@ -55,8 +55,17 @@ namespace Ledger.Net.Tests
         {
             await GetLedger();
 
-            _LedgerManager.SetCoinNumber(195);
-            var address = await _LedgerManager.GetAddressAsync(0, false, 0, true);
+            uint coinNumber = 195;
+            var isSegwit = false;
+            var isChange = false;
+            var index = 0;
+
+            _LedgerManager.SetCoinNumber(coinNumber);
+
+            //This address seems to match the default address in the Tron app
+            var path = $"m/{(isSegwit ? 49 : 44)}'/{coinNumber}'/{(isChange ? 1 : 0)}'/{0}/{index}";
+            var addressPath = AddressPathBase.Parse<BIP44AddressPath>(path);
+            var address = await _LedgerManager.GetAddressAsync(addressPath, false, true);
 
             Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
