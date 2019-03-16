@@ -210,7 +210,6 @@ namespace Ledger.Net
 
         public async Task<string> GetAddressAsync(IAddressPath addressPath, bool isPublicKey, bool display)
         {
-
             var returnResponse = (GetPublicKeyResponseBase)await CallAndPrompt(_GetAddressFunc,
                 new CallAndPromptArgs<GetAddressArgs>
                 {
@@ -218,7 +217,9 @@ namespace Ledger.Net
                     MemberName = nameof(GetAddressAsync),
                     Args = new GetAddressArgs(addressPath, display)
                 });
-            return isPublicKey ? returnResponse.PublicKey : returnResponse.Address;
+
+            //Something may have gone wrong and this device may have been disposed because it was throwing errors so return null in this case
+            return _IsDisposed ? null : isPublicKey ? returnResponse.PublicKey : returnResponse.Address;
         }
 
         public async Task<TResponse> SendRequestAsync<TResponse, TRequest>(TRequest request)
