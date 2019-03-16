@@ -84,6 +84,11 @@ namespace Ledger.Net
         #endregion
 
         #region Private Methods
+        private void CheckForDisposed()
+        {
+            if (_IsDisposed) throw new ObjectDisposedException($"The {nameof(LedgerManager)} is Disposed. It can not longer function.", nameof(LedgerManager));
+        }
+
         private async Task<IEnumerable<byte[]>> WriteRequestAndReadAsync<TRequest>(TRequest request) where TRequest : RequestBase
         {
             var responseData = new List<byte[]>();
@@ -210,6 +215,8 @@ namespace Ledger.Net
 
         public async Task<string> GetAddressAsync(IAddressPath addressPath, bool isPublicKey, bool display)
         {
+            CheckForDisposed();
+
             var returnResponse = (GetPublicKeyResponseBase)await CallAndPrompt(_GetAddressFunc,
                 new CallAndPromptArgs<GetAddressArgs>
                 {
@@ -218,8 +225,7 @@ namespace Ledger.Net
                     Args = new GetAddressArgs(addressPath, display)
                 });
 
-            //Something may have gone wrong and this device may have been disposed because it was throwing errors so return null in this case
-            return _IsDisposed ? null : isPublicKey ? returnResponse.PublicKey : returnResponse.Address;
+            return isPublicKey ? returnResponse.PublicKey : returnResponse.Address;
         }
 
         public async Task<TResponse> SendRequestAsync<TResponse, TRequest>(TRequest request)
@@ -233,7 +239,7 @@ namespace Ledger.Net
         {
             for (var i = 0; i < PromptRetryCount; i++)
             {
-                if (_IsDisposed) return null;
+                CheckForDisposed();
 
                 try
                 {

@@ -36,14 +36,11 @@ Class MainWindow
             _LedgerManager.SetCoinNumber(195)
             Dim addressPath = AddressPathBase.Parse(Of BIP44AddressPath)(AddressPathBox.Text)
             Dim address = Await _LedgerManager.GetAddressAsync(addressPath, False, False)
-
-            If address Is Nothing Then
-                Throw New Exception("The current ledger connected died. Try again")
-            End If
-
             AddressBox.Text = address
             PromptBox.Text = String.Empty
 
+        Catch ex As ObjectDisposedException
+            PromptUser("The current ledger connected died. Try again")
         Catch ex As Exception
             PromptUser($"Something went wrong.{vbCrLf}{ex.Message}")
         End Try
