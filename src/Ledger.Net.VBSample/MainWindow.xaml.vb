@@ -22,6 +22,8 @@ Class MainWindow
 
     Private Async Sub GetAddressButton_Click(sender As Object, e As RoutedEventArgs) Handles GetAddressButton.Click
 
+        _IsGettingAddress = True
+
         Try
             Dim _LedgerManager As LedgerManager = GetLedger()
 
@@ -41,6 +43,10 @@ Class MainWindow
             Dim promptMessage As String = $"Something went wrong.{vbCrLf}{ex.Message}"
             PromptUser(promptMessage)
         End Try
+
+        _IsGettingAddress = False
+
+        ToggleConnectedDelegate()
 
     End Sub
 
@@ -65,9 +71,11 @@ Class MainWindow
         Return Sub()
                    Dim isConnected As Boolean = Not GetLedger() Is Nothing
                    IsConnectedBox.IsChecked = isConnected
-                   GetAddressButton.IsEnabled = isConnected
+                   GetAddressButton.IsEnabled = isConnected And Not _IsGettingAddress
                End Sub
     End Function
+
+    Dim _IsGettingAddress As Boolean
 
     Private Async Function Prompt(ByVal returnCode As Integer?, ByVal exception As Exception, ByVal member As String) As Task
 
