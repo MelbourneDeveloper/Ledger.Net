@@ -18,14 +18,14 @@ Class MainWindow
         WindowsHidDeviceFactory.Register()
 
         _LedgerManagerBroker = New LedgerManagerBroker(3000, New DefaultCoinUtility(), New ErrorPromptDelegate(AddressOf Prompt))
-        AddHandler _LedgerManagerBroker.LedgerInitialized, AddressOf LedgerManagerBroker_LedgerInitialized
+        AddHandler _LedgerManagerBroker.LedgerInitialized, AddressOf LedgerManagerBroker_ConnectionEventOccurred
+        AddHandler _LedgerManagerBroker.LedgerDisconnected, AddressOf LedgerManagerBroker_ConnectionEventOccurred
         _LedgerManagerBroker.Start()
 
     End Sub
 
-    Private Sub LedgerManagerBroker_LedgerInitialized(ByVal sender As Object, ByVal e As LedgerManagerConnectionEventArgs)
+    Private Sub LedgerManagerBroker_ConnectionEventOccurred(ByVal sender As Object, ByVal e As LedgerManagerConnectionEventArgs)
         ToggleConnected()
-
     End Sub
 
     Private Sub ToggleConnected()
@@ -49,8 +49,7 @@ Class MainWindow
         Dim isChange = False
         Dim index = 0
         _LedgerManager.SetCoinNumber(coinNumber)
-        Dim path = $"m/{(If(isSegwit, 49, 44))}'/{coinNumber}'/{(If(isChange, 1, 0))}'/{0}/{index}"
-        Dim addressPath = AddressPathBase.Parse(Of BIP44AddressPath)(path)
+        Dim addressPath = AddressPathBase.Parse(Of BIP44AddressPath)(AddressPathBox.Text)
         Dim address = Await _LedgerManager.GetAddressAsync(addressPath, False, False)
         AddressBox.Text = address
 

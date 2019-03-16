@@ -25,6 +25,7 @@
         <Label x:Name="label_Copy" Content="Outputted Address" HorizontalAlignment="Left" Height="30" Margin="37,82,0,0" Grid.Row="1" VerticalAlignment="Top" Width="270"/>
         <TextBox IsReadOnly="True" x:Name="PromptBox" Grid.Column="1"  Margin="2,30,2,2" TextWrapping="Wrap" AcceptsReturn="True"  />
         <Label  Content="Message: " HorizontalAlignment="Left" Height="30" Margin="10,5,0,0" VerticalAlignment="Top" Width="270" Grid.Column="1"/>
+        <TextBox TextWrapping="Wrap" AcceptsReturn="False" IsReadOnly="True" x:Name="label1" Text="Connect your device and open the Tron app. Then, wait for this check box to become checked"  HorizontalAlignment="Left" Height="37" Margin="10,53,0,0" VerticalAlignment="Top" Width="376"/>
 
     </Grid>
 </Window>
