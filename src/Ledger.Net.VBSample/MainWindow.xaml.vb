@@ -5,14 +5,6 @@ Class MainWindow
 
     Dim _LedgerManagerBroker As LedgerManagerBroker
 
-    Private Function GetLedger() As LedgerManager
-
-        If _LedgerManagerBroker.LedgerManagers.Count = 0 Then Return Nothing
-
-        Return _LedgerManagerBroker.LedgerManagers.First()
-
-    End Function
-
     Public Sub New()
 
         WindowsHidDeviceFactory.Register()
@@ -28,9 +20,33 @@ Class MainWindow
         ToggleConnected()
     End Sub
 
+    Private Async Sub GetAddressButton_Click(sender As Object, e As RoutedEventArgs) Handles GetAddressButton.Click
+
+        Try
+            Dim _LedgerManager As LedgerManager = GetLedger()
+
+            _LedgerManager.SetCoinNumber(195)
+            Dim addressPath = AddressPathBase.Parse(Of BIP44AddressPath)(AddressPathBox.Text)
+            Dim address = Await _LedgerManager.GetAddressAsync(addressPath, False, False)
+            AddressBox.Text = address
+
+        Catch ex As Exception
+            MessageBox.Show($"Something went wrong.{vbCrLf}{ex.Message}")
+        End Try
+
+    End Sub
+
     Private Sub ToggleConnected()
         Dispatcher.BeginInvoke(ToggleConnectedDelegate())
     End Sub
+
+    Private Function GetLedger() As LedgerManager
+
+        If _LedgerManagerBroker.LedgerManagers.Count = 0 Then Return Nothing
+
+        Return _LedgerManagerBroker.LedgerManagers.First()
+
+    End Function
 
     Private Function ToggleConnectedDelegate() As [Delegate]
         Return Sub()
@@ -39,21 +55,6 @@ Class MainWindow
                    GetAddressButton.IsEnabled = isConnected
                End Sub
     End Function
-
-    Private Async Sub GetAddressButton_Click(sender As Object, e As RoutedEventArgs) Handles GetAddressButton.Click
-
-        Dim _LedgerManager As LedgerManager = GetLedger()
-
-        Dim coinNumber As UInteger = 195
-        Dim isSegwit = False
-        Dim isChange = False
-        Dim index = 0
-        _LedgerManager.SetCoinNumber(coinNumber)
-        Dim addressPath = AddressPathBase.Parse(Of BIP44AddressPath)(AddressPathBox.Text)
-        Dim address = Await _LedgerManager.GetAddressAsync(addressPath, False, False)
-        AddressBox.Text = address
-
-    End Sub
 
     Private Async Function Prompt(ByVal returnCode As Integer?, ByVal exception As Exception, ByVal member As String) As Task
 
