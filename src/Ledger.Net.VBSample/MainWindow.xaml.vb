@@ -28,13 +28,25 @@ Class MainWindow
             _LedgerManager.SetCoinNumber(195)
             Dim addressPath = AddressPathBase.Parse(Of BIP44AddressPath)(AddressPathBox.Text)
             Dim address = Await _LedgerManager.GetAddressAsync(addressPath, False, False)
+
+            If address Is Nothing Then
+                PromptUser("The current ledger connected died. Try again")
+                Return
+            End If
+
             AddressBox.Text = address
             PromptBox.Text = String.Empty
 
         Catch ex As Exception
-            PromptBox.Text = $"Something went wrong.{vbCrLf}{ex.Message}"
+            Dim promptMessage As String = $"Something went wrong.{vbCrLf}{ex.Message}"
+            PromptUser(promptMessage)
         End Try
 
+    End Sub
+
+    Private Sub PromptUser(promptMessage As String)
+        PromptBox.Text = promptMessage
+        AddressBox.Text = String.Empty
     End Sub
 
     Private Sub ToggleConnected()
@@ -67,19 +79,19 @@ Class MainWindow
 
             Select Case returnCode.Value
                 Case Constants.IncorrectLengthStatusCode
-                    PromptBox.Text = $"Please ensure the app {ledgerManager.CurrentCoin.App} is open on the Ledger, and press OK"
+                    PromptUser($"Please ensure the app {ledgerManager.CurrentCoin.App} is open on the Ledger, and press OK")
                 Case Constants.SecurityNotValidStatusCode
-                    PromptBox.Text = $"It appears that your Ledger pin has not been entered, or no app is open. Please ensure the app  {ledgerManager.CurrentCoin.App} is open on the Ledger, and press OK"
+                    PromptUser($"It appears that your Ledger pin has not been entered, or no app is open. Please ensure the app  {ledgerManager.CurrentCoin.App} is open on the Ledger, and press OK")
                 Case Constants.InstructionNotSupportedStatusCode
-                    PromptBox.Text = $"The current app is incorrect. Please ensure the app for {ledgerManager.CurrentCoin.App} is open on the Ledger, and press OK"
+                    PromptUser($"The current app is incorrect. Please ensure the app for {ledgerManager.CurrentCoin.App} is open on the Ledger, and press OK")
                 Case Else
-                    PromptBox.Text = $"Something went wrong. Please ensure the app  {ledgerManager.CurrentCoin.App} is open on the Ledger, and press OK"
+                    PromptUser($"Something went wrong. Please ensure the app  {ledgerManager.CurrentCoin.App} is open on the Ledger, and press OK")
             End Select
         Else
 
             If TypeOf exception Is Exception Then
 
-                PromptBox.Text = exception.Message
+                PromptUser(exception.Message)
 
                 Await Task.Delay(1000)
 
