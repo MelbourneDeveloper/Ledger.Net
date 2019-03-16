@@ -17,7 +17,7 @@ Class MainWindow
     End Sub
 
     Private Sub LedgerManagerBroker_ConnectionEventOccurred(ByVal sender As Object, ByVal e As LedgerManagerConnectionEventArgs)
-        ToggleConnected()
+        BeginToggleConnected()
     End Sub
 
     Private Async Sub GetAddressButton_Click(sender As Object, e As RoutedEventArgs) Handles GetAddressButton.Click
@@ -52,7 +52,7 @@ Class MainWindow
         TheProgressBar.Visibility = Visibility.Collapsed
         _IsGettingAddress = False
 
-        ToggleConnectedDelegate()
+        ToggleConnected()
 
     End Sub
 
@@ -61,8 +61,14 @@ Class MainWindow
         AddressBox.Text = String.Empty
     End Sub
 
+    Private Sub BeginToggleConnected()
+        Dispatcher.BeginInvoke(New Action(AddressOf ToggleConnected))
+    End Sub
+
     Private Sub ToggleConnected()
-        Dispatcher.BeginInvoke(ToggleConnectedDelegate())
+        Dim isConnected As Boolean = Not GetLedger() Is Nothing
+        IsConnectedBox.IsChecked = isConnected
+        GetAddressButton.IsEnabled = isConnected And Not _IsGettingAddress
     End Sub
 
     Private Function GetLedger() As LedgerManager
@@ -73,13 +79,6 @@ Class MainWindow
 
     End Function
 
-    Private Function ToggleConnectedDelegate() As [Delegate]
-        Return Sub()
-                   Dim isConnected As Boolean = Not GetLedger() Is Nothing
-                   IsConnectedBox.IsChecked = isConnected
-                   GetAddressButton.IsEnabled = isConnected And Not _IsGettingAddress
-               End Sub
-    End Function
 
     Dim _IsGettingAddress As Boolean
 
