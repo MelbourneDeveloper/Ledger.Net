@@ -1188,6 +1188,7 @@
     <Rule Id="CA1819" Action="Error" />
     <Rule Id="CA1822" Action="Error" />
     <Rule Id="CA1823" Action="Error" />
+    <Rule Id="CA2007" Action="Hidden" />
     <Rule Id="CA2119" Action="Error" />
     <Rule Id="CA2211" Action="Error" />
     <Rule Id="CA2214" Action="Warning" />
