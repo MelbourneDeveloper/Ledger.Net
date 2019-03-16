@@ -30,7 +30,7 @@ Class MainWindow
             Dim _LedgerManager As LedgerManager = GetLedger()
 
             If _LedgerManager Is Nothing Then
-                Throw New Exception("Oops. Look like the Ledger connection dropped")
+                Throw New Exception("Oops. Looks like the Ledger connection dropped")
             End If
 
             _LedgerManager.SetCoinNumber(195)
