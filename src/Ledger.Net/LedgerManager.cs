@@ -232,6 +232,8 @@ namespace Ledger.Net
         {
             for (var i = 0; i < PromptRetryCount; i++)
             {
+                if (_IsDisposed) return null;
+
                 try
                 {
                     var response = await func.Invoke(state);

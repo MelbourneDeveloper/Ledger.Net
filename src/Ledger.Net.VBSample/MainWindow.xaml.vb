@@ -29,9 +29,10 @@ Class MainWindow
             Dim addressPath = AddressPathBase.Parse(Of BIP44AddressPath)(AddressPathBox.Text)
             Dim address = Await _LedgerManager.GetAddressAsync(addressPath, False, False)
             AddressBox.Text = address
+            PromptBox.Text = String.Empty
 
         Catch ex As Exception
-            MessageBox.Show($"Something went wrong.{vbCrLf}{ex.Message}")
+            PromptBox.Text = $"Something went wrong.{vbCrLf}{ex.Message}"
         End Try
 
     End Sub
@@ -77,8 +78,17 @@ Class MainWindow
         Else
 
             If TypeOf exception Is Exception Then
+
                 PromptBox.Text = exception.Message
+
+                Await Task.Delay(1000)
+
+                'The ledger connection is probably broken and will probably never work again, so restart the broker
+                ledgerManager.Dispose()
+                _LedgerManagerBroker.Start(True)
+
             End If
+
         End If
 
         Await Task.Delay(5000)
