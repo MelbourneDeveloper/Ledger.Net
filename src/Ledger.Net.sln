@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ledger.Net.Tests", "Ledger.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ledger.Net.UWPUnitTest", "Ledger.Net.UWPUnitTest\Ledger.Net.UWPUnitTest.csproj", "{97924306-CC9E-4D40-B121-1040ECE2347E}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Ledger.Net.VBSample", "Ledger.Net.VBSample\Ledger.Net.VBSample.vbproj", "{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,22 @@ Global
 		{97924306-CC9E-4D40-B121-1040ECE2347E}.Release|x86.ActiveCfg = Release|x86
 		{97924306-CC9E-4D40-B121-1040ECE2347E}.Release|x86.Build.0 = Release|x86
 		{97924306-CC9E-4D40-B121-1040ECE2347E}.Release|x86.Deploy.0 = Release|x86
+		{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}.Debug|ARM.Build.0 = Debug|Any CPU
+		{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}.Debug|x64.Build.0 = Debug|Any CPU
+		{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}.Debug|x86.Build.0 = Debug|Any CPU
+		{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}.Release|ARM.ActiveCfg = Release|Any CPU
+		{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}.Release|ARM.Build.0 = Release|Any CPU
+		{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}.Release|x64.ActiveCfg = Release|Any CPU
+		{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}.Release|x64.Build.0 = Release|Any CPU
+		{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}.Release|x86.ActiveCfg = Release|Any CPU
+		{2CD1E349-85FC-42EB-8D8B-81F0D1340AC9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

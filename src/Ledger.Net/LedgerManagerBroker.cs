@@ -115,21 +115,39 @@ namespace Ledger.Net
         #endregion
 
         #region Public Methods
-
         /// <summary>
-        /// Placeholder. This currently does nothing but you should call this to initialize listening
+        /// Starts the device listener that manages the connection and disconnection of devices
         /// </summary>
         public void Start()
         {
+            Start(false);
+        }
+
+        /// <summary>
+        /// Starts the device listener that manages the connection and disconnection of devices
+        /// </summary>
+        public void Start(bool restart)
+        {
+            if (restart && _DeviceListener != null)
+            {
+                LedgerManagers = new ReadOnlyCollection<LedgerManager>(new List<LedgerManager>());
+                _DeviceListener.DeviceDisconnected -= DevicePoller_DeviceDisconnected;
+                _DeviceListener.DeviceInitialized -= DevicePoller_DeviceInitialized;
+                _DeviceListener.Dispose();
+                _DeviceListener = null;
+            }
+
             if (_DeviceListener == null)
             {
-                _DeviceListener = new DeviceListener(DeviceDefinitions, PollInterval);
+                _DeviceListener = new DeviceListener(DeviceDefinitions, PollInterval)
+                {
+                    Logger = new DebugLogger()
+                };
+
                 _DeviceListener.DeviceDisconnected += DevicePoller_DeviceDisconnected;
                 _DeviceListener.DeviceInitialized += DevicePoller_DeviceInitialized;
                 _DeviceListener.Start();
             }
-
-            //TODO: Call Start on the DeviceListener when it is implemented...
         }
 
         public void Stop()

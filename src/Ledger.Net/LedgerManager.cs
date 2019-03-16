@@ -84,6 +84,11 @@ namespace Ledger.Net
         #endregion
 
         #region Private Methods
+        private void CheckForDisposed()
+        {
+            if (_IsDisposed) throw new ObjectDisposedException($"The {nameof(LedgerManager)} is Disposed. It can not longer function.", nameof(LedgerManager));
+        }
+
         private async Task<IEnumerable<byte[]>> WriteRequestAndReadAsync<TRequest>(TRequest request) where TRequest : RequestBase
         {
             var responseData = new List<byte[]>();
@@ -210,6 +215,7 @@ namespace Ledger.Net
 
         public async Task<string> GetAddressAsync(IAddressPath addressPath, bool isPublicKey, bool display)
         {
+            CheckForDisposed();
 
             var returnResponse = (GetPublicKeyResponseBase)await CallAndPrompt(_GetAddressFunc,
                 new CallAndPromptArgs<GetAddressArgs>
@@ -218,6 +224,7 @@ namespace Ledger.Net
                     MemberName = nameof(GetAddressAsync),
                     Args = new GetAddressArgs(addressPath, display)
                 });
+
             return isPublicKey ? returnResponse.PublicKey : returnResponse.Address;
         }
 
@@ -232,6 +239,8 @@ namespace Ledger.Net
         {
             for (var i = 0; i < PromptRetryCount; i++)
             {
+                CheckForDisposed();
+
                 try
                 {
                     var response = await func.Invoke(state);
