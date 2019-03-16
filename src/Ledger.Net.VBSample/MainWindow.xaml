@@ -24,6 +24,7 @@
         <TextBox IsReadOnly="True" x:Name="PromptBox" Grid.Column="1"  Margin="2,30,2,2" TextWrapping="Wrap" AcceptsReturn="True"  />
         <Label  Content="Message: " HorizontalAlignment="Left" Height="30" Margin="10,5,0,0" VerticalAlignment="Top" Width="270" Grid.Column="1"/>
         <TextBox TextWrapping="Wrap" AcceptsReturn="False" IsReadOnly="True" x:Name="label1" Text="Connect your device and open the Tron app. Then, wait for this check box to become checked"  Margin="2,53,2,2"  />
+        <ProgressBar Name="TheProgressBar" Visibility="Collapsed" HorizontalAlignment="Left" Height="45" Margin="152,55,0,0" IsIndeterminate="True" Grid.Row="1" VerticalAlignment="Top" Width="174" Grid.Column="1"/>
 
     </Grid>
 </Window>

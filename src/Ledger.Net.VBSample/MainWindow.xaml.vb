@@ -23,27 +23,33 @@ Class MainWindow
     Private Async Sub GetAddressButton_Click(sender As Object, e As RoutedEventArgs) Handles GetAddressButton.Click
 
         _IsGettingAddress = True
+        IsEnabled = False
+        TheProgressBar.Visibility = Visibility.Visible
 
         Try
             Dim _LedgerManager As LedgerManager = GetLedger()
+
+            If _LedgerManager Is Nothing Then
+                Throw New Exception("Oops. Look like the Ledger connection dropped")
+            End If
 
             _LedgerManager.SetCoinNumber(195)
             Dim addressPath = AddressPathBase.Parse(Of BIP44AddressPath)(AddressPathBox.Text)
             Dim address = Await _LedgerManager.GetAddressAsync(addressPath, False, False)
 
             If address Is Nothing Then
-                PromptUser("The current ledger connected died. Try again")
-                Return
+                Throw New Exception("The current ledger connected died. Try again")
             End If
 
             AddressBox.Text = address
             PromptBox.Text = String.Empty
 
         Catch ex As Exception
-            Dim promptMessage As String = $"Something went wrong.{vbCrLf}{ex.Message}"
-            PromptUser(promptMessage)
+            PromptUser($"Something went wrong.{vbCrLf}{ex.Message}")
         End Try
 
+        IsEnabled = True
+        TheProgressBar.Visibility = Visibility.Collapsed
         _IsGettingAddress = False
 
         ToggleConnectedDelegate()
