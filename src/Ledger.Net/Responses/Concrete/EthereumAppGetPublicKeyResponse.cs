@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace Ledger.Net.Responses
 {
@@ -15,6 +16,8 @@ namespace Ledger.Net.Responses
 
         protected override string GetPublicKeyString(byte[] publicKeyData)
         {
+            if (publicKeyData == null) throw new ArgumentNullException(nameof(publicKeyData));
+
             var sb = new StringBuilder();
             foreach (var @byte in publicKeyData)
             {

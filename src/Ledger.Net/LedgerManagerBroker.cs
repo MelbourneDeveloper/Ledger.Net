@@ -164,9 +164,11 @@ namespace Ledger.Net
             {
                 await _DeviceListener.CheckForDevicesAsync();
             }
+#pragma warning disable CA1031 
             catch
             {
             }
+#pragma warning restore CA1031 
         }
 
         /// <summary>
@@ -185,6 +187,7 @@ namespace Ledger.Net
             if (disposed) return;
             disposed = true;
 
+            _Lock.Dispose();
             _DeviceListener.Stop();
             _DeviceListener.Dispose();
 

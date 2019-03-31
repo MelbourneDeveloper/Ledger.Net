@@ -1,4 +1,6 @@
-﻿namespace Ledger.Net.Responses
+﻿using System;
+
+namespace Ledger.Net.Responses
 {
     public abstract class ResponseBase
     {
@@ -55,6 +57,8 @@
         #region Public Static Methods
         public static int GetReturnCode(byte[] data)
         {
+            if (data == null) throw new ArgumentNullException(nameof(data));
+
             return ((data[data.Length - 2] & HardeningConstant) << 8) | (data[data.Length - 1] & HardeningConstant);
         }
         #endregion

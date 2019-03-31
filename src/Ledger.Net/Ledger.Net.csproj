@@ -27,12 +27,12 @@
 
   <ItemGroup>
     <PackageReference Include="Hardwarewallets.Net" Version="1.2.0" />
-    <PackageReference Include="Hid.Net" Version="2.6.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.3">
+    <PackageReference Include="Hid.Net" Version="2.7.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Usb.Net" Version="2.6.0" />
+    <PackageReference Include="Usb.Net" Version="2.7.0" />
 
   </ItemGroup>
 
