@@ -22,6 +22,10 @@
         public const byte ETHEREUM_SIGN_MESSAGE = 0x08;
         #endregion
 
+        #region Tron Instructions
+        public const byte TRON_SIGN_TX = 0x04;
+        #endregion
+
         #region Status Codes
         public const int SuccessStatusCode = 0x9000;
         public const int SecurityNotValidStatusCode = 0x6982;
