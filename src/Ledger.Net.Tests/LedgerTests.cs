@@ -4,6 +4,7 @@ using Ledger.Net.Requests;
 using Ledger.Net.Responses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -162,6 +163,40 @@ namespace Ledger.Net.Tests
 
             Assert.IsTrue(response.SignatureR?.Length == 32);
             Assert.IsTrue(response.SignatureS?.Length == 32);
+        }
+
+        [TestMethod]
+        public async Task SignTronTransaction()
+        {
+            await GetLedger();
+
+            _LedgerManager.SetCoinNumber(195);
+
+            //Data from python sample
+            //https://github.com/fbsobreira/trx-ledger/blob/b274fcdc19b09c20485fefa534aeba878ae525b6/test_signTransaction.py#L33
+            var transactionRaw1 = "0a027d52220889fd90c45b71f24740e0bcb0f2be2c5a67080112630a2d747970" +
+                     "652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e7366" +
+                     "6572436f6e747261637412320a1541c8599111f29c1e1e061265b4af93ea1f27" +
+                     "4ad78a1215414f560eb4182ca53757f905609e226e96e8e1a80c18c0843d70d0" +
+                     "f5acf2be2c";
+
+            var transactionData = new List<byte>();
+
+            for (var i = 0; i < transactionRaw1.Length; i += 2)
+            {
+                var byteInHex = transactionRaw1.Substring(i, 2);
+                transactionData.Add(Convert.ToByte(byteInHex, 16));
+            }
+
+            var derivationData = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
+
+            var firstRequest = new TronAppSignatureRequest(derivationData.Concat(transactionData).ToArray());
+
+            var response = await _LedgerManager.SendRequestAsync<TronAppSignatureResponse, TronAppSignatureRequest>(firstRequest);
+
+            Assert.IsTrue(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
+
+            Assert.IsTrue(response.Data?.Length > 0);
         }
 
         /// <summary>
