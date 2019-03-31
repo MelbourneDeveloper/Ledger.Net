@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 
 namespace Ledger.Net.Responses
@@ -23,8 +24,10 @@ namespace Ledger.Net.Responses
                 return;
             }
 
+            if (data == null) throw new ArgumentNullException(nameof(data));
+
             var coinLength = data[CoinLengthPos];
-			var shortCoinNameStartPos = (CoinLengthPos + SpacerLength) + coinLength;
+			var shortCoinNameStartPos = CoinLengthPos + SpacerLength + coinLength;
 			var shortCoinLength = data[shortCoinNameStartPos - 1];
 
 			var responseList = data.ToList();

@@ -10,6 +10,11 @@ namespace Ledger.Net
         #region Public Methods
         public static byte[] GetDerivationPathData(IAddressPath addressPath)
         {
+            if (addressPath == null)
+            {
+                throw new ArgumentNullException(nameof(addressPath));
+            }
+
             return GetByteData(addressPath.ToArray());
         }
         #endregion
@@ -79,7 +84,7 @@ namespace Ledger.Net
 
                     if (packetIndex == 0)
                     {
-                        remaining = ((input.ReadByte()) << 8);
+                        remaining = (input.ReadByte()) << 8;
                         remaining |= input.ReadByte();
                     }
 
