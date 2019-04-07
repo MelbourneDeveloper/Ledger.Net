@@ -185,8 +185,23 @@ namespace Ledger.Net.Tests
         [TestMethod]
         public async Task TestSignTronTransaction2()
         {
+            var model = GetTronTransactionModelFromResource("Ledger.Net.Tests.Resources.TronTransaction1.json");
+
+            await SignTronTransaction(model.raw_data_hex);
+        }
+
+        [TestMethod]
+        public async Task TestSignTronTransaction3()
+        {
+            var model = GetTronTransactionModelFromResource("Ledger.Net.Tests.Resources.TronTransaction2.json");
+
+            await SignTronTransaction(model.raw_data_hex);
+        }
+
+
+        private static TronTransactionModel GetTronTransactionModelFromResource(string resourceName)
+        {
             var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = "Ledger.Net.Tests.Resources.TronTransaction1.json";
 
             string json;
             using (var stream = assembly.GetManifestResourceStream(resourceName))
@@ -196,12 +211,7 @@ namespace Ledger.Net.Tests
             }
 
             var model = JsonConvert.DeserializeObject<TronTransactionModel>(json);
-
-            var transactionData = new List<byte>();
-
-            var transactionraw = model.raw_data_hex;
-
-            await SignTronTransaction(transactionraw);
+            return model;
         }
 
         /// <summary>
