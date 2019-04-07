@@ -2,12 +2,15 @@ using Hardwarewallets.Net;
 using Hardwarewallets.Net.AddressManagement;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
+using Ledger.Net.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Ledger.Net.Tests
@@ -166,12 +169,8 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task SignTronTransaction()
+        public async Task TestSignTronTransaction1()
         {
-            await GetLedger();
-
-            _LedgerManager.SetCoinNumber(195);
-
             //Data from python sample
             //https://github.com/fbsobreira/trx-ledger/blob/b274fcdc19b09c20485fefa534aeba878ae525b6/test_signTransaction.py#L33
             var transactionRaw1 = "0a027d52220889fd90c45b71f24740e0bcb0f2be2c5a67080112630a2d747970" +
@@ -180,23 +179,29 @@ namespace Ledger.Net.Tests
                      "4ad78a1215414f560eb4182ca53757f905609e226e96e8e1a80c18c0843d70d0" +
                      "f5acf2be2c";
 
-            var transactionData = new List<byte>();
+            await SignTronTransaction(transactionRaw1);
+        }
 
-            for (var i = 0; i < transactionRaw1.Length; i += 2)
+        [TestMethod]
+        public async Task TestSignTronTransaction2()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "Ledger.Net.Tests.Resources.TronTransaction1.json";
+
+            string json;
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            using (var reader = new StreamReader(stream))
             {
-                var byteInHex = transactionRaw1.Substring(i, 2);
-                transactionData.Add(Convert.ToByte(byteInHex, 16));
+                json = reader.ReadToEnd();
             }
 
-            var derivationData = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
+            var model = JsonConvert.DeserializeObject<TronTransactionModel>(json);
 
-            var firstRequest = new TronAppSignatureRequest(derivationData.Concat(transactionData).ToArray());
+            var transactionData = new List<byte>();
 
-            var response = await _LedgerManager.SendRequestAsync<TronAppSignatureResponse, TronAppSignatureRequest>(firstRequest);
+            var transactionraw = model.raw_data_hex;
 
-            Assert.IsTrue(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
-
-            Assert.IsTrue(response.Data?.Length > 0);
+            await SignTronTransaction(transactionraw);
         }
 
         /// <summary>
@@ -357,6 +362,32 @@ namespace Ledger.Net.Tests
         #endregion
 
         #region Other 
+
+        private async Task SignTronTransaction(string transactionRaw)
+        {
+            await GetLedger();
+
+            _LedgerManager.SetCoinNumber(195);
+
+
+            var transactionData = new List<byte>();
+
+            for (var i = 0; i < transactionRaw.Length; i += 2)
+            {
+                var byteInHex = transactionRaw.Substring(i, 2);
+                transactionData.Add(Convert.ToByte(byteInHex, 16));
+            }
+
+            var derivationData = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
+
+            var firstRequest = new TronAppSignatureRequest(derivationData.Concat(transactionData).ToArray());
+
+            var response = await _LedgerManager.SendRequestAsync<TronAppSignatureResponse, TronAppSignatureRequest>(firstRequest);
+
+            Assert.IsTrue(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
+
+            Assert.IsTrue(response.Data?.Length > 0);
+        }
 
         private async Task ThrowErrorInsteadOfPrompt(int? returnCode, Exception exception, string member)
         {
