@@ -198,6 +198,14 @@ namespace Ledger.Net.Tests
             await SignTronTransaction(model.raw_data_hex);
         }
 
+        [TestMethod]
+        public async Task TestSignTronTransaction4()
+        {
+            var transactionRaw = "5A6A080412660A30747970652E676F6F676C65617069732E636F6D2F70726F746F636F6C2E566F74655769746E657373436F6E747261637412320A154167E39013BE3CDD3814BED152D7439FB5B679140912190A154167E39013BE3CDD3814BED152D7439FB5B67914091064";
+
+            await SignTronTransaction(transactionRaw);
+        }
+
 
         private static TronTransactionModel GetTronTransactionModelFromResource(string resourceName)
         {
