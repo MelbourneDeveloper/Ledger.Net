@@ -180,7 +180,7 @@ namespace Ledger.Net.Tests
             "4ad78a1215414f560eb4182ca53757f905609e226e96e8e1a80c18c0843d70d0" +
             "f5acf2be2c";
 
-            await SignTronTransaction(transactionRaw1, "44'/195'/0'/0/0");
+            await SignTronTransaction(transactionRaw1, "44'/195'/0'/0/0", true);
         }
 
         [TestMethod]
@@ -194,7 +194,7 @@ namespace Ledger.Net.Tests
                      "4ad78a1215414f560eb4182ca53757f905609e226e96e8e1a80c1880897a70f3" +
                      "c3e48dbf2c";
 
-            await SignTronTransaction(transactionRaw2, "44'/195'/0'/0/0");
+            await SignTronTransaction(transactionRaw2, "44'/195'/0'/0/0", true);
         }
 
         [TestMethod]
@@ -208,7 +208,7 @@ namespace Ledger.Net.Tests
                      "6b656e121541c8599111f29c1e1e061265b4af93ea1f274ad78a1a15414f560e" +
                      "b4182ca53757f905609e226e96e8e1a80c200170b7f5cffabf2c";
 
-            await SignTronTransaction(transactionRaw3, "44'/195'/0'/0/0");
+            await SignTronTransaction(transactionRaw3, "44'/195'/0'/0/0", true);
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace Ledger.Net.Tests
         {
             var transactionRaw = "0a025505220885d2f613d363093540c8c6cba49f2d5a53080c124f0a34747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e556e667265657a6542616c616e6365436f6e747261637412170a1541bfdc501d1ccc4a7167489c8e670e4954a44c914570ac8bc8a49f2d";
 
-            await SignTronTransaction(transactionRaw, "44'/195'/0'/0/0");
+            await SignTronTransaction(transactionRaw, "44'/195'/0'/0/0", false);
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace Ledger.Net.Tests
         {
             var transactionRaw = "0a0254e32208d8055e5cf71ba13b40d8a9c5a49f2d5a730802126f0a32747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e736665724173736574436f6e747261637412390a0731303030323236121541bfdc501d1ccc4a7167489c8e670e4954a44c91451a1541035b5ce89b1bec9d82b4cf2e277075b36f77682d2001709be4c1a49f2d";
 
-            await SignTronTransaction(transactionRaw, "44'/195'/0'/0/0");
+            await SignTronTransaction(transactionRaw, "44'/195'/0'/0/0", false);
         }
        
         private static TronTransactionModel GetTronTransactionModelFromResource(string resourceName)
@@ -409,7 +409,7 @@ namespace Ledger.Net.Tests
 
         #region Other 
 
-        private async Task SignTronTransaction(string transactionRaw, string path)
+        private async Task SignTronTransaction(string transactionRaw, string path, bool expectsResult)
         {
             await GetLedger();
 
@@ -438,7 +438,7 @@ namespace Ledger.Net.Tests
 
             Assert.IsTrue(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
 
-            Assert.IsTrue(response.Data?.Length > 0);
+            Assert.IsTrue(!expectsResult ||  response.Data?.Length > 2, "No data was returned");           
         }
 
         private async Task ThrowErrorInsteadOfPrompt(int? returnCode, Exception exception, string member)
