@@ -221,7 +221,7 @@ namespace Ledger.Net.Tests
             ///Data from https://github.com/CTJaeger
             var transactionRaw3 = "0a02b76d2208ca2fdf1dc2eda61040f8a4b9a0a32d5a58080b12540a32747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e467265657a6542616c616e6365436f6e7472616374121e0a1541bfdc501d1ccc4a7167489c8e670e4954a44c914510c096b102180370dfdeb5a0a32d";
 
-            await SignTronTransaction(transactionRaw3, "44'/195'/0'/0/0", 130);
+            await SignTronTransaction(transactionRaw3, "44'/195'/0'/0/0", 134);
         }
 
         [TestMethod]
@@ -233,7 +233,7 @@ namespace Ledger.Net.Tests
             ///Data from https://github.com/CTJaeger
             var transactionRaw4 = "0a02b7782208d3016ebea5e1611740e0a6bba0a32d5a53080c124f0a34747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e556e667265657a6542616c616e6365436f6e747261637412170a1541bfdc501d1ccc4a7167489c8e670e4954a44c914570b4e4b7a0a32d";
 
-            await SignTronTransaction(transactionRaw4, "44'/195'/0'/0/0", 130);
+            await SignTronTransaction(transactionRaw4, "44'/195'/0'/0/0", 134);
         }
 
         [TestMethod]
@@ -245,21 +245,19 @@ namespace Ledger.Net.Tests
             ///Data from https://github.com/CTJaeger
             var transactionRaw5 = "0a02b77d2208634e3da9bdfa61ef40f89bbca0a32d5a880108041283010a30747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e566f74655769746e657373436f6e7472616374124f0a1541bfdc501d1ccc4a7167489c8e670e4954a44c9145121b0a154184399fc6a98edc11a6efb146e86a3e153d0a093310c4b30612190a154184399fc6a98edc11a6efb146e86a3e153d0a0933100570e0d5b8a0a32d";
 
-            await SignTronTransaction(transactionRaw5, "44'/195'/0'/0/0", 130);
+            await SignTronTransaction(transactionRaw5, "44'/195'/0'/0/0", 134);
         }
 
         [TestMethod]
         public async Task TestExchangeContract()
         {
-            var expectedDataLength = "a1c16cc82e6d74287ecbae779c0a907d1b1cb57c88633c5b13038af028fa8e6c551442c31605df1b20f5fa5c0aeb79385f8b0917fed3bc152d9ad3179b58424a00".Length;
-
             ///Exchange Transaction
             ///This API call performs a trade. This is essentially the "buy" and "sell" API calls for decentralized exchanges, rolled into one.
             ///https://developers.tron.network/reference#walletexchangetransaction
             ///Data from https://github.com/CTJaeger
             var transactionRaw6 = "0a02b7832208ca07886003b5260940c8a8bda0a32d5a63082c125f0a38747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e45786368616e67655472616e73616374696f6e436f6e747261637412230a1541bfdc501d1ccc4a7167489c8e670e4954a44c914510191a015f20908e8101280a70e8e8b9a0a32d";
 
-            await SignTronTransaction(transactionRaw6, "44'/195'/0'/0/0", 130);
+            await SignTronTransaction(transactionRaw6, "44'/195'/0'/0/0", 134);
         }       
        
         private static TronTransactionModel GetTronTransactionModelFromResource(string resourceName)
@@ -459,13 +457,13 @@ namespace Ledger.Net.Tests
             var hexData = new StringBuilder();
             for (var i = 0; i < response.Data.Length; i++)
             {
-                hexData.Append(response.Data[i].ToString("X"));
+                hexData.Append(response.Data[i].ToString("X2"));
             }
             Console.WriteLine(hexData);
 
             Assert.IsTrue(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
 
-            Assert.IsTrue(!expectedDataLength.HasValue ||  response.Data?.Length == expectedDataLength, "No data was returned");           
+            Assert.IsTrue(!expectedDataLength.HasValue || hexData.Length == expectedDataLength, $"Expected legnth {expectedDataLength}. Actual: {hexData.Length}");           
         }
 
         private async Task ThrowErrorInsteadOfPrompt(int? returnCode, Exception exception, string member)
