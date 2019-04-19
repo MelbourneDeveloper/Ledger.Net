@@ -258,31 +258,7 @@ namespace Ledger.Net.Tests
             var transactionRaw6 = "0a02b7832208ca07886003b5260940c8a8bda0a32d5a63082c125f0a38747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e45786368616e67655472616e73616374696f6e436f6e747261637412230a1541bfdc501d1ccc4a7167489c8e670e4954a44c914510191a015f20908e8101280a70e8e8b9a0a32d";
 
             await SignTronTransaction(transactionRaw6, "44'/195'/0'/0/0", true);
-        }
-        
-        /// <summary>
-        /// I don't really know what this does. I think it locks your Tron wallet...
-        /// </summary>
-        /// <returns></returns>
-        [TestMethod]
-        public async Task TestFreezeWARNING()
-        {
-            var transactionRaw = "0a025505220885d2f613d363093540c8c6cba49f2d5a53080c124f0a34747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e556e667265657a6542616c616e6365436f6e747261637412170a1541bfdc501d1ccc4a7167489c8e670e4954a44c914570ac8bc8a49f2d";
-
-            await SignTronTransaction(transactionRaw, "44'/195'/0'/0/0", false);
-        }
-
-        /// <summary>
-        /// I don't really know what this does. I think it locks your Tron wallet...
-        /// </summary>
-        /// <returns></returns>
-        [TestMethod]
-        public async Task TestFreezeWARNING2()
-        {
-            var transactionRaw = "0a0254e32208d8055e5cf71ba13b40d8a9c5a49f2d5a730802126f0a32747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e736665724173736574436f6e747261637412390a0731303030323236121541bfdc501d1ccc4a7167489c8e670e4954a44c91451a1541035b5ce89b1bec9d82b4cf2e277075b36f77682d2001709be4c1a49f2d";
-
-            await SignTronTransaction(transactionRaw, "44'/195'/0'/0/0", false);
-        }
+        }       
        
         private static TronTransactionModel GetTronTransactionModelFromResource(string resourceName)
         {
