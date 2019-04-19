@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Ledger.Net.Tests
@@ -174,39 +175,66 @@ namespace Ledger.Net.Tests
             //Data from python sample
             //https://github.com/fbsobreira/trx-ledger/blob/b274fcdc19b09c20485fefa534aeba878ae525b6/test_signTransaction.py#L33
             var transactionRaw1 = "0a027d52220889fd90c45b71f24740e0bcb0f2be2c5a67080112630a2d747970" +
-                     "652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e7366" +
-                     "6572436f6e747261637412320a1541c8599111f29c1e1e061265b4af93ea1f27" +
-                     "4ad78a1215414f560eb4182ca53757f905609e226e96e8e1a80c18c0843d70d0" +
-                     "f5acf2be2c";
+            "652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e7366" +
+            "6572436f6e747261637412320a1541c8599111f29c1e1e061265b4af93ea1f27" +
+            "4ad78a1215414f560eb4182ca53757f905609e226e96e8e1a80c18c0843d70d0" +
+            "f5acf2be2c";
 
-            await SignTronTransaction(transactionRaw1);
+            await SignTronTransaction(transactionRaw1, "44'/195'/0'/0/0");
         }
 
         [TestMethod]
         public async Task TestSignTronTransaction2()
         {
-            var model = GetTronTransactionModelFromResource("Ledger.Net.Tests.Resources.TronTransaction1.json");
+            //Data from python sample
+            //https://github.com/fbsobreira/trx-ledger/blob/b274fcdc19b09c20485fefa534aeba878ae525b6/test_signTransaction.py#L45
+            var transactionRaw2 = "0a02c56522086cd623dbe83075d8409089e88dbf2c5a67080112630a2d747970" +
+                     "652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e7366" +
+                     "6572436f6e747261637412320a1541c8599111f29c1e1e061265b4af93ea1f27" +
+                     "4ad78a1215414f560eb4182ca53757f905609e226e96e8e1a80c1880897a70f3" +
+                     "c3e48dbf2c";
 
-            await SignTronTransaction(model.raw_data_hex);
+            await SignTronTransaction(transactionRaw2, "44'/195'/0'/0/0");
         }
 
         [TestMethod]
         public async Task TestSignTronTransaction3()
         {
-            var model = GetTronTransactionModelFromResource("Ledger.Net.Tests.Resources.TronTransaction2.json");
+            //Data from python sample
+            //https://github.com/fbsobreira/trx-ledger/blob/b274fcdc19b09c20485fefa534aeba878ae525b6/test_signTransaction.py#L56
+            var transactionRaw3 = "0a02e7c3220869e2abb19969f1e740f0bbd3fabf2c5a7c080212780a32747970" +
+                     "652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e7366" +
+                     "65724173736574436f6e747261637412420a1043727970746f436861696e546f" +
+                     "6b656e121541c8599111f29c1e1e061265b4af93ea1f274ad78a1a15414f560e" +
+                     "b4182ca53757f905609e226e96e8e1a80c200170b7f5cffabf2c";
 
-            await SignTronTransaction(model.raw_data_hex);
+            await SignTronTransaction(transactionRaw3, "44'/195'/0'/0/0");
         }
 
+        /// <summary>
+        /// I don't really know what this does. I think it locks your Tron wallet...
+        /// </summary>
+        /// <returns></returns>
         [TestMethod]
-        public async Task TestSignTronTransaction4()
+        public async Task TestFreezeWARNING()
         {
-            var transactionRaw = "5A6A080412660A30747970652E676F6F676C65617069732E636F6D2F70726F746F636F6C2E566F74655769746E657373436F6E747261637412320A154167E39013BE3CDD3814BED152D7439FB5B679140912190A154167E39013BE3CDD3814BED152D7439FB5B67914091064";
+            var transactionRaw = "0a025505220885d2f613d363093540c8c6cba49f2d5a53080c124f0a34747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e556e667265657a6542616c616e6365436f6e747261637412170a1541bfdc501d1ccc4a7167489c8e670e4954a44c914570ac8bc8a49f2d";
 
-            await SignTronTransaction(transactionRaw);
+            await SignTronTransaction(transactionRaw, "44'/195'/0'/0/0");
         }
 
+        /// <summary>
+        /// I don't really know what this does. I think it locks your Tron wallet...
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task TestFreezeWARNING2()
+        {
+            var transactionRaw = "0a0254e32208d8055e5cf71ba13b40d8a9c5a49f2d5a730802126f0a32747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e736665724173736574436f6e747261637412390a0731303030323236121541bfdc501d1ccc4a7167489c8e670e4954a44c91451a1541035b5ce89b1bec9d82b4cf2e277075b36f77682d2001709be4c1a49f2d";
 
+            await SignTronTransaction(transactionRaw, "44'/195'/0'/0/0");
+        }
+       
         private static TronTransactionModel GetTronTransactionModelFromResource(string resourceName)
         {
             var assembly = Assembly.GetExecutingAssembly();
@@ -381,12 +409,11 @@ namespace Ledger.Net.Tests
 
         #region Other 
 
-        private async Task SignTronTransaction(string transactionRaw)
+        private async Task SignTronTransaction(string transactionRaw, string path)
         {
             await GetLedger();
 
             _LedgerManager.SetCoinNumber(195);
-
 
             var transactionData = new List<byte>();
 
@@ -396,11 +423,18 @@ namespace Ledger.Net.Tests
                 transactionData.Add(Convert.ToByte(byteInHex, 16));
             }
 
-            var derivationData = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
+            var derivationData = Helpers.GetDerivationPathData(AddressPathBase.Parse<BIP44AddressPath>(path));
 
             var firstRequest = new TronAppSignatureRequest(derivationData.Concat(transactionData).ToArray());
 
             var response = await _LedgerManager.SendRequestAsync<TronAppSignatureResponse, TronAppSignatureRequest>(firstRequest);
+
+            var hexData = new StringBuilder();
+            for (var i = 0; i < response.Data.Length; i++)
+            {
+                hexData.Append(response.Data[i].ToString("X"));
+            }
+            Console.WriteLine(hexData);
 
             Assert.IsTrue(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
 
