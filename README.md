@@ -22,7 +22,7 @@ Currently supports:
 - Connect Ledger and enter pin
 - Open Bitcoin app on the device
 - Run the GetAddress unit test
-- Repeat for Ethereum
+- Repeat for Ethereum and Tron etc.
 
 For any instructions that are not implemented you will need to create a RequestBase, and ResponseBase class. Then, you will need to call SendRequestAsync. See the see also section.
 
