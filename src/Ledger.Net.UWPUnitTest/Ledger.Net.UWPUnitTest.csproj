@@ -102,6 +102,9 @@
     <Compile Include="..\Ledger.Net.Tests\LedgerTests.cs">
       <Link>LedgerTests.cs</Link>
     </Compile>
+    <Compile Include="..\Ledger.Net.Tests\Model\TronTransactionModel.cs">
+      <Link>Model\TronTransactionModel.cs</Link>
+    </Compile>
     <Compile Include="..\Ledger.Net.Tests\UsageSpecification.cs">
       <Link>UsageSpecification.cs</Link>
     </Compile>

@@ -2,12 +2,16 @@ using Hardwarewallets.Net;
 using Hardwarewallets.Net.AddressManagement;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
+using Ledger.Net.Tests.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Ledger.Net.Tests
@@ -166,37 +170,109 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task SignTronTransaction()
+        public async Task TestSignTronTransaction1()
         {
-            await GetLedger();
-
-            _LedgerManager.SetCoinNumber(195);
-
             //Data from python sample
             //https://github.com/fbsobreira/trx-ledger/blob/b274fcdc19b09c20485fefa534aeba878ae525b6/test_signTransaction.py#L33
             var transactionRaw1 = "0a027d52220889fd90c45b71f24740e0bcb0f2be2c5a67080112630a2d747970" +
+            "652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e7366" +
+            "6572436f6e747261637412320a1541c8599111f29c1e1e061265b4af93ea1f27" +
+            "4ad78a1215414f560eb4182ca53757f905609e226e96e8e1a80c18c0843d70d0" +
+            "f5acf2be2c";
+
+            await SignTronTransaction(transactionRaw1, "44'/195'/0'/0/0");
+        }
+
+        [TestMethod]
+        public async Task TestSignTronTransaction2()
+        {
+            //Data from python sample
+            //https://github.com/fbsobreira/trx-ledger/blob/b274fcdc19b09c20485fefa534aeba878ae525b6/test_signTransaction.py#L45
+            var transactionRaw2 = "0a02c56522086cd623dbe83075d8409089e88dbf2c5a67080112630a2d747970" +
                      "652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e7366" +
                      "6572436f6e747261637412320a1541c8599111f29c1e1e061265b4af93ea1f27" +
-                     "4ad78a1215414f560eb4182ca53757f905609e226e96e8e1a80c18c0843d70d0" +
-                     "f5acf2be2c";
+                     "4ad78a1215414f560eb4182ca53757f905609e226e96e8e1a80c1880897a70f3" +
+                     "c3e48dbf2c";
 
-            var transactionData = new List<byte>();
+            await SignTronTransaction(transactionRaw2, "44'/195'/0'/0/0");
+        }
 
-            for (var i = 0; i < transactionRaw1.Length; i += 2)
+        [TestMethod]
+        public async Task TestSignTronTransaction3()
+        {
+            //Data from python sample
+            //https://github.com/fbsobreira/trx-ledger/blob/b274fcdc19b09c20485fefa534aeba878ae525b6/test_signTransaction.py#L56
+            var transactionRaw3 = "0a02e7c3220869e2abb19969f1e740f0bbd3fabf2c5a7c080212780a32747970" +
+                     "652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e7366" +
+                     "65724173736574436f6e747261637412420a1043727970746f436861696e546f" +
+                     "6b656e121541c8599111f29c1e1e061265b4af93ea1f274ad78a1a15414f560e" +
+                     "b4182ca53757f905609e226e96e8e1a80c200170b7f5cffabf2c";
+
+            await SignTronTransaction(transactionRaw3, "44'/195'/0'/0/0");
+        }
+
+        [TestMethod]
+        public async Task TestFreezeBalanceContract()
+        {
+            ///Freeze Balance
+            ///Freezes an amount of TRX. Will give bandwidth OR Energy and TRON Power (voting rights) to the owner of the frozen tokens. 
+            ///Optionally, can freeze TRX to grant Energy or Bandwidth to other users. Balance amount in the denomination of Sun.
+            ///https://developers.tron.network/reference#walletfreezebalance-1
+            ///Data from https://github.com/CTJaeger
+            var transactionRaw3 = "0a02b76d2208ca2fdf1dc2eda61040f8a4b9a0a32d5a58080b12540a32747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e467265657a6542616c616e6365436f6e7472616374121e0a1541bfdc501d1ccc4a7167489c8e670e4954a44c914510c096b102180370dfdeb5a0a32d";
+
+            await SignTronTransaction(transactionRaw3, "44'/195'/0'/0/0", 134);
+        }
+
+        [TestMethod]
+        public async Task TestUnFreezeBalanceContract()
+        {
+            ///Unfreeze Balance
+            ///Unfreeze TRX that has passed the minimum freeze duration. Unfreezing will remove bandwidth and TRON Power. Returns unfrozen TRX transaction.
+            ///https://developers.tron.network/reference#walletunfreezebalance-1
+            ///Data from https://github.com/CTJaeger
+            var transactionRaw4 = "0a02b7782208d3016ebea5e1611740e0a6bba0a32d5a53080c124f0a34747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e556e667265657a6542616c616e6365436f6e747261637412170a1541bfdc501d1ccc4a7167489c8e670e4954a44c914570b4e4b7a0a32d";
+
+            await SignTronTransaction(transactionRaw4, "44'/195'/0'/0/0", 134);
+        }
+
+        [TestMethod]
+        public async Task TestVoteWitnessContract()
+        {
+            ///Vote Witness Account
+            ///Vote for Super Representatives or Candidates
+            ///https://developers.tron.network/reference#walletvotewitnessaccount-1
+            ///Data from https://github.com/CTJaeger
+            var transactionRaw5 = "0a02b77d2208634e3da9bdfa61ef40f89bbca0a32d5a880108041283010a30747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e566f74655769746e657373436f6e7472616374124f0a1541bfdc501d1ccc4a7167489c8e670e4954a44c9145121b0a154184399fc6a98edc11a6efb146e86a3e153d0a093310c4b30612190a154184399fc6a98edc11a6efb146e86a3e153d0a0933100570e0d5b8a0a32d";
+
+            await SignTronTransaction(transactionRaw5, "44'/195'/0'/0/0", 134);
+        }
+
+        [TestMethod]
+        public async Task TestExchangeContract()
+        {
+            ///Exchange Transaction
+            ///This API call performs a trade. This is essentially the "buy" and "sell" API calls for decentralized exchanges, rolled into one.
+            ///https://developers.tron.network/reference#walletexchangetransaction
+            ///Data from https://github.com/CTJaeger
+            var transactionRaw6 = "0a02b7832208ca07886003b5260940c8a8bda0a32d5a63082c125f0a38747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e45786368616e67655472616e73616374696f6e436f6e747261637412230a1541bfdc501d1ccc4a7167489c8e670e4954a44c914510191a015f20908e8101280a70e8e8b9a0a32d";
+
+            await SignTronTransaction(transactionRaw6, "44'/195'/0'/0/0", 134);
+        }       
+       
+        private static TronTransactionModel GetTronTransactionModelFromResource(string resourceName)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+
+            string json;
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            using (var reader = new StreamReader(stream))
             {
-                var byteInHex = transactionRaw1.Substring(i, 2);
-                transactionData.Add(Convert.ToByte(byteInHex, 16));
+                json = reader.ReadToEnd();
             }
 
-            var derivationData = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
-
-            var firstRequest = new TronAppSignatureRequest(derivationData.Concat(transactionData).ToArray());
-
-            var response = await _LedgerManager.SendRequestAsync<TronAppSignatureResponse, TronAppSignatureRequest>(firstRequest);
-
-            Assert.IsTrue(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
-
-            Assert.IsTrue(response.Data?.Length > 0);
+            var model = JsonConvert.DeserializeObject<TronTransactionModel>(json);
+            return model;
         }
 
         /// <summary>
@@ -357,6 +433,38 @@ namespace Ledger.Net.Tests
         #endregion
 
         #region Other 
+
+        private async Task SignTronTransaction(string transactionRaw, string path, int? expectedDataLength = null)
+        {
+            await GetLedger();
+
+            _LedgerManager.SetCoinNumber(195);
+
+            var transactionData = new List<byte>();
+
+            for (var i = 0; i < transactionRaw.Length; i += 2)
+            {
+                var byteInHex = transactionRaw.Substring(i, 2);
+                transactionData.Add(Convert.ToByte(byteInHex, 16));
+            }
+
+            var derivationData = Helpers.GetDerivationPathData(AddressPathBase.Parse<BIP44AddressPath>(path));
+
+            var firstRequest = new TronAppSignatureRequest(derivationData.Concat(transactionData).ToArray());
+
+            var response = await _LedgerManager.SendRequestAsync<TronAppSignatureResponse, TronAppSignatureRequest>(firstRequest);
+
+            var hexData = new StringBuilder();
+            for (var i = 0; i < response.Data.Length; i++)
+            {
+                hexData.Append(response.Data[i].ToString("X2"));
+            }
+            Console.WriteLine(hexData);
+
+            Assert.IsTrue(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
+
+            Assert.IsTrue(!expectedDataLength.HasValue || hexData.Length == expectedDataLength, $"Expected legnth {expectedDataLength}. Actual: {hexData.Length}");           
+        }
 
         private async Task ThrowErrorInsteadOfPrompt(int? returnCode, Exception exception, string member)
         {

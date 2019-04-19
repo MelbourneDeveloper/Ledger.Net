@@ -1,0 +1,32 @@
+{
+  "signature": [ "9000" ],
+  "txID": "0b0e5647779fb5ec99634ad53ac91565f271afb2b29acf004a58ad0e44401c70",
+  "raw_data": {
+    "contract": [
+
+      {
+
+        "parameter": {
+
+          "value": {
+
+            "owner_address": "41bfdc501d1ccc4a7167489c8e670e4954a44c9145"
+
+          },
+
+          "type_url": "type.googleapis.com/protocol.UnfreezeBalanceContract"
+
+        },
+
+        "type": "UnfreezeBalanceContract"
+
+      }
+
+    ],
+    "ref_block_bytes": "5505",
+    "ref_block_hash": "85d2f613d3630935",
+    "expiration": 1554586461000,
+    "timestamp": 1554586404268
+  },
+  "raw_data_hex": "0a025505220885d2f613d363093540c8c6cba49f2d5a53080c124f0a34747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e556e667265657a6542616c616e6365436f6e747261637412170a1541bfdc501d1ccc4a7167489c8e670e4954a44c914570ac8bc8a49f2d"
+}
