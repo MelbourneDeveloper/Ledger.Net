@@ -93,8 +93,37 @@ namespace Ledger.Net
         {
             var responseData = new List<byte[]>();
 
-            foreach (var apduCommandChunk in request.ToAPDUChunks())
+            var apduChunks = request.ToAPDUChunks();
+
+            for (var i = 0; i < apduChunks.Count; i++)
             {
+                var apduCommandChunk = apduChunks[i];
+
+                if (apduChunks.Count == 1)
+                {
+                    //There is only one chunk so use the argument from the request (e.g P1_SIGN)
+                    apduCommandChunk[2] = request.Argument1;
+                }
+                else if (apduChunks.Count > 1)
+                {
+                    //There are multiple chunks so the assumption is that this is probably a transaction
+
+                    if (i == 0)
+                    {
+                        //This is the first chunk of the transaction
+                        apduCommandChunk[2] = Constants.P1_FIRST;
+                    }
+                    else if (i == (apduChunks.Count - 1))
+                    {
+                        //This is the last chunk of the transaction
+                        apduCommandChunk[2] = Constants.P1_LAST;
+                    }
+                    else
+                    {
+                        //This is one of the middle chunks and there is more coming
+                        apduCommandChunk[2] = Constants.P1_MORE;
+                    }
+                }
 
                 var packetIndex = 0;
                 byte[] data = null;

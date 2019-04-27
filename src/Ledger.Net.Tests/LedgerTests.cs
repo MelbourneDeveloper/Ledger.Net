@@ -151,13 +151,12 @@ namespace Ledger.Net.Tests
         public async Task SignEthereumTransaction()
         {
             await GetLedger();
+
             _LedgerManager.SetCoinNumber(60);
 
             byte[] rlpEncodedTransactionData = { 227, 128, 132, 59, 154, 202, 0, 130, 82, 8, 148, 139, 6, 158, 207, 123, 242, 48, 225, 83, 184, 237, 144, 59, 171, 242, 68, 3, 204, 162, 3, 128, 128, 4, 128, 128 };
 
             var derivationData = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
-
-            // Create base class like GetPublicKeyResponseBase and make the method more like GetAddressAsync
 
             var firstRequest = new EthereumAppSignatureRequest(true, derivationData.Concat(rlpEncodedTransactionData).ToArray());
 
@@ -167,6 +166,8 @@ namespace Ledger.Net.Tests
 
             Assert.IsTrue(response.SignatureR?.Length == 32);
             Assert.IsTrue(response.SignatureS?.Length == 32);
+
+            Console.WriteLine($"R:{HexDataToString(response.SignatureR)}\r\nS:{HexDataToString(response.SignatureS)}\r\nV:{response.SignatureV}");
         }
 
         [TestMethod]
@@ -258,8 +259,8 @@ namespace Ledger.Net.Tests
             var transactionRaw6 = "0a02b7832208ca07886003b5260940c8a8bda0a32d5a63082c125f0a38747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e45786368616e67655472616e73616374696f6e436f6e747261637412230a1541bfdc501d1ccc4a7167489c8e670e4954a44c914510191a015f20908e8101280a70e8e8b9a0a32d";
 
             await SignTronTransaction(transactionRaw6, "44'/195'/0'/0/0", 134);
-        }       
-       
+        }
+
         private static TronTransactionModel GetTronTransactionModelFromResource(string resourceName)
         {
             var assembly = Assembly.GetExecutingAssembly();
@@ -454,16 +455,26 @@ namespace Ledger.Net.Tests
 
             var response = await _LedgerManager.SendRequestAsync<TronAppSignatureResponse, TronAppSignatureRequest>(firstRequest);
 
-            var hexData = new StringBuilder();
-            for (var i = 0; i < response.Data.Length; i++)
-            {
-                hexData.Append(response.Data[i].ToString("X2"));
-            }
-            Console.WriteLine(hexData);
+            var data = response.Data;
+
+            var hexAsString = HexDataToString(data);
+
+            Console.WriteLine(hexAsString);
 
             Assert.IsTrue(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
 
-            Assert.IsTrue(!expectedDataLength.HasValue || hexData.Length == expectedDataLength, $"Expected legnth {expectedDataLength}. Actual: {hexData.Length}");           
+            Assert.IsTrue(!expectedDataLength.HasValue || hexAsString.Length == expectedDataLength, $"Expected legnth {expectedDataLength}. Actual: {hexAsString.Length}");
+        }
+
+        private static string HexDataToString(byte[] data)
+        {
+            var sb = new StringBuilder();
+            for (var i = 0; i < data.Length; i++)
+            {
+                sb.Append(data[i].ToString("X2"));
+            }
+            var hexAsString = sb.ToString();
+            return hexAsString;
         }
 
         private async Task ThrowErrorInsteadOfPrompt(int? returnCode, Exception exception, string member)

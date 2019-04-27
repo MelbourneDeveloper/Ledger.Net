@@ -31,7 +31,7 @@ namespace Ledger.Net.Requests
             var buffer = new byte[5 + chunkSize];
             buffer[0] = Cla;
             buffer[1] = Ins;
-            buffer[2] = offset == 0 ? Argument1 : Constants.P1_MORE;
+            //buffer[2] = offset == 0 ? Argument1 : Constants.P1_MORE;
             buffer[3] = Argument2;
             buffer[4] = (byte)chunkSize;
             Array.Copy(Data, offset, buffer, 5, chunkSize);
