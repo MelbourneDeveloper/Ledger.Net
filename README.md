@@ -29,7 +29,7 @@ NuGet: Install-Package Ledger.Net
 
 This library is part of the Hardwarewallets.Net suite of libraries. It is an ambitious project aimed toward putting a set of common C# interfaces across all hardwarewallets
 
-## [Contribution] (https://github.com/MelbourneDeveloper/Device.Net/blob/master/CONTRIBUTING.md)
+## [Contribution](https://github.com/MelbourneDeveloper/Device.Net/blob/master/CONTRIBUTING.md)
 
 Unit tests, integration tests, and bug fixes please! Check out the Issues section.
 
