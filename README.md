@@ -7,11 +7,7 @@ Cross Platform C# Library for the Ledger Cryptocurrency Hardwarewallet
 - PM me on [Twitter](https://twitter.com/cfdevelop)
 - Blog: https://christianfindlay.com/
 
-Currently supports:
-* .NET Framework
-* .NET Core
-* Android
-* UWP 
+Currently supports: .NET Framework, .NET Core, Android, UWP 
 
 ## Quick Start
 
@@ -24,6 +20,24 @@ Currently supports:
 For any instructions that are not implemented you will need to create a RequestBase, and ResponseBase class. Then, you will need to call SendRequestAsync. See the see also section.
 
 NuGet: Install-Package Ledger.Net
+
+[Example](https://github.com/MelbourneDeveloper/Ledger.Net/blob/7b166489eb227ffe56eeb765ba6108d4573ebedc/src/Ledger.Net.Tests/LedgerTests.cs#L125):
+```cs
+public async Task GetBitcoinPublicKey()
+{
+    WindowsHidDeviceFactory.Register();
+    var ledgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt);
+    _LedgerManager = await ledgerManagerBroker.WaitForFirstDeviceAsync();
+
+    var returnResponse = (GetPublicKeyResponseBase)await _LedgerManager.CallAndPrompt(_GetPublicKeyFunc,
+    new CallAndPromptArgs<GetAddressArgs>
+    {
+        LedgerManager = _LedgerManager,
+        MemberName = nameof(_GetPublicKeyFunc),
+        Args = new GetAddressArgs(new BIP44AddressPath(true, 0, 0, false, 0), false)
+    });
+}
+```
 
 ## [Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net)
 
