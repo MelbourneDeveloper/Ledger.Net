@@ -4,7 +4,10 @@
     {
         #region Generic App Constants
         public const byte CLA = 0xE0;
+
         public const byte P1_MORE = 0x80;
+        public const byte P1_SIGN = 0x10;
+
         public const int DEFAULT_CHANNEL = 0x0101;
         public const int LEDGER_HID_PACKET_SIZE = 64;
         public const int LEDGER_MAX_DATA_SIZE = 255;
