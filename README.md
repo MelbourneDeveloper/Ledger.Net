@@ -44,13 +44,12 @@ All my libraries are open source and free. Your donations will contribute to mak
 | Bitcoin        | [33LrG1p81kdzNUHoCnsYGj6EHRprTKWu3U](https://www.blockchain.com/btc/address/33LrG1p81kdzNUHoCnsYGj6EHRprTKWu3U) |
 | Ethereum       | [0x7ba0ea9975ac0efb5319886a287dcf5eecd3038e](https://etherdonation.com/d?to=0x7ba0ea9975ac0efb5319886a287dcf5eecd3038e) |
 
-## [Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net)
+## Based On
 
-This library is part of the Hardwarewallets.Net suite of libraries. It is an ambitious project aimed toward putting a set of common C# interfaces across all hardwarewallets
-
-## [Hid.Net, Usb.Net](https://github.com/MelbourneDeveloper/Device.Net)
-
-Ledger.Net communicates with the devices via the Hid.Net and Usb.Net libraries. You can see the repo for this library here.
+| Library           | Description |
+| -------------  |:-------------:|
+| [Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net) | This library is part of the Hardwarewallets.Net suite. It is aimed toward putting a set of common C# interfaces, and utilities that will work with all hardwarewallets. |
+| [Hid.Net, Usb.Net](https://github.com/MelbourneDeveloper/Device.Net)             | Ledger.Net communicates with the devices via the Hid.Net and Usb.Net libraries. You can see the repo for this library here. |
 
 ## See Also
 
