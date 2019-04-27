@@ -23,19 +23,13 @@ NuGet: Install-Package Ledger.Net
 
 [Example](https://github.com/MelbourneDeveloper/Ledger.Net/blob/7b166489eb227ffe56eeb765ba6108d4573ebedc/src/Ledger.Net.Tests/LedgerTests.cs#L125):
 ```cs
-public async Task GetBitcoinPublicKey()
+public async Task DisplayAddress()
 {
     WindowsHidDeviceFactory.Register();
     var ledgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt);
     _LedgerManager = await ledgerManagerBroker.WaitForFirstDeviceAsync();
-
-    var returnResponse = (GetPublicKeyResponseBase)await _LedgerManager.CallAndPrompt(_GetPublicKeyFunc,
-    new CallAndPromptArgs<GetAddressArgs>
-    {
-        LedgerManager = _LedgerManager,
-        MemberName = nameof(_GetPublicKeyFunc),
-        Args = new GetAddressArgs(new BIP44AddressPath(true, 0, 0, false, 0), false)
-    });
+    var address = await _LedgerManager.GetAddressAsync(0, false, 0, true);
+}
 }
 ```
 ## [Contribution](https://github.com/MelbourneDeveloper/Ledger.Net/blob/master/CONTRIBUTING.md)
