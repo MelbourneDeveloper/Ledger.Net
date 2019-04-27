@@ -11,7 +11,7 @@ Currently supports: .NET Framework, .NET Core, Android, UWP , See [MacOS and Lin
 - Run the GetBitcoinPublicKey unit test
 - Repeat for Ethereum and Tron etc.
 
-For any instructions that are not implemented you will need to create a RequestBase, and ResponseBase class. Then, you will need to call SendRequestAsync or CallAndPrompt. See the see also section.
+For any instructions that are not implemented you will need to create a RequestBase, and ResponseBase class. Then, you will need to call SendRequestAsync or CallAndPrompt.
 
 NuGet: Install-Package Ledger.Net
 
@@ -33,7 +33,7 @@ public async Task DisplayAddress()
 
 ## [Contribution](https://github.com/MelbourneDeveloper/Ledger.Net/blob/master/CONTRIBUTING.md)
 
-The community needs your help! Unit tests, integration tests, and bug fixes please! Check out the Issues section.
+The community needs your help! Unit tests, integration tests, more app integrations and bug fixes please! Check out the Issues section.
 
 ## Donate
 
