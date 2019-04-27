@@ -1,13 +1,13 @@
 # Ledger.Net
 Cross Platform C# Library for the Ledger Cryptocurrency Hardwarewallet
 
+Currently supports: .NET Framework, .NET Core, Android, UWP , See [MacOS and Linux Support](https://github.com/MelbourneDeveloper/Device.Net/wiki/Linux-and-MacOS-Support)
+
 ## Contact
 
 - Join us on [Slack](https://join.slack.com/t/hardwarewallets/shared_invite/enQtNjA5MDgxMzE2Nzg2LWUyODIzY2U0ODE5OTFlMmI3MGYzY2VkZGJjNTc0OTUwNDliMTg2MzRiNTU1MTVjZjI0YWVhNjQzNjUwMjEyNzQ)
 - PM me on [Twitter](https://twitter.com/cfdevelop)
 - Blog: https://christianfindlay.com/
-
-Currently supports: .NET Framework, .NET Core, Android, UWP , See [MacOS and Linux Support](https://github.com/MelbourneDeveloper/Device.Net/wiki/Linux-and-MacOS-Support)
 
 ## Quick Start
 
