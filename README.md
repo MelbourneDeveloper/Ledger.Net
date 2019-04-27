@@ -42,7 +42,7 @@ All my libraries are open source and free. Your donations will contribute to mak
 | Coin           | Address |
 | -------------  |:-------------:|
 | Bitcoin        | 33LrG1p81kdzNUHoCnsYGj6EHRprTKWu3U |
-| Ethereum       | 0x7ba0ea9975ac0efb5319886a287dcf5eecd3038e  |
+| Ethereum       | <a href="https://etherdonation.com/d?to=0x7ba0ea9975ac0efb5319886a287dcf5eecd3038e" target="_blank" title="Donate ETH"><img src="https://etherdonation.com/i/btn/donate-btn.png" alt="Donate ETH"/></a>  |
 | Litecoin       | MVAbLaNPq7meGXvZMU4TwypUsDEuU6stpY |
 
 ## [Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net)
