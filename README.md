@@ -55,7 +55,7 @@ Ledger.Net communicates with the devices via the Hid.Net and Usb.Net libraries. 
 
 ## See Also
 
-| Coin           | Address |
+| Library           | Description |
 | -------------  |:-------------:|
 | [Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net) | Trezor Hardwarewallet Library
 | [KeepKey.Net](https://github.com/MelbourneDeveloper/KeepKey.Net)                 | KeepKey Hardwarewallet Library
