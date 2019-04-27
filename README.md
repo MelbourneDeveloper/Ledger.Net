@@ -23,9 +23,7 @@ Currently supports:
 
 For any instructions that are not implemented you will need to create a RequestBase, and ResponseBase class. Then, you will need to call SendRequestAsync. See the see also section.
 
-## NuGet
-
-Install-Package Ledger.Net
+NuGet: Install-Package Ledger.Net
 
 ## [Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net)
 
