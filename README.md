@@ -64,13 +64,11 @@ Ledger.Net communicates with the devices via the Hid.Net and Usb.Net libraries. 
 
 [KeepKey.Net](https://github.com/MelbourneDeveloper/KeepKey.Net) - KeepKey Hardwarewallet Library
 
-This library has more instructions implemented out of the box.
+[Ledger .NET API](https://github.com/LedgerHQ/ledger-dotnet-api) - A similar library
 
-https://github.com/LedgerHQ/ledger-dotnet-api
+ These are the device apps on the Ledger. These can be used to reverse engineer the Request/Response messages.
 
- These are the actual 3rd party apps on the Ledger, their codebase, and samples. These can be used to reverse engineer the Request/Response messages.
+[Ledger Bitcoin App](https://github.com/LedgerHQ/blue-app-btc) - Bitcoin wallet application for Ledger Blue and Nano S 
 
-https://github.com/LedgerHQ/blue-app-btc
-
-https://github.com/LedgerHQ/blue-app-eth
+[Ledger Ethereum App](https://github.com/LedgerHQ/blue-app-eth) - Ethereum wallet application for Ledger Blue and Nano S 
 
