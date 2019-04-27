@@ -33,11 +33,11 @@ public async Task DisplayAddress()
 ```
 ## [Contribution](https://github.com/MelbourneDeveloper/Ledger.Net/blob/master/CONTRIBUTING.md)
 
-Unit tests, integration tests, and bug fixes please! Check out the Issues section.
+The community needs your help! Unit tests, integration tests, and bug fixes please! Check out the Issues section.
 
 ## Donate
 
-All Hardwarewallets.Net libraries are open source and free. Your donations will contribute to making sure that these libraries keep up with the latest hardwarewallet firmware, functions are implemented, and the quality is maintained.
+All my libraries are open source and free. Your donations will contribute to making sure that these libraries keep up with the latest firmware, functions are implemented, and the quality is maintained.
 
 | Coin           | Address |
 | -------------  |:-------------:|
