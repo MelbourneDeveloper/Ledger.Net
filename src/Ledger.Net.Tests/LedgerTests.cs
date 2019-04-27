@@ -152,7 +152,7 @@ namespace Ledger.Net.Tests
         {
             byte[] rlpEncodedTransactionData = { 227, 128, 132, 59, 154, 202, 0, 130, 82, 8, 148, 139, 6, 158, 207, 123, 242, 48, 225, 83, 184, 237, 144, 59, 171, 242, 68, 3, 204, 162, 3, 128, 128, 4, 128, 128 };
 
-            await TestEthereumTransaction(rlpEncodedTransactionData);
+            await TestSigningEthereum(rlpEncodedTransactionData, true);
         }
 
         /// <summary>
@@ -203,10 +203,10 @@ namespace Ledger.Net.Tests
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x00, 0x00};
 
-            await TestEthereumTransaction(rlpEncodedTransactionData);
+            await TestSigningEthereum(rlpEncodedTransactionData, false);
         }
 
-        private async Task TestEthereumTransaction(byte[] rlpEncodedTransactionData)
+        private async Task TestSigningEthereum(byte[] rlpEncodedTransactionData, bool isTransaction)
         {
             await GetLedger();
 
@@ -214,7 +214,11 @@ namespace Ledger.Net.Tests
 
             var derivationData = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
 
-            var firstRequest = new EthereumAppSignatureRequest(true, derivationData.Concat(rlpEncodedTransactionData).ToArray());
+            var concatenatedData = derivationData.Concat(rlpEncodedTransactionData).ToArray();
+
+            Console.WriteLine($"Input data: {HexDataToString(concatenatedData)}");
+
+            var firstRequest = new EthereumAppSignatureRequest(isTransaction, concatenatedData);
 
             var response = await _LedgerManager.SendRequestAsync<EthereumAppSignatureResponse, EthereumAppSignatureRequest>(firstRequest);
 
