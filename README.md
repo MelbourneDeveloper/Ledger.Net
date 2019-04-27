@@ -55,17 +55,11 @@ Ledger.Net communicates with the devices via the Hid.Net and Usb.Net libraries. 
 
 ## See Also
 
-[Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net) - Base level Hardwarewallet Library
-
-[Trezor.Net](https://github.com/MelbourneDeveloper/Trezor.Net) - Trezor Hardwarewallet Library
-
-[KeepKey.Net](https://github.com/MelbourneDeveloper/KeepKey.Net) - KeepKey Hardwarewallet Library
-
-[Ledger .NET API](https://github.com/LedgerHQ/ledger-dotnet-api) - A similar library
-
- These are the device apps on the Ledger. These can be used to reverse engineer the Request/Response messages.
-
-[Ledger Bitcoin App](https://github.com/LedgerHQ/blue-app-btc) - Bitcoin wallet application for Ledger Blue and Nano S 
-
-[Ledger Ethereum App](https://github.com/LedgerHQ/blue-app-eth) - Ethereum wallet application for Ledger Blue and Nano S 
+| Coin           | Address |
+| -------------  |:-------------:|
+| [Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net) | Trezor Hardwarewallet Library
+| [KeepKey.Net](https://github.com/MelbourneDeveloper/KeepKey.Net)                 | KeepKey Hardwarewallet Library
+| [Ledger .NET API](https://github.com/LedgerHQ/ledger-dotnet-api)                 | A similar library |
+| [Ledger Bitcoin App](https://github.com/LedgerHQ/blue-app-btc)                   | Bitcoin wallet application for Ledger Blue and Nano S |
+| [Ledger Ethereum App](https://github.com/LedgerHQ/blue-app-eth)                  | Ethereum wallet application for Ledger Blue and Nano S |
 
