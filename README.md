@@ -38,11 +38,6 @@ public async Task GetBitcoinPublicKey()
     });
 }
 ```
-
-## [Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net)
-
-This library is part of the Hardwarewallets.Net suite of libraries. It is an ambitious project aimed toward putting a set of common C# interfaces across all hardwarewallets
-
 ## [Contribution](https://github.com/MelbourneDeveloper/Ledger.Net/blob/master/CONTRIBUTING.md)
 
 Unit tests, integration tests, and bug fixes please! Check out the Issues section.
@@ -51,11 +46,11 @@ Unit tests, integration tests, and bug fixes please! Check out the Issues sectio
 
 All Hardwarewallets.Net libraries are open source and free. Your donations will contribute to making sure that these libraries keep up with the latest hardwarewallet firmware, functions are implemented, and the quality is maintained.
 
-Bitcoin: 33LrG1p81kdzNUHoCnsYGj6EHRprTKWu3U
+Bitcoin: 33LrG1p81kdzNUHoCnsYGj6EHRprTKWu3U Ethereum: 0x7ba0ea9975ac0efb5319886a287dcf5eecd3038e Litecoin: MVAbLaNPq7meGXvZMU4TwypUsDEuU6stpY
 
-Ethereum: 0x7ba0ea9975ac0efb5319886a287dcf5eecd3038e
+## [Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net)
 
-Litecoin: MVAbLaNPq7meGXvZMU4TwypUsDEuU6stpY
+This library is part of the Hardwarewallets.Net suite of libraries. It is an ambitious project aimed toward putting a set of common C# interfaces across all hardwarewallets
 
 ## Store App Production Usage (Not Yet In Production)
 
