@@ -3,12 +3,6 @@ Cross Platform C# Library for the Ledger Cryptocurrency Hardwarewallet
 
 Currently supports: .NET Framework, .NET Core, Android, UWP , See [MacOS and Linux Support](https://github.com/MelbourneDeveloper/Device.Net/wiki/Linux-and-MacOS-Support)
 
-## Contact
-
-- Join us on [Slack](https://join.slack.com/t/hardwarewallets/shared_invite/enQtNjA5MDgxMzE2Nzg2LWUyODIzY2U0ODE5OTFlMmI3MGYzY2VkZGJjNTc0OTUwNDliMTg2MzRiNTU1MTVjZjI0YWVhNjQzNjUwMjEyNzQ)
-- PM me on [Twitter](https://twitter.com/cfdevelop)
-- Blog: https://christianfindlay.com/
-
 ## Quick Start
 
 - Clone the repo and open the solution
@@ -31,6 +25,12 @@ public async Task DisplayAddress()
     var address = await _LedgerManager.GetAddressAsync(0, false, 0, true);
 }
 ```
+## Contact
+
+- Join us on [Slack](https://join.slack.com/t/hardwarewallets/shared_invite/enQtNjA5MDgxMzE2Nzg2LWUyODIzY2U0ODE5OTFlMmI3MGYzY2VkZGJjNTc0OTUwNDliMTg2MzRiNTU1MTVjZjI0YWVhNjQzNjUwMjEyNzQ)
+- PM me on [Twitter](https://twitter.com/cfdevelop)
+- Blog: https://christianfindlay.com/
+
 ## [Contribution](https://github.com/MelbourneDeveloper/Ledger.Net/blob/master/CONTRIBUTING.md)
 
 The community needs your help! Unit tests, integration tests, and bug fixes please! Check out the Issues section.
