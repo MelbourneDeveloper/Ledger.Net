@@ -14,10 +14,10 @@ Currently supports: .NET Framework, .NET Core, Android, UWP
 - Clone the repo and open the solution
 - Connect Ledger and enter pin
 - Open Bitcoin app on the device
-- Run the GetAddress unit test
+- Run the GetBitcoinPublicKey unit test
 - Repeat for Ethereum and Tron etc.
 
-For any instructions that are not implemented you will need to create a RequestBase, and ResponseBase class. Then, you will need to call SendRequestAsync. See the see also section.
+For any instructions that are not implemented you will need to create a RequestBase, and ResponseBase class. Then, you will need to call SendRequestAsync or CallAndPrompt. See the see also section.
 
 NuGet: Install-Package Ledger.Net
 
@@ -51,14 +51,6 @@ Bitcoin: 33LrG1p81kdzNUHoCnsYGj6EHRprTKWu3U Ethereum: 0x7ba0ea9975ac0efb5319886a
 ## [Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net)
 
 This library is part of the Hardwarewallets.Net suite of libraries. It is an ambitious project aimed toward putting a set of common C# interfaces across all hardwarewallets
-
-## Store App Production Usage (Not Yet In Production)
-
-This app currently only Supports Trezor (https://github.com/MelbourneDeveloper/Trezor.Net) but it will soon support Ledger with this library.
-
-https://play.google.com/store/apps/details?id=com.Hardfolio (Android)
-
-https://www.microsoft.com/en-au/p/hardfolio/9p8xx70n5d2j (UWP)
 
 ## [Hid.Net, Usb.Net](https://github.com/MelbourneDeveloper/Device.Net)
 
