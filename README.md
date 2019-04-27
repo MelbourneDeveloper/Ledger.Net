@@ -1,14 +1,11 @@
 # Ledger.Net
 Cross Platform C# Library for the Ledger Cryptocurrency Hardwarewallet
 
-Join us on Slack:
-https://hardwarewallets.slack.com
+## Contact
 
-Twitter:
-https://twitter.com/HardfolioApp
-
-Blog:
-https://christianfindlay.wordpress.com
+- Join us on [Slack](https://join.slack.com/t/hardwarewallets/shared_invite/enQtNjA5MDgxMzE2Nzg2LWUyODIzY2U0ODE5OTFlMmI3MGYzY2VkZGJjNTc0OTUwNDliMTg2MzRiNTU1MTVjZjI0YWVhNjQzNjUwMjEyNzQ)
+- PM me on [Twitter](https://twitter.com/cfdevelop)
+- Blog: https://christianfindlay.com/
 
 Currently supports:
 * .NET Framework
@@ -26,9 +23,7 @@ Currently supports:
 
 For any instructions that are not implemented you will need to create a RequestBase, and ResponseBase class. Then, you will need to call SendRequestAsync. See the see also section.
 
-## NuGet
-
-Install-Package Ledger.Net
+NuGet: Install-Package Ledger.Net
 
 ## [Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net)
 
