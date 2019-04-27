@@ -30,7 +30,6 @@ public async Task DisplayAddress()
     _LedgerManager = await ledgerManagerBroker.WaitForFirstDeviceAsync();
     var address = await _LedgerManager.GetAddressAsync(0, false, 0, true);
 }
-}
 ```
 ## [Contribution](https://github.com/MelbourneDeveloper/Ledger.Net/blob/master/CONTRIBUTING.md)
 
