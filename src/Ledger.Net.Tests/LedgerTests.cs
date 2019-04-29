@@ -231,15 +231,24 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
+        public async Task TestSignTronTransactionBig()
+        {
+            //Data from python sample
+            //https://github.com/fbsobreira/trx-ledger/blob/aaf10b341c47cc8cb22ba22ba189bc91fa0355aa/examples/signTransactionExtension.py#L18
+
+            var transactionRaw1 = "0a02ee332208c90c7f40dfbdc51540e0dfe3ada62d5a860108041281010a30747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e566f74655769746e657373436f6e7472616374124d0a15417773ff0ebd2d2c85761db01ae2b00c417bf1539312190a154167e39013be3cdd3814bed152d7439fb5b6791409100212190a1541c189fa6fc9ed7a3580c3fe291915d5c6a6259be710027089a2e0ada62d";
+
+            await SignTronTransaction(transactionRaw1, "44'/195'/0'/0/0");
+        }
+
+        [TestMethod]
         public async Task TestSignTronTransaction1()
         {
             //Data from python sample
             //https://github.com/fbsobreira/trx-ledger/blob/b274fcdc19b09c20485fefa534aeba878ae525b6/test_signTransaction.py#L33
-            var transactionRaw1 = "0a027d52220889fd90c45b71f24740e0bcb0f2be2c5a67080112630a2d747970" +
-            "652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e7366" +
-            "6572436f6e747261637412320a1541c8599111f29c1e1e061265b4af93ea1f27" +
-            "4ad78a1215414f560eb4182ca53757f905609e226e96e8e1a80c18c0843d70d0" +
-            "f5acf2be2c";
+            //var transactionRaw1 = "0a02edd92208ac1579fd507b8c8b40b0a2d3ada62d5af301080412ee010a30747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e566f74655769746e657373436f6e747261637412b9010a15417773ff0ebd2d2c85761db01ae2b00c417bf1539312190a154167e39013be3cdd38";
+
+            var transactionRaw1 = "0a02ee332208c90c7f40dfbdc51540e0dfe3ada62d5a860108041281010a30747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e566f74655769746e657373436f6e7472616374124d0a15417773ff0ebd2d2c85761db01ae2b00c417bf1539312190a154167e39013be3cdd3814bed152d7439fb5b6791409100212190a1541c189fa6fc9ed7a3580c3fe291915d5c6a6259be710027089a2e0ada62d";
 
             await SignTronTransaction(transactionRaw1, "44'/195'/0'/0/0");
         }
@@ -343,6 +352,8 @@ namespace Ledger.Net.Tests
 
             _LedgerManager.SetCoinNumber(60);
             var address = await _LedgerManager.GetAddressAsync(0, 0);
+
+            Console.WriteLine(address);
 
             Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
@@ -455,6 +466,8 @@ namespace Ledger.Net.Tests
             var hexAsString = HexDataToString(data);
 
             Console.WriteLine(hexAsString);
+
+            Console.WriteLine($"Length: {hexData.Length}");
 
             Assert.IsTrue(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
 

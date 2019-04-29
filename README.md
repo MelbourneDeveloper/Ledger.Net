@@ -1,84 +1,63 @@
 # Ledger.Net
 Cross Platform C# Library for the Ledger Cryptocurrency Hardwarewallet
 
-Join us on Slack:
-https://hardwarewallets.slack.com
-
-Twitter:
-https://twitter.com/HardfolioApp
-
-Blog:
-https://christianfindlay.wordpress.com
-
-Currently supports:
-* .NET Framework
-* .NET Core
-* Android
-* UWP 
+Currently supports: .NET Framework, .NET Core, Android, UWP , See [MacOS and Linux Support](https://github.com/MelbourneDeveloper/Device.Net/wiki/Linux-and-MacOS-Support)
 
 ## Quick Start
 
 - Clone the repo and open the solution
 - Connect Ledger and enter pin
 - Open Bitcoin app on the device
-- Run the GetAddress unit test
+- Run the GetBitcoinPublicKey unit test
 - Repeat for Ethereum and Tron etc.
 
-For any instructions that are not implemented you will need to create a RequestBase, and ResponseBase class. Then, you will need to call SendRequestAsync. See the see also section.
+For any instructions that are not implemented you will need to create a RequestBase, and ResponseBase class. Then, you will need to call SendRequestAsync or CallAndPrompt.
 
-## NuGet
+NuGet: Install-Package Ledger.Net
 
-Install-Package Ledger.Net
+[Example](https://github.com/MelbourneDeveloper/Ledger.Net/blob/7b166489eb227ffe56eeb765ba6108d4573ebedc/src/Ledger.Net.Tests/LedgerTests.cs#L125):
+```cs
+public async Task DisplayAddress()
+{
+    WindowsHidDeviceFactory.Register();
+    var ledgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt);
+    _LedgerManager = await ledgerManagerBroker.WaitForFirstDeviceAsync();
+    var address = await _LedgerManager.GetAddressAsync(0, false, 0, true);
+}
+```
+## Contact
 
-## [Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net)
+- Join us on [Slack](https://join.slack.com/t/hardwarewallets/shared_invite/enQtNjA5MDgxMzE2Nzg2LWUyODIzY2U0ODE5OTFlMmI3MGYzY2VkZGJjNTc0OTUwNDliMTg2MzRiNTU1MTVjZjI0YWVhNjQzNjUwMjEyNzQ)
+- PM me on [Twitter](https://twitter.com/cfdevelop)
+- Blog: https://christianfindlay.com/
 
-This library is part of the Hardwarewallets.Net suite of libraries. It is an ambitious project aimed toward putting a set of common C# interfaces across all hardwarewallets
+## [Contribution](https://github.com/MelbourneDeveloper/Ledger.Net/blob/master/CONTRIBUTING.md)
 
-## Contribution
-
-I welcome feedback, and pull requests. If there's something that you need to change in the library, please log an issue, and explain the problem. If you have a proposed solution, please write it up and explain why you think it is the answer to the problem. The best way to highlight a bug is to submit a pull request with a unit test that fails so I can clearly see what the problem is in the first place.
-
-### Pull Requests
-
-Please break pull requests up in to their smallest possible parts. If you have a small feature of refactor that other code depends on, try submitting that first. Please try to reference an issue so that I understand the context of the pull request. If there is no issue, I don't know what the code is about. If you need help, please jump on Slack here: https://hardwarewallets.slack.com
+The community needs your help! Unit tests, integration tests, more app integrations and bug fixes please! Check out the Issues section.
 
 ## Donate
 
-All Hardwarewallets.Net libraries are open source and free. Your donations will contribute to making sure that these libraries keep up with the latest hardwarewallet firmware, functions are implemented, and the quality is maintained.
+All my libraries are open source and free. Your donations will contribute to making sure that these libraries keep up with the latest firmware, functions are implemented, and the quality is maintained.
 
-Bitcoin: 33LrG1p81kdzNUHoCnsYGj6EHRprTKWu3U
+| Coin           | Address |
+| -------------  |:-------------:|
+| Bitcoin        | [33LrG1p81kdzNUHoCnsYGj6EHRprTKWu3U](https://www.blockchain.com/btc/address/33LrG1p81kdzNUHoCnsYGj6EHRprTKWu3U) |
+| Ethereum       | [0x7ba0ea9975ac0efb5319886a287dcf5eecd3038e](https://etherdonation.com/d?to=0x7ba0ea9975ac0efb5319886a287dcf5eecd3038e) |
 
-Ethereum: 0x7ba0ea9975ac0efb5319886a287dcf5eecd3038e
+## Based On
 
-Litecoin: MVAbLaNPq7meGXvZMU4TwypUsDEuU6stpY
-
-## Store App Production Usage (Not Yet In Production)
-
-This app currently only Supports Trezor (https://github.com/MelbourneDeveloper/Trezor.Net) but it will soon support Ledger with this library.
-
-https://play.google.com/store/apps/details?id=com.Hardfolio (Android)
-
-https://www.microsoft.com/en-au/p/hardfolio/9p8xx70n5d2j (UWP)
-
-## [Hid.Net, Usb.Net](https://github.com/MelbourneDeveloper/Device.Net)
-
-Ledger.Net communicates with the devices via the Hid.Net and Usb.Net libraries. You can see the repo for this library here.
+| Library           | Description |
+| -------------  |:-------------:|
+| [Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net) | This library is part of the Hardwarewallets.Net suite. It is aimed toward putting a set of common C# interfaces, and utilities that will work with all hardwarewallets. |
+| [Hid.Net, Usb.Net](https://github.com/MelbourneDeveloper/Device.Net)             | Ledger.Net communicates with the devices via the Hid.Net and Usb.Net libraries. You can see the repo for this library here. |
 
 ## See Also
 
-[Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net) - Base level Hardwarewallet Library
-
-[Trezor.Net](https://github.com/MelbourneDeveloper/Trezor.Net) - Trezor Hardwarewallet Library
-
-[KeepKey.Net](https://github.com/MelbourneDeveloper/KeepKey.Net) - KeepKey Hardwarewallet Library
-
-This library has more instructions implemented out of the box.
-
-https://github.com/LedgerHQ/ledger-dotnet-api
-
- These are the actual 3rd party apps on the Ledger, their codebase, and samples. These can be used to reverse engineer the Request/Response messages.
-
-https://github.com/LedgerHQ/blue-app-btc
-
-https://github.com/LedgerHQ/blue-app-eth
+| Library           | Description |
+| -------------  |:-------------:|
+| [Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net) | Trezor Hardwarewallet Library
+| [KeepKey.Net](https://github.com/MelbourneDeveloper/KeepKey.Net)                 | KeepKey Hardwarewallet Library
+| [Ledger .NET API](https://github.com/LedgerHQ/ledger-dotnet-api)                 | A similar library |
+| [Ledger Bitcoin App](https://github.com/LedgerHQ/blue-app-btc)                   | Bitcoin wallet application for Ledger Blue and Nano S |
+| [Ledger Ethereum App](https://github.com/LedgerHQ/blue-app-eth)                  | Ethereum wallet application for Ledger Blue and Nano S |
 
