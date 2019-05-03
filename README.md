@@ -3,6 +3,8 @@ Cross Platform C# Library for the Ledger Cryptocurrency Hardwarewallet
 
 Currently supports: .NET Framework, .NET Core, Android, UWP , See [MacOS and Linux Support](https://github.com/MelbourneDeveloper/Device.Net/wiki/Linux-and-MacOS-Support)
 
+[Would you like to contribute?](https://christianfindlay.com/2019/04/28/calling-all-c-crypto-developers/)
+
 ## Quick Start
 
 - Clone the repo and open the solution
@@ -55,7 +57,7 @@ All my libraries are open source and free. Your donations will contribute to mak
 
 | Library           | Description |
 | -------------  |:-------------:|
-| [Hardwarewallets.Net](https://github.com/MelbourneDeveloper/Hardwarewallets.Net) | Trezor Hardwarewallet Library
+| [Trezor.Net](https://github.com/MelbourneDeveloper/Trezor.Net)                   | Trezor Hardwarewallet Library
 | [KeepKey.Net](https://github.com/MelbourneDeveloper/KeepKey.Net)                 | KeepKey Hardwarewallet Library
 | [Ledger .NET API](https://github.com/LedgerHQ/ledger-dotnet-api)                 | A similar library |
 | [Ledger Bitcoin App](https://github.com/LedgerHQ/blue-app-btc)                   | Bitcoin wallet application for Ledger Blue and Nano S |
