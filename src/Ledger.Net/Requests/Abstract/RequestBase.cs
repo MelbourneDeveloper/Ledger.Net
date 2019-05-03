@@ -31,7 +31,7 @@ namespace Ledger.Net.Requests
             var buffer = new byte[5 + chunkSize];
             buffer[0] = Cla;
             buffer[1] = Ins;
-            buffer[2] = offset == 0 ? Argument1 : Constants.P1_MORE;
+            //buffer[2] will be filled in later when we know how many chunks there are
             buffer[3] = Argument2;
             buffer[4] = (byte)chunkSize;
             Array.Copy(Data, offset, buffer, 5, chunkSize);
@@ -42,17 +42,24 @@ namespace Ledger.Net.Requests
         #endregion
 
         #region Internal Methods
-        internal IEnumerable<byte[]> ToAPDUChunks()
+        internal List<byte[]> ToAPDUChunks()
         {
             var offset = 0;
+
             if (Data.Length > 0)
             {
+                var retVal = new List<byte[]>();
+
                 while (offset < Data.Length - 1)
-                    yield return GetNextApduCommand(ref offset);
-            } 
+                {
+                    retVal.Add(GetNextApduCommand(ref offset));
+                }
+
+                return retVal;
+            }
             else
             {
-                yield return GetNextApduCommand(ref offset);
+                return new List<byte[]> { GetNextApduCommand(ref offset) };
             }
         }
         #endregion

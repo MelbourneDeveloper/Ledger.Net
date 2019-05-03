@@ -5,20 +5,21 @@
     <Description>A cross platform C# library for the Ledger hardwarewallet. To see the samples, please clone the repo at the project Url.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageLicenseUrl>https://github.com/MelbourneDeveloper/Ledger.Net/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/MelbourneDeveloper/Ledger.Net</PackageProjectUrl>
-    <AssemblyVersion>3.3.1.0</AssemblyVersion>
-    <FileVersion>3.3.1.0</FileVersion>
+    <AssemblyVersion>3.4.0.0</AssemblyVersion>
+    <FileVersion>3.4.0.0</FileVersion>
     <Company>Christian Findlay</Company>
-    <Version>3.3.1</Version>
+    <Version>3.4.0</Version>
     <RepositoryUrl>https://github.com/MelbourneDeveloper/Ledger.Net</RepositoryUrl>
-    <PackageReleaseNotes>Add Tron transaction signing</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixes for large message chunking and Tron signing</PackageReleaseNotes>
     <Copyright>Copyright (c) 2019 Christian Findlay</Copyright>
     <Title>Ledger.Net</Title>
     <Summary>A cross platform C# library for the Ledger hardwarewallet.</Summary>
     <LangVersion>7.3</LangVersion>
     <PackageTags>C# USB Hid Ledger Hardwarewallet Bitcoin Ethereum BitcoinCash Litecoin Cryptocurrency Security Tron</PackageTags>
-    <CodeAnalysisRuleSet>CodeRules.ruleset</CodeAnalysisRuleSet>     
+    <CodeAnalysisRuleSet>CodeRules.ruleset</CodeAnalysisRuleSet>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>     
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -28,6 +29,10 @@
   <ItemGroup>
     <None Include="..\..\CONTRIBUTING.md" Link="CONTRIBUTING.md" />
     <None Include="..\..\LICENSE" Link="LICENSE" />
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="..\..\README.md" Link="README.md" />
   </ItemGroup>
 
