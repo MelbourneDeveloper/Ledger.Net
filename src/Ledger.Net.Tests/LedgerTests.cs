@@ -53,10 +53,16 @@ namespace Ledger.Net.Tests
         private static readonly UsageSpecification[] _UsageSpecification = new[] { new UsageSpecification(0xffa0, 0x01) };
         #endregion
 
+        [TestInitialize]
+        public async Task InitializeAsync()
+        {
+            await GetLedger();
+        }
+
         #region Tests
 
         [TestMethod]
-        public async Task DisplayTronAddress()
+        public async Task TestTronDisplayAddress()
         {
             await GetLedger();
 
@@ -76,34 +82,23 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task GetLiteCoinAddress()
+        public async Task TestLiteCoinGetAddress()
         {
-            await GetLedger();
-
-            _LedgerManager.SetCoinNumber(2);
-            var address = await _LedgerManager.GetAddressAsync(0, 0);
-
-            Assert.IsTrue(!string.IsNullOrEmpty(address));
+            await GetAddress(2);
         }
 
         /// <summary>
         /// Note this hasn't been confirmed to be returning the correct address in Ledger live yet
         /// </summary>
         [TestMethod]
-        public async Task GetBitcoinCashAddress()
+        public async Task TestBitcoinCashGetAddress()
         {
-            await GetLedger();
-
-            _LedgerManager.SetCoinNumber(145);
-            var address = await _LedgerManager.GetAddressAsync(0, 0);
-
-            Assert.IsTrue(!string.IsNullOrEmpty(address));
+            await GetAddress(145);
         }
 
         [TestMethod]
-        public async Task GetAddressAnyBitcoinApp()
+        public async Task TestBitcoinGetAddressAnyApp()
         {
-            await GetLedger();
 
             await _LedgerManager.SetCoinNumber();
 
@@ -111,9 +106,8 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task DisplayAddress()
+        public async Task TestBitcoinDisplayAddress()
         {
-            await GetLedger();
 
             var address = await _LedgerManager.GetAddressAsync(0, false, 0, true);
 
@@ -122,9 +116,8 @@ namespace Ledger.Net.Tests
 
 
         [TestMethod]
-        public async Task GetBitcoinPublicKey()
+        public async Task TestBitcoinGetPublicKey()
         {
-            await GetLedger();
 
             var returnResponse = (GetPublicKeyResponseBase)await _LedgerManager.CallAndPrompt(_GetPublicKeyFunc,
             new CallAndPromptArgs<GetAddressArgs>
@@ -138,9 +131,8 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task DisplayEthereumPublicKey()
+        public async Task TestEthereumDisplayPublicKey()
         {
-            await GetLedger();
             _LedgerManager.SetCoinNumber(60);
             var addressPath = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
             var publicKey = await _LedgerManager.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(true, false, addressPath));
@@ -148,11 +140,11 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task SignEthereumTransaction()
+        public async Task TestEthereumSignTransaction()
         {
             byte[] rlpEncodedTransactionData = { 227, 128, 132, 59, 154, 202, 0, 130, 82, 8, 148, 139, 6, 158, 207, 123, 242, 48, 225, 83, 184, 237, 144, 59, 171, 242, 68, 3, 204, 162, 3, 128, 128, 4, 128, 128 };
 
-            await TestSigningEthereum(rlpEncodedTransactionData, true);
+            await SignEtheremAsync(rlpEncodedTransactionData, true);
         }
 
         /// <summary>
@@ -161,7 +153,7 @@ namespace Ledger.Net.Tests
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task SignChunkedEthereumTransaction()
+        public async Task TestEthereumSignTransactionChunked()
         {
             byte[] rlpEncodedTransactionData = {
                 0xf9, 0x01, 0x27, 0x11, 0x84, 0x3b, 0x9a, 0xca,
@@ -203,13 +195,11 @@ namespace Ledger.Net.Tests
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x00, 0x00};
 
-            await TestSigningEthereum(rlpEncodedTransactionData, false);
+            await SignEtheremAsync(rlpEncodedTransactionData, false);
         }
 
-        private async Task TestSigningEthereum(byte[] rlpEncodedTransactionData, bool isTransaction)
+        private async Task SignEtheremAsync(byte[] rlpEncodedTransactionData, bool isTransaction)
         {
-            await GetLedger();
-
             _LedgerManager.SetCoinNumber(60);
 
             var derivationData = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
@@ -231,7 +221,7 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task TestSignTronTransactionBig()
+        public async Task TestTronSignTransactionBig()
         {
             //Data from python sample
             //https://github.com/fbsobreira/trx-ledger/blob/aaf10b341c47cc8cb22ba22ba189bc91fa0355aa/examples/signTransactionExtension.py#L18
@@ -241,14 +231,14 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task TestSignTronTransactionBig2()
+        public async Task TestTronSignTransactionBig2()
         {
             var transactionRaw1 = "0a022b652208745915a7ae8ae98d409097b1c4a62d5a66082c12620a38747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e45786368616e67655472616e73616374696f6e436f6e747261637412260a1541bfdc501d1ccc4a7167489c8e670e4954a44c914510191a0731303030323236200a2801709edaadc4a62d08191207313030303232361a1454524f4e4575726f7065526577617264436f696e20002a015f320354525838064247304502210092bcbaeb668c8cc5a89db2d5ce901946a4d7f9fab02b0e119d44cf818c36b4e802201ac8702d5412177d622c82737c46e25f9fdaae35f4d3c4ea807ef30b8ae00bf2";
             await SignTronTransaction(transactionRaw1, "44'/195'/0'/0/0");
         }
 
         [TestMethod]
-        public async Task TestSignTronTransaction1()
+        public async Task TestTronSignTransaction1()
         {
             //Data from python sample
             //https://github.com/fbsobreira/trx-ledger/blob/b274fcdc19b09c20485fefa534aeba878ae525b6/test_signTransaction.py#L33
@@ -260,7 +250,7 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task TestSignTronTransaction2()
+        public async Task TestTronSignTransaction2()
         {
             //Data from python sample
             //https://github.com/fbsobreira/trx-ledger/blob/b274fcdc19b09c20485fefa534aeba878ae525b6/test_signTransaction.py#L45
@@ -274,7 +264,7 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task TestSignTronTransaction3()
+        public async Task TestTronSignTransaction3()
         {
             //Data from python sample
             //https://github.com/fbsobreira/trx-ledger/blob/b274fcdc19b09c20485fefa534aeba878ae525b6/test_signTransaction.py#L56
@@ -288,7 +278,7 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task TestFreezeBalanceContract()
+        public async Task TestTronFreezeBalanceContract()
         {
             ///Freeze Balance
             ///Freezes an amount of TRX. Will give bandwidth OR Energy and TRON Power (voting rights) to the owner of the frozen tokens. 
@@ -301,7 +291,7 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task TestUnFreezeBalanceContract()
+        public async Task TestTronUnFreezeBalanceContract()
         {
             ///Unfreeze Balance
             ///Unfreeze TRX that has passed the minimum freeze duration. Unfreezing will remove bandwidth and TRON Power. Returns unfrozen TRX transaction.
@@ -313,7 +303,7 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task TestVoteWitnessContract()
+        public async Task TestTronVoteWitnessContract()
         {
             ///Vote Witness Account
             ///Vote for Super Representatives or Candidates
@@ -325,7 +315,7 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task TestExchangeContract()
+        public async Task TestTronExchangeContract()
         {
             ///Exchange Transaction
             ///This API call performs a trade. This is essentially the "buy" and "sell" API calls for decentralized exchanges, rolled into one.
@@ -336,26 +326,9 @@ namespace Ledger.Net.Tests
             await SignTronTransaction(transactionRaw6, "44'/195'/0'/0/0", 134);
         }
 
-        private static TronTransactionModel GetTronTransactionModelFromResource(string resourceName)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-
-            string json;
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            using (var reader = new StreamReader(stream))
-            {
-                json = reader.ReadToEnd();
-            }
-
-            var model = JsonConvert.DeserializeObject<TronTransactionModel>(json);
-            return model;
-        }
-
         [TestMethod]
-        public async Task GetEthereumAddress()
+        public async Task TestEthereumGetAddress()
         {
-            await GetLedger();
-
             _LedgerManager.SetCoinNumber(60);
             var address = await _LedgerManager.GetAddressAsync(0, 0);
 
@@ -365,10 +338,8 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task GetEthereumAddressParsed()
+        public async Task TestEthereumGetAddressParsed()
         {
-            await GetLedger();
-
             _LedgerManager.SetCoinNumber(60);
 
             //Modern Path
@@ -383,10 +354,8 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task GetEthereumAddressCustomPath()
+        public async Task TestEthereumGetAddressCustomPath()
         {
-            await GetLedger();
-
             _LedgerManager.SetCoinNumber(60);
 
             //Three elements
@@ -421,10 +390,8 @@ namespace Ledger.Net.Tests
         }
 
         [TestMethod]
-        public async Task GetEthereumAddresses()
+        public async Task TestEthereumGetAddresses()
         {
-            await GetLedger();
-
             _LedgerManager.SetCoinNumber(60);
 
             var addressManager = new AddressManager(_LedgerManager, new BIP44AddressPathFactory(false, 60));
@@ -446,11 +413,30 @@ namespace Ledger.Net.Tests
         #endregion
 
         #region Other 
+        private static TronTransactionModel GetTronTransactionModelFromResource(string resourceName)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+
+            string json;
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            using (var reader = new StreamReader(stream))
+            {
+                json = reader.ReadToEnd();
+            }
+
+            var model = JsonConvert.DeserializeObject<TronTransactionModel>(json);
+            return model;
+        }
+
+        private async Task GetAddress(uint coinNumber)
+        {
+            _LedgerManager.SetCoinNumber(coinNumber);
+            var address = await _LedgerManager.GetAddressAsync(0, 0);
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
+        }
 
         private async Task SignTronTransaction(string transactionRaw, string path, int? expectedDataLength = null)
         {
-            await GetLedger();
-
             _LedgerManager.SetCoinNumber(195);
 
             var transactionData = new List<byte>();
