@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ledger.Net.Tests
@@ -20,7 +21,19 @@ namespace Ledger.Net.Tests
     public partial class LedgerTests
     {
         #region Private Fields
-        private LedgerManager _LedgerManager;
+        private LedgerManagerBroker _LedgerManagerBroker;
+        private LedgerManager LedgerManager
+        {
+            get
+            {
+                while (_LedgerManagerBroker.LedgerManagers.Count == 0)
+                {
+                    Thread.Sleep(100);
+                }
+
+                return _LedgerManagerBroker.LedgerManagers.First();
+            }
+        }
 
         /// <summary>
         /// This func is not necessary, but it is an example of how to make a call so that the user can be prompted with UI prompts based on the current state of the Ledger device
@@ -53,11 +66,13 @@ namespace Ledger.Net.Tests
         private static readonly UsageSpecification[] _UsageSpecification = new[] { new UsageSpecification(0xffa0, 0x01) };
         #endregion
 
+        #region Test Initialize
         [TestInitialize]
         public async Task InitializeAsync()
         {
             await GetLedger();
         }
+        #endregion
 
         #region Tests
 
@@ -71,12 +86,12 @@ namespace Ledger.Net.Tests
             var isChange = false;
             var index = 0;
 
-            _LedgerManager.SetCoinNumber(coinNumber);
+            LedgerManager.SetCoinNumber(coinNumber);
 
             //This address seems to match the default address in the Tron app
             var path = $"m/{(isSegwit ? 49 : 44)}'/{coinNumber}'/{(isChange ? 1 : 0)}'/{0}/{index}";
             var addressPath = AddressPathBase.Parse<BIP44AddressPath>(path);
-            var address = await _LedgerManager.GetAddressAsync(addressPath, false, true);
+            var address = await LedgerManager.GetAddressAsync(addressPath, false, true);
 
             Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
@@ -100,16 +115,16 @@ namespace Ledger.Net.Tests
         public async Task TestBitcoinGetAddressAnyApp()
         {
 
-            await _LedgerManager.SetCoinNumber();
+            await LedgerManager.SetCoinNumber();
 
-            var address = await _LedgerManager.GetAddressAsync(0, false, 0, false);
+            var address = await LedgerManager.GetAddressAsync(0, false, 0, false);
         }
 
         [TestMethod]
         public async Task TestBitcoinDisplayAddress()
         {
 
-            var address = await _LedgerManager.GetAddressAsync(0, false, 0, true);
+            var address = await LedgerManager.GetAddressAsync(0, false, 0, true);
 
             Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
@@ -119,10 +134,10 @@ namespace Ledger.Net.Tests
         public async Task TestBitcoinGetPublicKey()
         {
 
-            var returnResponse = (GetPublicKeyResponseBase)await _LedgerManager.CallAndPrompt(_GetPublicKeyFunc,
+            var returnResponse = (GetPublicKeyResponseBase)await LedgerManager.CallAndPrompt(_GetPublicKeyFunc,
             new CallAndPromptArgs<GetAddressArgs>
             {
-                LedgerManager = _LedgerManager,
+                LedgerManager = LedgerManager,
                 MemberName = nameof(_GetPublicKeyFunc),
                 Args = new GetAddressArgs(new BIP44AddressPath(true, 0, 0, false, 0), false)
             });
@@ -133,9 +148,9 @@ namespace Ledger.Net.Tests
         [TestMethod]
         public async Task TestEthereumDisplayPublicKey()
         {
-            _LedgerManager.SetCoinNumber(60);
-            var addressPath = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
-            var publicKey = await _LedgerManager.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(true, false, addressPath));
+            LedgerManager.SetCoinNumber(60);
+            var addressPath = Helpers.GetDerivationPathData(new BIP44AddressPath(LedgerManager.CurrentCoin.IsSegwit, LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
+            var publicKey = await LedgerManager.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(true, false, addressPath));
             Assert.IsTrue(!string.IsNullOrEmpty(publicKey.PublicKey));
         }
 
@@ -200,9 +215,9 @@ namespace Ledger.Net.Tests
 
         private async Task SignEtheremAsync(byte[] rlpEncodedTransactionData, bool isTransaction)
         {
-            _LedgerManager.SetCoinNumber(60);
+            LedgerManager.SetCoinNumber(60);
 
-            var derivationData = Helpers.GetDerivationPathData(new BIP44AddressPath(_LedgerManager.CurrentCoin.IsSegwit, _LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
+            var derivationData = Helpers.GetDerivationPathData(new BIP44AddressPath(LedgerManager.CurrentCoin.IsSegwit, LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
 
             var concatenatedData = derivationData.Concat(rlpEncodedTransactionData).ToArray();
 
@@ -210,7 +225,7 @@ namespace Ledger.Net.Tests
 
             var firstRequest = new EthereumAppSignatureRequest(isTransaction, concatenatedData);
 
-            var response = await _LedgerManager.SendRequestAsync<EthereumAppSignatureResponse, EthereumAppSignatureRequest>(firstRequest);
+            var response = await LedgerManager.SendRequestAsync<EthereumAppSignatureResponse, EthereumAppSignatureRequest>(firstRequest);
 
             Assert.IsTrue(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
 
@@ -329,8 +344,8 @@ namespace Ledger.Net.Tests
         [TestMethod]
         public async Task TestEthereumGetAddress()
         {
-            _LedgerManager.SetCoinNumber(60);
-            var address = await _LedgerManager.GetAddressAsync(0, 0);
+            LedgerManager.SetCoinNumber(60);
+            var address = await LedgerManager.GetAddressAsync(0, 0);
 
             Console.WriteLine(address);
 
@@ -340,47 +355,47 @@ namespace Ledger.Net.Tests
         [TestMethod]
         public async Task TestEthereumGetAddressParsed()
         {
-            _LedgerManager.SetCoinNumber(60);
+            LedgerManager.SetCoinNumber(60);
 
             //Modern Path
             var path = AddressPathBase.Parse<CustomAddressPath>("m/44'/60'/0'/0/0");
-            var address = await _LedgerManager.GetAddressAsync(path, false, false);
+            var address = await LedgerManager.GetAddressAsync(path, false, false);
             Assert.IsTrue(!string.IsNullOrEmpty(address));
 
             //Legacy Path
             path = AddressPathBase.Parse<CustomAddressPath>("m/44'/60'/0'/0");
-            address = await _LedgerManager.GetAddressAsync(path, false, false);
+            address = await LedgerManager.GetAddressAsync(path, false, false);
             Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
 
         [TestMethod]
         public async Task TestEthereumGetAddressCustomPath()
         {
-            _LedgerManager.SetCoinNumber(60);
+            LedgerManager.SetCoinNumber(60);
 
             //Three elements
             var path = new uint[] { AddressUtilities.HardenNumber(44), AddressUtilities.HardenNumber(60), 0 };
-            var address = await _LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
+            var address = await LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
             Assert.IsTrue(!string.IsNullOrEmpty(address));
 
             //Four elements
             path = new uint[] { AddressUtilities.HardenNumber(44), AddressUtilities.HardenNumber(60), 0, 1 };
-            address = await _LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
+            address = await LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
             Assert.IsTrue(!string.IsNullOrEmpty(address));
 
             //Two elements
             path = new uint[] { AddressUtilities.HardenNumber(44), AddressUtilities.HardenNumber(60) };
-            address = await _LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
+            address = await LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
             Assert.IsTrue(!string.IsNullOrEmpty(address));
 
-            _LedgerManager.ErrorPrompt = ThrowErrorInsteadOfPrompt;
+            LedgerManager.ErrorPrompt = ThrowErrorInsteadOfPrompt;
 
             Exception exception = null; ;
             try
             {
                 //The ethereum app doesn't like this Purpose (49)
                 path = new uint[] { AddressUtilities.HardenNumber(49), AddressUtilities.HardenNumber(60), AddressUtilities.HardenNumber(0), 0, 0 };
-                address = await _LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
+                address = await LedgerManager.GetAddressAsync(new CustomAddressPath(path), false, false);
             }
             catch (Exception ex)
             {
@@ -392,9 +407,9 @@ namespace Ledger.Net.Tests
         [TestMethod]
         public async Task TestEthereumGetAddresses()
         {
-            _LedgerManager.SetCoinNumber(60);
+            LedgerManager.SetCoinNumber(60);
 
-            var addressManager = new AddressManager(_LedgerManager, new BIP44AddressPathFactory(false, 60));
+            var addressManager = new AddressManager(LedgerManager, new BIP44AddressPathFactory(false, 60));
 
             //Get 10 addresses with all the trimming
             const int numberOfAddresses = 3;
@@ -430,14 +445,14 @@ namespace Ledger.Net.Tests
 
         private async Task GetAddress(uint coinNumber)
         {
-            _LedgerManager.SetCoinNumber(coinNumber);
-            var address = await _LedgerManager.GetAddressAsync(0, 0);
+            LedgerManager.SetCoinNumber(coinNumber);
+            var address = await LedgerManager.GetAddressAsync(0, 0);
             Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
 
         private async Task SignTronTransaction(string transactionRaw, string path, int? expectedDataLength = null)
         {
-            _LedgerManager.SetCoinNumber(195);
+            LedgerManager.SetCoinNumber(195);
 
             var transactionData = new List<byte>();
 
@@ -451,7 +466,7 @@ namespace Ledger.Net.Tests
 
             var firstRequest = new TronAppSignatureRequest(derivationData.Concat(transactionData).ToArray());
 
-            var response = await _LedgerManager.SendRequestAsync<TronAppSignatureResponse, TronAppSignatureRequest>(firstRequest);
+            var response = await LedgerManager.SendRequestAsync<TronAppSignatureResponse, TronAppSignatureRequest>(firstRequest);
 
             var data = response.Data;
 
@@ -489,16 +504,16 @@ namespace Ledger.Net.Tests
                 switch (returnCode.Value)
                 {
                     case Constants.IncorrectLengthStatusCode:
-                        Debug.WriteLine($"Please ensure the app { _LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
+                        Debug.WriteLine($"Please ensure the app { LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
                         break;
                     case Constants.SecurityNotValidStatusCode:
-                        Debug.WriteLine($"It appears that your Ledger pin has not been entered, or no app is open. Please ensure the app  {_LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
+                        Debug.WriteLine($"It appears that your Ledger pin has not been entered, or no app is open. Please ensure the app  {LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
                         break;
                     case Constants.InstructionNotSupportedStatusCode:
-                        Debug.WriteLine($"The current app is incorrect. Please ensure the app for {_LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
+                        Debug.WriteLine($"The current app is incorrect. Please ensure the app for {LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
                         break;
                     default:
-                        Debug.WriteLine($"Something went wrong. Please ensure the app  {_LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
+                        Debug.WriteLine($"Something went wrong. Please ensure the app  {LedgerManager.CurrentCoin.App} is open on the Ledger, and press OK");
                         break;
                 }
             }
@@ -507,7 +522,7 @@ namespace Ledger.Net.Tests
                 if (exception is IOException)
                 {
                     await Task.Delay(3000);
-                    await _LedgerManager.LedgerHidDevice.InitializeAsync();
+                    await LedgerManager.LedgerHidDevice.InitializeAsync();
                 }
             }
 
@@ -516,10 +531,9 @@ namespace Ledger.Net.Tests
 
         private async Task GetLedgerBase(ErrorPromptDelegate errorPrompt = null)
         {
-            var ledgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt);
-            _LedgerManager = await ledgerManagerBroker.WaitForFirstDeviceAsync();
+            _LedgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt);
+            _LedgerManagerBroker.Start();
         }
-
         #endregion
     }
 }
