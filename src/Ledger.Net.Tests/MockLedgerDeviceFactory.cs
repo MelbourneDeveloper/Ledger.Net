@@ -9,11 +9,11 @@ namespace Ledger.Net.Tests
     {
         public DeviceType DeviceType => DeviceType.Hid;
 
-        public List<string> DeviceIds { get; } = new List<string>();
+        public List<string> DeviceIds { get; } = new List<string>() { "0x2c97" };
 
         public Task<IEnumerable<ConnectedDeviceDefinition>> GetConnectedDeviceDefinitionsAsync(FilterDeviceDefinition deviceDefinition)
         {
-            return Task.FromResult(DeviceIds.Select(d => new ConnectedDeviceDefinition(d) { DeviceType = DeviceType.Hid, VendorId = 0x2581, ProductId = 0x3b7c, UsagePage = 0xffa0 }));
+            return Task.FromResult(DeviceIds.Select(d => new ConnectedDeviceDefinition(d) { DeviceType = DeviceType.Hid, VendorId = 0x2c97, UsagePage = 0xffa0 }));
         }
 
         public IDevice GetDevice(ConnectedDeviceDefinition deviceDefinition)

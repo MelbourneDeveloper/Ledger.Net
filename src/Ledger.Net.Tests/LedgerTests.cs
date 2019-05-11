@@ -32,7 +32,7 @@ namespace Ledger.Net.Tests
                 {
                     Thread.Sleep(100);
                     i++;
-                    if (i > 100) throw new Exception("Waited too long");
+                    if (i > 200) throw new Exception("Waited too long");
                 }
 
                 return _LedgerManagerBroker.LedgerManagers.First();

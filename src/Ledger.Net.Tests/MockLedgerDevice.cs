@@ -11,9 +11,9 @@ namespace Ledger.Net.Tests
             DeviceId = deviceId;
         }
 
-        public bool IsInitialized => throw new NotImplementedException();
+        public bool IsInitialized => true;
 
-        public string DeviceId  {get; private set;}
+        public string DeviceId { get; private set; }
 
         public ConnectedDeviceDefinitionBase ConnectedDeviceDefinition => throw new NotImplementedException();
 
