@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Ledger.Net
 {
-    public class LedgerManager : IAddressDeriver, IDisposable
+    public class LedgerManager : IAddressDeriver, ILedgerManager
     {
         #region Fields
         private bool _IsDisposed;

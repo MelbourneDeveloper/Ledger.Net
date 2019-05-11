@@ -22,7 +22,7 @@ namespace Ledger.Net.Tests
     {
         #region Private Fields
         private LedgerManagerBroker _LedgerManagerBroker;
-        private LedgerManager LedgerManager
+        private ILedgerManager LedgerManager
         {
             get
             {
