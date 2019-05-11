@@ -12,8 +12,8 @@ namespace Ledger.Net.Tests
         protected override Task GetLedger()
         {
             DeviceManager.Current.DeviceFactories.Add(MockLedgerDeviceFactory);
-            MockLedgerDeviceFactory.Register();
-            return GetLedgerBase();
+            _LedgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt, new MockLedgerManagerFactory());
+            return StartLedgerManagerBroker();
         }
     }
 }

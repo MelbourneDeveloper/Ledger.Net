@@ -9,7 +9,7 @@ namespace Ledger.Net.Tests
         private Task GetLedger()
         {
             UWPHidDeviceFactory.Register();
-            return GetLedgerBase();
+            return StartLedgerManagerBroker();
         }
     }
 }

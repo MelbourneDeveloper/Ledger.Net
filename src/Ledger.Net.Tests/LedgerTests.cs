@@ -21,7 +21,7 @@ namespace Ledger.Net.Tests
     public partial class LedgerTests
     {
         #region Private Fields
-        private LedgerManagerBroker _LedgerManagerBroker;
+        protected LedgerManagerBroker _LedgerManagerBroker;
         private ILedgerManager LedgerManager
         {
             get
@@ -501,7 +501,7 @@ namespace Ledger.Net.Tests
             throw new Exception("Ouch!");
         }
 
-        private async Task Prompt(int? returnCode, Exception exception, string member)
+        protected async Task Prompt(int? returnCode, Exception exception, string member)
         {
             if (returnCode.HasValue)
             {
@@ -533,9 +533,8 @@ namespace Ledger.Net.Tests
             await Task.Delay(5000);
         }
 
-        protected async Task GetLedgerBase(ErrorPromptDelegate errorPrompt = null)
+        protected async Task StartLedgerManagerBroker(ErrorPromptDelegate errorPrompt = null)
         {
-            _LedgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt, new LedgerManagerFactory());
             _LedgerManagerBroker.Start();
         }
         #endregion

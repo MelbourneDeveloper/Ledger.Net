@@ -10,7 +10,7 @@ namespace Ledger.Net.Tests
         {
             WindowsHidDeviceFactory.Register();
             WindowsUsbDeviceFactory.Register();
-            return GetLedgerBase();
+            return StartLedgerManagerBroker();
         }
     }
 }
