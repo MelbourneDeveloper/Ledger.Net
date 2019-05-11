@@ -522,7 +522,7 @@ namespace Ledger.Net.Tests
                 if (exception is IOException)
                 {
                     await Task.Delay(3000);
-                    await LedgerManager.LedgerHidDevice.InitializeAsync();
+                    await LedgerManager.ReconnectAsync();
                 }
             }
 

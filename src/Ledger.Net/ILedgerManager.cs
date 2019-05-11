@@ -1,5 +1,4 @@
-﻿using Device.Net;
-using Hardwarewallets.Net;
+﻿using Hardwarewallets.Net;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
 using System;
@@ -9,10 +8,10 @@ namespace Ledger.Net
 {
     public interface ILedgerManager : IAddressDeriver, IDisposable
     {
+        string DeviceId { get; }
         ICoinUtility CoinUtility { get; }
         ICoinInfo CurrentCoin { get; }
         ErrorPromptDelegate ErrorPrompt { get; set; }
-        IDevice LedgerHidDevice { get; }
         int PromptRetryCount { get; set; }
 
         Task<ResponseBase> CallAndPrompt<T, T2>(Func<CallAndPromptArgs<T2>, Task<T>> func, CallAndPromptArgs<T2> state) where T : ResponseBase;
@@ -23,5 +22,6 @@ namespace Ledger.Net
             where TRequest : RequestBase;
         Task SetCoinNumber();
         void SetCoinNumber(uint coinNumber);
+        Task ReconnectAsync();
     }
 }

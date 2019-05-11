@@ -64,7 +64,8 @@ namespace Ledger.Net
             {
                 await _Lock.WaitAsync();
 
-                var LedgerManager = LedgerManagers.FirstOrDefault(t => ReferenceEquals(t.LedgerHidDevice, e.Device));
+                //TODO: Is this correct? What if there are two devices with the same Id? 
+                var LedgerManager = LedgerManagers.FirstOrDefault(t => t.DeviceId == e.Device.DeviceId);
                 if (LedgerManager == null)
                 {
                     LedgerManager = new LedgerManager(e.Device, CoinUtility, ErrorPromptDelegate);
@@ -93,7 +94,8 @@ namespace Ledger.Net
             {
                 await _Lock.WaitAsync();
 
-                var LedgerManager = LedgerManagers.FirstOrDefault(t => ReferenceEquals(t.LedgerHidDevice, e.Device));
+                //TODO: Is this correct? What if there are two devices with the same Id? 
+                var LedgerManager = LedgerManagers.FirstOrDefault(t => t.DeviceId == e.Device.DeviceId);
                 if (LedgerManager != null)
                 {
                     LedgerDisconnected?.Invoke(this, new LedgerManagerConnectionEventArgs(LedgerManager));
