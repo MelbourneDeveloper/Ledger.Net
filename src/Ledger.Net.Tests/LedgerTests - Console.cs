@@ -4,9 +4,9 @@ using Usb.Net.Windows;
 
 namespace Ledger.Net.Tests
 {
-    public  partial class LedgerTests
+    public partial class LedgerTests
     {
-        private Task GetLedger()
+        protected virtual Task GetLedger()
         {
             WindowsHidDeviceFactory.Register();
             WindowsUsbDeviceFactory.Register();

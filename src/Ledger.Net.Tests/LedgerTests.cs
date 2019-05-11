@@ -26,9 +26,13 @@ namespace Ledger.Net.Tests
         {
             get
             {
+                var i = 0;
+
                 while (_LedgerManagerBroker.LedgerManagers.Count == 0)
                 {
                     Thread.Sleep(100);
+                    i++;
+                    if (i > 100) throw new Exception("Waited too long");
                 }
 
                 return _LedgerManagerBroker.LedgerManagers.First();
@@ -529,7 +533,7 @@ namespace Ledger.Net.Tests
             await Task.Delay(5000);
         }
 
-        private async Task GetLedgerBase(ErrorPromptDelegate errorPrompt = null)
+        protected async Task GetLedgerBase(ErrorPromptDelegate errorPrompt = null)
         {
             _LedgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt, new LedgerManagerFactory());
             _LedgerManagerBroker.Start();
