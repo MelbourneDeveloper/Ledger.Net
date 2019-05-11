@@ -46,14 +46,16 @@ namespace Ledger.Net
         public ICoinUtility CoinUtility { get; }
         public int? PollInterval { get; }
         public ErrorPromptDelegate ErrorPromptDelegate { get; }
+        public ILedgerManagerFactory LedgerManagerFactory { get; }
         #endregion
 
         #region Constructor
-        public LedgerManagerBroker(int? pollInterval, ICoinUtility coinUtility, ErrorPromptDelegate errorPromptDelegate)
+        public LedgerManagerBroker(int? pollInterval, ICoinUtility coinUtility, ErrorPromptDelegate errorPromptDelegate, ILedgerManagerFactory ledgerManagerFactory)
         {
             CoinUtility = coinUtility;
             PollInterval = pollInterval;
             ErrorPromptDelegate = errorPromptDelegate;
+            LedgerManagerFactory = ledgerManagerFactory;
         }
         #endregion
 
@@ -68,7 +70,7 @@ namespace Ledger.Net
                 var LedgerManager = LedgerManagers.FirstOrDefault(t => t.DeviceId == e.Device.DeviceId);
                 if (LedgerManager == null)
                 {
-                    LedgerManager = new LedgerManager(e.Device, CoinUtility, ErrorPromptDelegate);
+                    LedgerManager = LedgerManagerFactory.GetNewLedgerManager(e.Device, CoinUtility, ErrorPromptDelegate);
 
                     var tempList = new List<ILedgerManager>(LedgerManagers)
                     {

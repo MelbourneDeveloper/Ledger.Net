@@ -531,7 +531,7 @@ namespace Ledger.Net.Tests
 
         private async Task GetLedgerBase(ErrorPromptDelegate errorPrompt = null)
         {
-            _LedgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt);
+            _LedgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt, new LedgerManagerFactory());
             _LedgerManagerBroker.Start();
         }
         #endregion
