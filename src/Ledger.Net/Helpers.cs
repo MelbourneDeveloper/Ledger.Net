@@ -1,5 +1,6 @@
 ﻿using Hardwarewallets.Net.Model;
 using Ledger.Net.Exceptions;
+using Ledger.Net.Responses;
 using System;
 using System.IO;
 
@@ -16,6 +17,23 @@ namespace Ledger.Net
             }
 
             return GetByteData(addressPath.ToArray());
+        }
+
+        public static void HandleErrorResponse(ResponseBase response)
+        {
+            if (response == null) throw new ArgumentNullException(nameof(response));
+
+            switch (response.ReturnCode)
+            {
+                case Constants.InstructionNotSupportedStatusCode:
+                    throw new InstructionNotSupportedException(response.Data);
+                case Constants.SecurityNotValidStatusCode:
+                    throw new SecurityException(response.Data);
+                case Constants.IncorrectLengthStatusCode:
+                    throw new IncorrectLengthException(response.Data);
+                default:
+                    throw new Exception(response.StatusMessage);
+            }
         }
         #endregion
 

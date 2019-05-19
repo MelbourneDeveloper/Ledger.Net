@@ -64,10 +64,17 @@ namespace Ledger.Net
             {
                 await _Lock.WaitAsync();
 
-                var LedgerManager = LedgerManagers.FirstOrDefault(t => ReferenceEquals(t.LedgerHidDevice, e.Device));
+                var LedgerManager = LedgerManagers.FirstOrDefault(t =>
+                {
+                    var ledgerManagerTransport = t.RequestHandler as LedgerManagerTransport;
+                    return ReferenceEquals(ledgerManagerTransport?.LedgerHidDevice, e.Device);
+                });
+
                 if (LedgerManager == null)
                 {
-                    LedgerManager = new LedgerManager(e.Device, CoinUtility, ErrorPromptDelegate);
+                    var ledgerManagerTransport = new LedgerManagerTransport(e.Device);
+
+                    LedgerManager = new LedgerManager(ledgerManagerTransport, CoinUtility, ErrorPromptDelegate);
 
                     var tempList = new List<LedgerManager>(LedgerManagers)
                     {
@@ -93,7 +100,12 @@ namespace Ledger.Net
             {
                 await _Lock.WaitAsync();
 
-                var LedgerManager = LedgerManagers.FirstOrDefault(t => ReferenceEquals(t.LedgerHidDevice, e.Device));
+                var LedgerManager = LedgerManagers.FirstOrDefault(t =>
+                {
+                    var ledgerManagerTransport = t.RequestHandler as LedgerManagerTransport;
+                    return ReferenceEquals(ledgerManagerTransport?.LedgerHidDevice, e.Device);
+                });
+
                 if (LedgerManager != null)
                 {
                     LedgerDisconnected?.Invoke(this, new LedgerManagerConnectionEventArgs(LedgerManager));
