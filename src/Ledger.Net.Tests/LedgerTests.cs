@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 
 namespace Ledger.Net.Tests
 {
-    [TestClass]
     public abstract class LedgerTests
     {
         #region Private Fields
