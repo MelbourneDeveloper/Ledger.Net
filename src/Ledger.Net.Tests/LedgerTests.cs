@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace Ledger.Net.Tests
 {
     [TestClass]
-    public partial class LedgerTests
+    public abstract class LedgerTests
     {
         #region Private Fields
         private LedgerManagerBroker _LedgerManagerBroker;
@@ -68,21 +68,11 @@ namespace Ledger.Net.Tests
         private static readonly UsageSpecification[] _UsageSpecification = new[] { new UsageSpecification(0xffa0, 0x01) };
         #endregion
 
-        #region Test Initialize
-        [TestInitialize]
-        public async Task InitializeAsync()
-        {
-            await GetLedger();
-        }
-        #endregion
 
         #region Tests
-
         [TestMethod]
         public async Task TestTronDisplayAddress()
         {
-            await GetLedger();
-
             uint coinNumber = 195;
             var isSegwit = false;
             var isChange = false;
@@ -536,7 +526,7 @@ namespace Ledger.Net.Tests
             await Task.Delay(5000);
         }
 
-        private async Task GetLedgerBase(ErrorPromptDelegate errorPrompt = null)
+        protected void StartBroker(ErrorPromptDelegate errorPrompt = null)
         {
             _LedgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt);
             _LedgerManagerBroker.Start();
