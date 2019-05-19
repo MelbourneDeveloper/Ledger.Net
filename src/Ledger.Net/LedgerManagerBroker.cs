@@ -74,6 +74,8 @@ namespace Ledger.Net
                 {
                     var ledgerManagerTransport = new LedgerManagerTransport(e.Device);
 
+                    THIS IS WRONG. MERGE CODE FROM FixUnitTestsPrompting-Abstraction
+
                     LedgerManager = new LedgerManager(ledgerManagerTransport, CoinUtility, ErrorPromptDelegate);
 
                     var tempList = new List<LedgerManager>(LedgerManagers)
