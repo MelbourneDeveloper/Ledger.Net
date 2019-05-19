@@ -49,11 +49,13 @@ namespace Ledger.Net.Tests
             switch (lm.CurrentCoin.App)
             {
                 case App.Ethereum:
-                    response = await lm.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(s.Args.ShowDisplay, false, data));
+                    //TODO: don't use the RequestHandler directly.
+                    response = await lm.RequestHandler.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(s.Args.ShowDisplay, false, data));
                     break;
                 case App.Bitcoin:
                     //TODO: Should we use the Coin's IsSegwit here?
-                    response = await lm.SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(s.Args.ShowDisplay, BitcoinAddressType.Segwit, data));
+                    //TODO: don't use the RequestHandler directly.
+                    response = await lm.RequestHandler.SendRequestAsync<BitcoinAppGetPublicKeyResponse, BitcoinAppGetPublicKeyRequest>(new BitcoinAppGetPublicKeyRequest(s.Args.ShowDisplay, BitcoinAddressType.Segwit, data));
                     break;
                 default:
                     throw new NotImplementedException();
@@ -150,7 +152,8 @@ namespace Ledger.Net.Tests
         {
             LedgerManager.SetCoinNumber(60);
             var addressPath = Helpers.GetDerivationPathData(new BIP44AddressPath(LedgerManager.CurrentCoin.IsSegwit, LedgerManager.CurrentCoin.CoinNumber, 0, false, 0));
-            var publicKey = await LedgerManager.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(true, false, addressPath));
+            //TODO: don't use the RequestHandler directly.
+            var publicKey = await LedgerManager.RequestHandler.SendRequestAsync<EthereumAppGetPublicKeyResponse, EthereumAppGetPublicKeyRequest>(new EthereumAppGetPublicKeyRequest(true, false, addressPath));
             Assert.IsTrue(!string.IsNullOrEmpty(publicKey.PublicKey));
         }
 
@@ -225,7 +228,8 @@ namespace Ledger.Net.Tests
 
             var firstRequest = new EthereumAppSignatureRequest(isTransaction, concatenatedData);
 
-            var response = await LedgerManager.SendRequestAsync<EthereumAppSignatureResponse, EthereumAppSignatureRequest>(firstRequest);
+            //TODO: don't use the RequestHandler directly.
+            var response = await LedgerManager.RequestHandler.SendRequestAsync<EthereumAppSignatureResponse, EthereumAppSignatureRequest>(firstRequest);
 
             Assert.IsTrue(response.IsSuccess, $"The response failed with a status of: {response.StatusMessage} ({response.ReturnCode})");
 
@@ -466,7 +470,8 @@ namespace Ledger.Net.Tests
 
             var firstRequest = new TronAppSignatureRequest(derivationData.Concat(transactionData).ToArray());
 
-            var response = await LedgerManager.SendRequestAsync<TronAppSignatureResponse, TronAppSignatureRequest>(firstRequest);
+            //TODO: don't use the RequestHandler directly.
+            var response = await LedgerManager.RequestHandler.SendRequestAsync<TronAppSignatureResponse, TronAppSignatureRequest>(firstRequest);
 
             var data = response.Data;
 
@@ -522,7 +527,9 @@ namespace Ledger.Net.Tests
                 if (exception is IOException)
                 {
                     await Task.Delay(3000);
-                    await LedgerManager.LedgerHidDevice.InitializeAsync();
+                    //TODO: don't use the RequestHandler directly.
+                    var ledgerManagerTransport = LedgerManager.RequestHandler as LedgerManagerTransport;
+                    await ledgerManagerTransport.LedgerHidDevice.InitializeAsync();
                 }
             }
 
