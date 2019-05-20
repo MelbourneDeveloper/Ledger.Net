@@ -12,5 +12,10 @@ namespace Ledger.Net.Tests
             UWPHidDeviceFactory.Register();
             StartBroker();
         }
+
+        protected override ILedgerManagerFactory GetLedgerManagerFactory()
+        {
+            return new LedgerManagerFactory();
+        }
     }
 }
