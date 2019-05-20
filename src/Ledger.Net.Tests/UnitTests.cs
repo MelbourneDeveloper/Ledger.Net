@@ -6,13 +6,12 @@ namespace Ledger.Net.Tests
     [TestClass]
     public class UnitTests : LedgerTests
     {
-        private readonly MockLedgerDeviceFactory MockLedgerDeviceFactory = new MockLedgerDeviceFactory() { DeviceIds = { "test" } };
+        private readonly MockLedgerDeviceFactory MockLedgerDeviceFactory = new MockLedgerDeviceFactory() {  };
 
         [TestInitialize]
-        public void GetLedger()
+        public void Initialize()
         {
             DeviceManager.Current.DeviceFactories.Add(MockLedgerDeviceFactory);
-            _LedgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt, new MockLedgerManagerFactory());
             StartBroker();
         }
 
