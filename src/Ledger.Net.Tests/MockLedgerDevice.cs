@@ -11,7 +11,7 @@ namespace Ledger.Net.Tests
             DeviceId = deviceId;
         }
 
-        public bool IsInitialized => true;
+        public bool IsInitialized { get; private set; }
 
         public string DeviceId { get; private set; }
 
@@ -27,9 +27,9 @@ namespace Ledger.Net.Tests
             throw new NotImplementedException();
         }
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            throw new NotImplementedException();
+            IsInitialized = true;
         }
 
         public Task<byte[]> ReadAsync()
