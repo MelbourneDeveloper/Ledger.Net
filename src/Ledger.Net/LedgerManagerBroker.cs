@@ -46,11 +46,11 @@ namespace Ledger.Net
         public ICoinUtility CoinUtility { get; }
         public int? PollInterval { get; }
         public ErrorPromptDelegate ErrorPromptDelegate { get; }
-        public IManagesLedgerFactory LedgerManagerFactory { get; }
+        public ILedgerManagerFactory LedgerManagerFactory { get; }
         #endregion
 
         #region Constructor
-        public LedgerManagerBroker(int? pollInterval, ICoinUtility coinUtility, ErrorPromptDelegate errorPromptDelegate, IManagesLedgerFactory ledgerManagerFactory)
+        public LedgerManagerBroker(int? pollInterval, ICoinUtility coinUtility, ErrorPromptDelegate errorPromptDelegate, ILedgerManagerFactory ledgerManagerFactory)
         {
             CoinUtility = coinUtility;
             PollInterval = pollInterval;

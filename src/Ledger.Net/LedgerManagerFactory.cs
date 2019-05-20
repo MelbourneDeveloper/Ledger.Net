@@ -2,7 +2,7 @@
 
 namespace Ledger.Net
 {
-    public class LedgerManagerFactory : IManagesLedgerFactory
+    public class LedgerManagerFactory : ILedgerManagerFactory
     {
         public IManagesLedger GetNewLedgerManager(IDevice ledgerHidDevice, ICoinUtility coinUtility, ErrorPromptDelegate errorPrompt)
         {

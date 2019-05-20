@@ -531,8 +531,12 @@ namespace Ledger.Net.Tests
 
         protected void StartBroker(ErrorPromptDelegate errorPrompt = null)
         {
+            _LedgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt, GetLedgerManagerFactory());
             _LedgerManagerBroker.Start();
         }
+
+        protected abstract ILedgerManagerFactory GetLedgerManagerFactory();
+
         #endregion
     }
 }

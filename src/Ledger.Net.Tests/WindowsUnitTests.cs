@@ -7,6 +7,11 @@ namespace Ledger.Net.Tests
     [TestClass]
     public class WindowsUnitTests : LedgerTests
     {
+        protected override ILedgerManagerFactory GetLedgerManagerFactory()
+        {
+            return new LedgerManagerFactory();
+        }
+
         [TestInitialize]
         public void Initialize()
         {

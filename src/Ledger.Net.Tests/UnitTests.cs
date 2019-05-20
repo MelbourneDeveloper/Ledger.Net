@@ -1,6 +1,5 @@
 ﻿using Device.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Threading.Tasks;
 
 namespace Ledger.Net.Tests
 {
@@ -15,6 +14,11 @@ namespace Ledger.Net.Tests
             DeviceManager.Current.DeviceFactories.Add(MockLedgerDeviceFactory);
             _LedgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt, new MockLedgerManagerFactory());
             StartBroker();
+        }
+
+        protected override ILedgerManagerFactory GetLedgerManagerFactory()
+        {
+            return new MockLedgerManagerFactory();
         }
     }
 }
