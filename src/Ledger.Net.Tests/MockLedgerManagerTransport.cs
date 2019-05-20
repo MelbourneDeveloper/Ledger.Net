@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 namespace Ledger.Net.Tests
 {
     internal class MockLedgerManagerTransport : IHandlesRequest
-    {
+    {        
+        public CurrentState CurrentState { get; set; }
+
         public Task<TResponse> SendRequestAsync<TResponse, TRequest>(TRequest request)
             where TResponse : ResponseBase
             where TRequest : RequestBase
@@ -26,4 +28,12 @@ namespace Ledger.Net.Tests
             throw new NotImplementedException();
         }
     }
+
+    public enum CurrentState
+    {
+        Bitcoin,
+        Ethereum,
+        Dashboard
+    }
+
 }
