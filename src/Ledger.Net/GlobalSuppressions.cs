@@ -17,3 +17,6 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "<Pending>", Scope = "member", Target = "~P:Ledger.Net.Exceptions.ResponseBaseException.ResponseData")]
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1714:Flags enums should have plural names", Justification = "<Pending>", Scope = "type", Target = "~T:Ledger.Net.BitcoinAddressType")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>", Scope = "member", Target = "~M:Ledger.Net.LedgerManager.WriteRequestAndReadAsync``1(``0)~System.Threading.Tasks.Task{System.Collections.Generic.IEnumerable{System.Byte[]}}")]
+
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1012:Abstract types should not have constructors", Justification = "<Pending>", Scope = "type", Target = "~T:Ledger.Net.LedgerManagerBase")]

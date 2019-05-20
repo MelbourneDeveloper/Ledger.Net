@@ -4,6 +4,6 @@
     {
         public string MemberName { get; set; }
         public T Args { get; set; }
-        public LedgerManager LedgerManager { get; set; }
+        public IManagesLedger LedgerManager { get; set; }
     }
 }

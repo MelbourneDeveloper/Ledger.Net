@@ -20,17 +20,21 @@ namespace Ledger.Net.Tests
     public abstract class LedgerTests
     {
         #region Private Fields
-        private LedgerManagerBroker _LedgerManagerBroker;
+        protected LedgerManagerBroker _LedgerManagerBroker;
         private LedgerManager LedgerManager
         {
             get
             {
+                var i = 0;
+
                 while (_LedgerManagerBroker.LedgerManagers.Count == 0)
                 {
                     Thread.Sleep(100);
+                    i++;
+                    if (i > 200) throw new Exception("Waited too long");
                 }
 
-                return _LedgerManagerBroker.LedgerManagers.First();
+                return (LedgerManager)_LedgerManagerBroker.LedgerManagers.First();
             }
         }
 
@@ -491,7 +495,7 @@ namespace Ledger.Net.Tests
             throw new Exception("Ouch!");
         }
 
-        private async Task Prompt(int? returnCode, Exception exception, string member)
+        protected async Task Prompt(int? returnCode, Exception exception, string member)
         {
             if (returnCode.HasValue)
             {
@@ -527,7 +531,6 @@ namespace Ledger.Net.Tests
 
         protected void StartBroker(ErrorPromptDelegate errorPrompt = null)
         {
-            _LedgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt);
             _LedgerManagerBroker.Start();
         }
         #endregion

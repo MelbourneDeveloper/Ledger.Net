@@ -4,9 +4,9 @@ namespace Ledger.Net
 {
     public class LedgerManagerConnectionEventArgs : EventArgs
     {
-        public LedgerManager LedgerManager { get; }
+        public IManagesLedger LedgerManager { get; }
 
-        public LedgerManagerConnectionEventArgs(LedgerManager ledgerManager)
+        public LedgerManagerConnectionEventArgs(IManagesLedger ledgerManager)
         {
             LedgerManager = ledgerManager;
         }

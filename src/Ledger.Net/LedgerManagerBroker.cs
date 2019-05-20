@@ -25,7 +25,7 @@ namespace Ledger.Net
         #region Fields
         private DeviceListener _DeviceListener;
         private SemaphoreSlim _Lock = new SemaphoreSlim(1, 1);
-        private TaskCompletionSource<LedgerManager> _FirstLedgerTaskCompletionSource = new TaskCompletionSource<LedgerManager>();
+        private TaskCompletionSource<IManagesLedger> _FirstLedgerTaskCompletionSource = new TaskCompletionSource<IManagesLedger>();
         private bool disposed;
         #endregion
 
@@ -42,18 +42,20 @@ namespace Ledger.Net
         #endregion
 
         #region Public Properties
-        public ReadOnlyCollection<LedgerManager> LedgerManagers { get; private set; } = new ReadOnlyCollection<LedgerManager>(new List<LedgerManager>());
+        public ReadOnlyCollection<IManagesLedger> LedgerManagers { get; private set; } = new ReadOnlyCollection<IManagesLedger>(new List<IManagesLedger>());
         public ICoinUtility CoinUtility { get; }
         public int? PollInterval { get; }
         public ErrorPromptDelegate ErrorPromptDelegate { get; }
+        public IManagesLedgerFactory LedgerManagerFactory { get; }
         #endregion
 
         #region Constructor
-        public LedgerManagerBroker(int? pollInterval, ICoinUtility coinUtility, ErrorPromptDelegate errorPromptDelegate)
+        public LedgerManagerBroker(int? pollInterval, ICoinUtility coinUtility, ErrorPromptDelegate errorPromptDelegate, IManagesLedgerFactory ledgerManagerFactory)
         {
             CoinUtility = coinUtility;
             PollInterval = pollInterval;
             ErrorPromptDelegate = errorPromptDelegate;
+            LedgerManagerFactory = ledgerManagerFactory;
         }
         #endregion
 
@@ -72,18 +74,14 @@ namespace Ledger.Net
 
                 if (LedgerManager == null)
                 {
-                    var ledgerManagerTransport = new LedgerManagerTransport(e.Device);
+                    LedgerManager = LedgerManagerFactory.GetNewLedgerManager(e.Device, CoinUtility, ErrorPromptDelegate);
 
-                    THIS IS WRONG. MERGE CODE FROM FixUnitTestsPrompting-Abstraction
-
-                    LedgerManager = new LedgerManager(ledgerManagerTransport, CoinUtility, ErrorPromptDelegate);
-
-                    var tempList = new List<LedgerManager>(LedgerManagers)
+                    var tempList = new List<IManagesLedger>(LedgerManagers)
                     {
                         LedgerManager
                     };
 
-                    LedgerManagers = new ReadOnlyCollection<LedgerManager>(tempList);
+                    LedgerManagers = new ReadOnlyCollection<IManagesLedger>(tempList);
 
                     if (_FirstLedgerTaskCompletionSource.Task.Status == TaskStatus.WaitingForActivation) _FirstLedgerTaskCompletionSource.SetResult(LedgerManager);
 
@@ -114,11 +112,11 @@ namespace Ledger.Net
 
                     LedgerManager.Dispose();
 
-                    var tempList = new List<LedgerManager>(LedgerManagers);
+                    var tempList = new List<IManagesLedger>(LedgerManagers);
 
                     tempList.Remove(LedgerManager);
 
-                    LedgerManagers = new ReadOnlyCollection<LedgerManager>(tempList);
+                    LedgerManagers = new ReadOnlyCollection<IManagesLedger>(tempList);
                 }
             }
             finally
@@ -144,7 +142,7 @@ namespace Ledger.Net
         {
             if (restart && _DeviceListener != null)
             {
-                LedgerManagers = new ReadOnlyCollection<LedgerManager>(new List<LedgerManager>());
+                LedgerManagers = new ReadOnlyCollection<IManagesLedger>(new List<IManagesLedger>());
                 _DeviceListener.DeviceDisconnected -= DevicePoller_DeviceDisconnected;
                 _DeviceListener.DeviceInitialized -= DevicePoller_DeviceInitialized;
                 _DeviceListener.Dispose();
@@ -189,7 +187,7 @@ namespace Ledger.Net
         /// Starts the device listener and waits for the first connected Ledger to be initialized
         /// </summary>
         /// <returns></returns>
-        public async Task<LedgerManager> WaitForFirstDeviceAsync()
+        public async Task<IManagesLedger> WaitForFirstDeviceAsync()
         {
             if (_DeviceListener == null) Start();
             await _DeviceListener.CheckForDevicesAsync();
