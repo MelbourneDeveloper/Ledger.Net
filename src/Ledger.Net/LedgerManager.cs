@@ -129,6 +129,9 @@ namespace Ledger.Net
                 {
                     var response = await func.Invoke(state);
 
+                    //Use this to get the response as an array of bytes
+                    //var data = string.Join(", ", response.Data.Select(b => b.ToString()));
+
                     if (response.IsSuccess)
                     {
                         return response;
