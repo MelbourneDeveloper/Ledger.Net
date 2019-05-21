@@ -9,6 +9,7 @@ namespace Ledger.Net.Tests
     {
         private static byte[] NoAppLoadedResponseData = new byte[] { 105, 130 };
         private static byte[] BitcoinPublicKeyResponseData = new byte[] { 78, 2, 80, 12, 244, 122, 65, 92, 56, 119, 215, 232, 56, 1, 60, 35, 147, 20, 185, 198, 91, 78, 62, 117, 162, 25, 19, 255, 233, 204, 129, 81, 102, 61, 238, 147, 158, 220, 54, 184, 123, 156, 123, 78, 122, 236, 27, 225, 87, 8, 80, 6, 155, 86, 68, 243, 33, 82, 110, 29, 19, 89, 145, 208, 235, 108, 34, 51, 78, 121, 68, 102, 117, 111, 71, 107, 56, 100, 86, 97, 103, 122, 97, 67, 118, 106, 72, 57, 122, 74, 111, 70, 88, 86, 100, 68, 86, 86, 53, 87, 109, 189, 71, 99, 138, 245, 30, 191, 210, 130, 5, 213, 10, 88, 174, 204, 194, 59, 13, 84, 21, 234, 220, 130, 247, 113, 225, 226, 235, 135, 102, 113, 45, 144, 0 };
+        private static byte[] TronTransactionResponseData = new byte[] { 150, 198, 46, 194, 23, 156, 245, 31, 8, 45, 124, 161, 175, 103, 46, 88, 223, 87, 34, 88, 243, 166, 165, 177, 67, 75, 168, 219, 23, 225, 154, 178, 51, 134, 133, 219, 252, 216, 138, 83, 103, 79, 64, 148, 71, 43, 125, 191, 49, 197, 67, 13, 239, 110, 15, 222, 168, 251, 64, 165, 250, 219, 229, 62, 0, 144, 0 };
 
         public CurrentState CurrentState { get; set; }
 
@@ -40,6 +41,10 @@ namespace Ledger.Net.Tests
                 case EthereumAppGetPublicKeyRequest ethereumAppGetPublicKeyRequest:
                     //TODO: Make this a real Ethereum address length
                     response = new EthereumAppGetPublicKeyResponse(BitcoinPublicKeyResponseData);
+                    break;
+
+                case TronAppSignatureRequest tronAppSignatureRequest:
+                    response = new TronAppSignatureResponse(TronTransactionResponseData);
                     break;
 
                 default:
