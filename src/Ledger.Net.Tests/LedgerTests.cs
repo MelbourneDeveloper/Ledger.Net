@@ -20,8 +20,9 @@ namespace Ledger.Net.Tests
     public abstract class LedgerTests
     {
         #region Private Fields
-        protected LedgerManagerBroker _LedgerManagerBroker;
-        protected LedgerManager LedgerManager
+        protected static LedgerManagerBroker _LedgerManagerBroker;
+
+        protected static LedgerManager LedgerManager
         {
             get
             {
@@ -495,7 +496,7 @@ namespace Ledger.Net.Tests
             throw new Exception("Ouch!");
         }
 
-        protected async Task Prompt(int? returnCode, Exception exception, string member)
+        protected static async Task Prompt(int? returnCode, Exception exception, string member)
         {
             if (returnCode.HasValue)
             {
@@ -529,14 +530,11 @@ namespace Ledger.Net.Tests
             await Task.Delay(5000);
         }
 
-        protected void StartBroker(ErrorPromptDelegate errorPrompt = null)
+        protected static void StartBroker(ErrorPromptDelegate errorPrompt, ILedgerManagerFactory ledgerManagerFactory)
         {
-            _LedgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt, GetLedgerManagerFactory());
+            _LedgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt, ledgerManagerFactory);
             _LedgerManagerBroker.Start();
         }
-
-        protected abstract ILedgerManagerFactory GetLedgerManagerFactory();
-
         #endregion
     }
 }

@@ -12,11 +12,7 @@ namespace Ledger.Net.Tests
         {
             WindowsHidDeviceFactory.Register();
             WindowsUsbDeviceFactory.Register();
-            StartBroker();
-        }
-        protected override ILedgerManagerFactory GetLedgerManagerFactory()
-        {
-            return new LedgerManagerFactory();
+            StartBroker(null, new LedgerManagerFactory());
         }
     }
 }

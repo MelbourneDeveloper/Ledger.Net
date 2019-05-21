@@ -47,6 +47,11 @@ namespace Ledger.Net.Tests
                     response = new TronAppSignatureResponse(TronTransactionResponseData);
                     break;
 
+                case TronAppGetPublicKeyRequest tronAppGetPublicKeyRequest:
+                    //TODO: Make this a real Tron address length
+                    response = new TronAppGetPublicKeyResponse(BitcoinPublicKeyResponseData);
+                    break;
+
                 default:
                     throw new NotImplementedException();
             }

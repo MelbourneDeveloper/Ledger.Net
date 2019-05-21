@@ -10,26 +10,16 @@ namespace Ledger.Net.Tests
     public class UnitTests : LedgerTests
     {
         #region Fields
-        private readonly MockLedgerDeviceFactory MockLedgerDeviceFactory = new MockLedgerDeviceFactory() { };
+        private static readonly MockLedgerDeviceFactory MockLedgerDeviceFactory = new MockLedgerDeviceFactory() { };
         public static MockLedgerManagerFactory MockLedgerManagerFactory;
         #endregion
 
-        #region Initialization
-        [TestInitialize]
-        public void Initialize()
+        static UnitTests()
         {
             MockLedgerManagerFactory = new MockLedgerManagerFactory(MockPrompt);
             DeviceManager.Current.DeviceFactories.Add(MockLedgerDeviceFactory);
-            StartBroker();
+            StartBroker(MockPrompt, MockLedgerManagerFactory);
         }
-        #endregion
-
-        #region Protected Overrides
-        protected override ILedgerManagerFactory GetLedgerManagerFactory()
-        {
-            return MockLedgerManagerFactory;
-        }
-        #endregion
 
         #region Tests
         [TestMethod]
@@ -45,7 +35,7 @@ namespace Ledger.Net.Tests
 
                 Assert.IsTrue(!string.IsNullOrEmpty(address));
             }
-            catch(TooManyPromptsException tex)
+            catch (TooManyPromptsException tex)
             {
                 lastException = tex;
             }
@@ -55,9 +45,9 @@ namespace Ledger.Net.Tests
         #endregion
 
         #region Private Methods
-        private async Task MockPrompt(int? returnCode, Exception exception, string member)
+        private static async Task MockPrompt(int? returnCode, Exception exception, string member)
         {
-            if(MockLedgerManagerFactory.MockLedgerManagerTransport.CurrentState == CurrentState.Dashboard)
+            if (MockLedgerManagerFactory.MockLedgerManagerTransport.CurrentState == CurrentState.Dashboard)
             {
                 //TODO: is this the right code for dashboard?
                 Assert.IsTrue(returnCode.HasValue && returnCode == Constants.SecurityNotValidStatusCode);
