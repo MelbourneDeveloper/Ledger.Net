@@ -30,7 +30,18 @@ namespace Ledger.Net.Tests
                     {
                         response = new BitcoinAppGetPublicKeyResponse(BitcoinPublicKeyResponseData);
                     }
+                    else  
+                    {
+                        //TODO: Make this a real bitcoin address length
+                        response = new BitcoinAppGetPublicKeyResponse(BitcoinPublicKeyResponseData);
+                    }
                     break;
+
+                case EthereumAppGetPublicKeyRequest ethereumAppGetPublicKeyRequest:
+                    //TODO: Make this a real Ethereum address length
+                    response = new EthereumAppGetPublicKeyResponse(BitcoinPublicKeyResponseData);
+                    break;
+
                 default:
                     throw new NotImplementedException();
             }

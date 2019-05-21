@@ -35,6 +35,7 @@ namespace Ledger.Net.Tests
         [TestMethod]
         public async Task TestBitcoinDashboardTooManyPrompts()
         {
+            var lastState = MockLedgerManagerFactory.MockLedgerManagerTransport.CurrentState;
             Exception lastException = null;
             try
             {
@@ -49,6 +50,7 @@ namespace Ledger.Net.Tests
                 lastException = tex;
             }
             Assert.IsTrue(lastException is TooManyPromptsException);
+            MockLedgerManagerFactory.MockLedgerManagerTransport.CurrentState = lastState;
         }
         #endregion
 
