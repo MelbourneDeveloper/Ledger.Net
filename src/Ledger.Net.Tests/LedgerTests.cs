@@ -21,7 +21,7 @@ namespace Ledger.Net.Tests
     {
         #region Private Fields
         protected LedgerManagerBroker _LedgerManagerBroker;
-        private LedgerManager LedgerManager
+        protected LedgerManager LedgerManager
         {
             get
             {
