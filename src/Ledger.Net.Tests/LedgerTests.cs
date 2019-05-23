@@ -130,6 +130,7 @@ namespace Ledger.Net.Tests
         [TestMethod]
         public async Task TestBitcoinGetPublicKey()
         {
+            LedgerManager.SetCoinNumber(0);
 
             var returnResponse = (GetPublicKeyResponseBase)await LedgerManager.CallAndPrompt(_GetPublicKeyFunc,
             new CallAndPromptArgs<GetAddressArgs>
