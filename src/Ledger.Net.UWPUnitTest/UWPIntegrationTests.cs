@@ -1,17 +1,15 @@
-﻿using Hid.Net.Windows;
+﻿using Hid.Net.UWP;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Usb.Net.Windows;
 
 namespace Ledger.Net.Tests
 {
     [TestClass]
-    public class WindowsUnitTests : LedgerTests
+    public class UWPIntegrationTests : LedgerTests
     {
         [TestInitialize]
         public void Initialize()
         {
-            WindowsHidDeviceFactory.Register();
-            WindowsUsbDeviceFactory.Register();
+            UWPHidDeviceFactory.Register();
             StartBroker(null, new LedgerManagerFactory());
         }
     }

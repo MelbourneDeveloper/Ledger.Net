@@ -96,14 +96,32 @@
     <SDKReference Include="TestPlatform.Universal, Version=$(UnitTestPlatformVersion)" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Ledger.Net.Tests\CurrentState.cs">
+      <Link>CurrentState.cs</Link>
+    </Compile>
     <Compile Include="..\Ledger.Net.Tests\CustomAddressPath.cs">
       <Link>CustomAddressPath.cs</Link>
     </Compile>
     <Compile Include="..\Ledger.Net.Tests\LedgerTests.cs">
       <Link>LedgerTests.cs</Link>
     </Compile>
+    <Compile Include="..\Ledger.Net.Tests\MockLedgerDevice.cs">
+      <Link>MockLedgerDevice.cs</Link>
+    </Compile>
+    <Compile Include="..\Ledger.Net.Tests\MockLedgerDeviceFactory.cs">
+      <Link>MockLedgerDeviceFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Ledger.Net.Tests\MockLedgerManagerFactory.cs">
+      <Link>MockLedgerManagerFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Ledger.Net.Tests\MockLedgerManagerTransport.cs">
+      <Link>MockLedgerManagerTransport.cs</Link>
+    </Compile>
     <Compile Include="..\Ledger.Net.Tests\Model\TronTransactionModel.cs">
       <Link>Model\TronTransactionModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Ledger.Net.Tests\UnitTests.cs">
+      <Link>UnitTests.cs</Link>
     </Compile>
     <Compile Include="..\Ledger.Net.Tests\UsageSpecification.cs">
       <Link>UsageSpecification.cs</Link>
@@ -111,7 +129,7 @@
     <Compile Include="..\Ledger.Net.Tests\VendorProductIds.cs">
       <Link>VendorProductIds.cs</Link>
     </Compile>
-    <Compile Include="UWPLedgerTests.cs" />
+    <Compile Include="UWPIntegrationTests.cs" />
     <Compile Include="UnitTestApp.xaml.cs">
       <DependentUpon>UnitTestApp.xaml</DependentUpon>
     </Compile>
