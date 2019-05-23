@@ -1,5 +1,4 @@
 ﻿using Device.Net;
-using Ledger.Net.Exceptions;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
 using System;
@@ -139,7 +138,11 @@ namespace Ledger.Net
     where TResponse : ResponseBase
     where TRequest : RequestBase
         {
-            return await SendRequestAsync<TResponse>(request);
+            var response = await SendRequestAsync<TResponse>(request);
+
+            //var data = string.Join(", ", response.Data.Select(b => b.ToString()));
+
+            return response;
         }
 
         public void Dispose()
