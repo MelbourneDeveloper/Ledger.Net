@@ -52,6 +52,11 @@ namespace Ledger.Net.Tests
                 //TODO: is this the right code for dashboard?
                 Assert.IsTrue(returnCode.HasValue && returnCode == Constants.SecurityNotValidStatusCode);
             }
+
+            if (exception != null)
+            {
+                throw exception;
+            }
         }
         #endregion
     }
