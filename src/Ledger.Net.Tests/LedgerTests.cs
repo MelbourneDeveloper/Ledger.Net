@@ -114,6 +114,7 @@ namespace Ledger.Net.Tests
             await LedgerManager.SetCoinNumber();
 
             var address = await LedgerManager.GetAddressAsync(0, false, 0, false);
+            Assert.IsTrue(!string.IsNullOrEmpty(address));
         }
 
         [TestMethod]
