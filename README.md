@@ -1,11 +1,13 @@
 # Ledger.Net
 Cross Platform C# Library for the Ledger Cryptocurrency Hardwarewallet
 
-Currently supports: .NET Framework, .NET Core, Android, UWP , See [MacOS and Linux Support](https://github.com/MelbourneDeveloper/Device.Net/wiki/Linux-and-MacOS-Support)
 
 I'll start work on Ledger Nano X integration if someone will donate 50% of the price, or send me one
 ![a](https://cdn.shopify.com/s/files/1/2974/4858/products/ledger-nano-x-stand-up_grande_7a016731-824a-4d00-acec-40acfdfed9dc.png?v=1545313453)
 https://shop.ledger.com/products/ledger-nano-x
+
+
+Currently supports: .NET Framework, .NET Core, Android, UWP , See [MacOS and Linux Support](https://github.com/MelbourneDeveloper/Device.Net/wiki/Linux-and-MacOS-Support)
 
 [Would you like to contribute?](https://christianfindlay.com/2019/04/28/calling-all-c-crypto-developers/)
 
