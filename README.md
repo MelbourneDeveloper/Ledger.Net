@@ -1,6 +1,10 @@
 # Ledger.Net
 Cross Platform C# Library for the Ledger Cryptocurrency Hardwarewallet
 
+**Ledger Nano X Support is here in Version 4.0.0!**
+
+![a](https://cdn.shopify.com/s/files/1/2974/4858/products/ledger-nano-x-stand-up_grande_7a016731-824a-4d00-acec-40acfdfed9dc.png?v=1545313453)
+
 Currently supports: .NET Framework, .NET Core, Android, UWP , See [MacOS and Linux Support](https://github.com/MelbourneDeveloper/Device.Net/wiki/Linux-and-MacOS-Support)
 
 [Would you like to contribute?](https://christianfindlay.com/2019/04/28/calling-all-c-crypto-developers/)
@@ -21,10 +25,12 @@ NuGet: Install-Package Ledger.Net
 ```cs
 public async Task DisplayAddress()
 {
-    WindowsHidDeviceFactory.Register();
-    var ledgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt);
-    _LedgerManager = await ledgerManagerBroker.WaitForFirstDeviceAsync();
-    var address = await _LedgerManager.GetAddressAsync(0, false, 0, true);
+    WindowsHidDeviceFactory.Register(new DebugLogger(), new DebugTracer());
+    var ledgerManagerBroker = new LedgerManagerBroker(3000, null, null, new LedgerManagerFactory() );
+    var ledgerManager = (IAddressDeriver) await ledgerManagerBroker.WaitForFirstDeviceAsync();
+    var path = $"m/49'/0'/0'/0/0";
+    var addressPath = AddressPathBase.Parse<BIP44AddressPath>(path);
+    var address = await ledgerManager.GetAddressAsync(addressPath, false, true);
 }
 ```
 ## Contact
