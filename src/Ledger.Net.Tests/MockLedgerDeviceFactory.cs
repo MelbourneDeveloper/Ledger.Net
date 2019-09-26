@@ -16,7 +16,6 @@ namespace Ledger.Net.Tests
         {
             var connectedDeviceDefinitions = DeviceIds.Select(d => new ConnectedDeviceDefinition(d)
             {
-                DeviceId = d,
                 DeviceType = DeviceType.Hid,
                 VendorId = 0x2581,
                 ProductId = 0x3b7c,

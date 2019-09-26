@@ -1,4 +1,5 @@
-﻿using Hid.Net.Windows;
+﻿using Device.Net;
+using Hid.Net.Windows;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Usb.Net.Windows;
 
@@ -10,8 +11,8 @@ namespace Ledger.Net.Tests
         [TestInitialize]
         public void Initialize()
         {
-            WindowsHidDeviceFactory.Register();
-            WindowsUsbDeviceFactory.Register();
+            WindowsHidDeviceFactory.Register(new DebugLogger(), new DebugTracer());
+            WindowsUsbDeviceFactory.Register(new DebugLogger(), new DebugTracer());
             StartBroker(null, new LedgerManagerFactory());
         }
     }

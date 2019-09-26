@@ -1,4 +1,5 @@
-﻿using Hid.Net.UWP;
+﻿using Device.Net;
+using Hid.Net.UWP;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Ledger.Net.Tests
@@ -9,7 +10,7 @@ namespace Ledger.Net.Tests
         [TestInitialize]
         public void Initialize()
         {
-            UWPHidDeviceFactory.Register();
+            UWPHidDeviceFactory.Register(new DebugLogger(), new DebugTracer());
             StartBroker(null, new LedgerManagerFactory());
         }
     }

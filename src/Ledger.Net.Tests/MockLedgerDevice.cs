@@ -27,17 +27,22 @@ namespace Ledger.Net.Tests
             throw new NotImplementedException();
         }
 
+        public Task Flush()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task InitializeAsync()
         {
             IsInitialized = true;
         }
 
-        public Task<byte[]> ReadAsync()
+        public Task<ReadResult> ReadAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<byte[]> WriteAndReadAsync(byte[] writeBuffer)
+        public Task<ReadResult> WriteAndReadAsync(byte[] writeBuffer)
         {
             throw new NotImplementedException();
         }
