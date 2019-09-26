@@ -1,7 +1,7 @@
 # Ledger.Net
 Cross Platform C# Library for the Ledger Cryptocurrency Hardwarewallet
 
-*Ledger Nano X Support is here in Version 4.0.0!*
+**Ledger Nano X Support is here in Version 4.0.0!**
 
 ![a](https://cdn.shopify.com/s/files/1/2974/4858/products/ledger-nano-x-stand-up_grande_7a016731-824a-4d00-acec-40acfdfed9dc.png?v=1545313453)
 
