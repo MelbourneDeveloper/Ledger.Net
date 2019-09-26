@@ -7,9 +7,9 @@ Class MainWindow
 
     Public Sub New()
 
-        WindowsHidDeviceFactory.Register()
+        WindowsHidDeviceFactory.Register(Nothing, Nothing)
 
-        _LedgerManagerBroker = New LedgerManagerBroker(3000, New DefaultCoinUtility(), New ErrorPromptDelegate(AddressOf Prompt))
+        _LedgerManagerBroker = New LedgerManagerBroker(3000, New DefaultCoinUtility(), New ErrorPromptDelegate(AddressOf Prompt), New LedgerManagerFactory())
         AddHandler _LedgerManagerBroker.LedgerInitialized, AddressOf LedgerManagerBroker_ConnectionEventOccurred
         AddHandler _LedgerManagerBroker.LedgerDisconnected, AddressOf LedgerManagerBroker_ConnectionEventOccurred
         _LedgerManagerBroker.Start()

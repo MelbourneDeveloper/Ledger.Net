@@ -7,12 +7,12 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/MelbourneDeveloper/Ledger.Net</PackageProjectUrl>
-    <AssemblyVersion>3.4.0.0</AssemblyVersion>
-    <FileVersion>3.4.0.0</FileVersion>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <FileVersion>4.0.0.0</FileVersion>
     <Company>Christian Findlay</Company>
-    <Version>3.4.0</Version>
+    <Version>4.0.0</Version>
     <RepositoryUrl>https://github.com/MelbourneDeveloper/Ledger.Net</RepositoryUrl>
-    <PackageReleaseNotes>Fixes for large message chunking and Tron signing</PackageReleaseNotes>
+    <PackageReleaseNotes>Ledger Nano X Support. Upgrade Device.Net</PackageReleaseNotes>
     <Copyright>Copyright (c) 2019 Christian Findlay</Copyright>
     <Title>Ledger.Net</Title>
     <Summary>A cross platform C# library for the Ledger hardwarewallet.</Summary>
@@ -38,12 +38,12 @@
 
   <ItemGroup>
     <PackageReference Include="Hardwarewallets.Net" Version="1.2.0" />
-    <PackageReference Include="Hid.Net" Version="2.7.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.1">
+    <PackageReference Include="Hid.Net" Version="3.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Usb.Net" Version="2.7.0" />
+    <PackageReference Include="Usb.Net" Version="3.1.0" />
 
   </ItemGroup>
 

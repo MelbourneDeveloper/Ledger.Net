@@ -18,14 +18,16 @@ namespace Ledger.Net
             //Android only
             new FilterDeviceDefinition{ DeviceType= DeviceType.Usb, VendorId= 0x2c97, UsagePage=0xffa0 },
             new FilterDeviceDefinition{ DeviceType= DeviceType.Usb, VendorId= 0x2581, ProductId=0x3b7c, UsagePage=0xffa0 },
-       };
+            //Ledger Nano X
+            new FilterDeviceDefinition{ DeviceType= DeviceType.Hid, VendorId= 0x2c97, ProductId=0x0004, Label="Ledger Nano X"  }
+        };
 
         #endregion
 
         #region Fields
         private DeviceListener _DeviceListener;
         private SemaphoreSlim _Lock = new SemaphoreSlim(1, 1);
-        private TaskCompletionSource<LedgerManager> _FirstLedgerTaskCompletionSource = new TaskCompletionSource<LedgerManager>();
+        private TaskCompletionSource<IManagesLedger> _FirstLedgerTaskCompletionSource = new TaskCompletionSource<IManagesLedger>();
         private bool disposed;
         #endregion
 
@@ -42,18 +44,20 @@ namespace Ledger.Net
         #endregion
 
         #region Public Properties
-        public ReadOnlyCollection<LedgerManager> LedgerManagers { get; private set; } = new ReadOnlyCollection<LedgerManager>(new List<LedgerManager>());
+        public ReadOnlyCollection<IManagesLedger> LedgerManagers { get; private set; } = new ReadOnlyCollection<IManagesLedger>(new List<IManagesLedger>());
         public ICoinUtility CoinUtility { get; }
         public int? PollInterval { get; }
         public ErrorPromptDelegate ErrorPromptDelegate { get; }
+        public ILedgerManagerFactory LedgerManagerFactory { get; }
         #endregion
 
         #region Constructor
-        public LedgerManagerBroker(int? pollInterval, ICoinUtility coinUtility, ErrorPromptDelegate errorPromptDelegate)
+        public LedgerManagerBroker(int? pollInterval, ICoinUtility coinUtility, ErrorPromptDelegate errorPromptDelegate, ILedgerManagerFactory ledgerManagerFactory)
         {
             CoinUtility = coinUtility;
             PollInterval = pollInterval;
             ErrorPromptDelegate = errorPromptDelegate;
+            LedgerManagerFactory = ledgerManagerFactory;
         }
         #endregion
 
@@ -64,17 +68,22 @@ namespace Ledger.Net
             {
                 await _Lock.WaitAsync();
 
-                var LedgerManager = LedgerManagers.FirstOrDefault(t => ReferenceEquals(t.LedgerHidDevice, e.Device));
+                var LedgerManager = LedgerManagers.FirstOrDefault(t =>
+                {
+                    var ledgerManagerTransport = t.RequestHandler as LedgerManagerTransport;
+                    return ReferenceEquals(ledgerManagerTransport?.LedgerHidDevice, e.Device);
+                });
+
                 if (LedgerManager == null)
                 {
-                    LedgerManager = new LedgerManager(e.Device, CoinUtility, ErrorPromptDelegate);
+                    LedgerManager = LedgerManagerFactory.GetNewLedgerManager(e.Device, CoinUtility, ErrorPromptDelegate);
 
-                    var tempList = new List<LedgerManager>(LedgerManagers)
+                    var tempList = new List<IManagesLedger>(LedgerManagers)
                     {
                         LedgerManager
                     };
 
-                    LedgerManagers = new ReadOnlyCollection<LedgerManager>(tempList);
+                    LedgerManagers = new ReadOnlyCollection<IManagesLedger>(tempList);
 
                     if (_FirstLedgerTaskCompletionSource.Task.Status == TaskStatus.WaitingForActivation) _FirstLedgerTaskCompletionSource.SetResult(LedgerManager);
 
@@ -93,18 +102,23 @@ namespace Ledger.Net
             {
                 await _Lock.WaitAsync();
 
-                var LedgerManager = LedgerManagers.FirstOrDefault(t => ReferenceEquals(t.LedgerHidDevice, e.Device));
+                var LedgerManager = LedgerManagers.FirstOrDefault(t =>
+                {
+                    var ledgerManagerTransport = t.RequestHandler as LedgerManagerTransport;
+                    return ReferenceEquals(ledgerManagerTransport?.LedgerHidDevice, e.Device);
+                });
+
                 if (LedgerManager != null)
                 {
                     LedgerDisconnected?.Invoke(this, new LedgerManagerConnectionEventArgs(LedgerManager));
 
                     LedgerManager.Dispose();
 
-                    var tempList = new List<LedgerManager>(LedgerManagers);
+                    var tempList = new List<IManagesLedger>(LedgerManagers);
 
                     tempList.Remove(LedgerManager);
 
-                    LedgerManagers = new ReadOnlyCollection<LedgerManager>(tempList);
+                    LedgerManagers = new ReadOnlyCollection<IManagesLedger>(tempList);
                 }
             }
             finally
@@ -130,7 +144,7 @@ namespace Ledger.Net
         {
             if (restart && _DeviceListener != null)
             {
-                LedgerManagers = new ReadOnlyCollection<LedgerManager>(new List<LedgerManager>());
+                LedgerManagers = new ReadOnlyCollection<IManagesLedger>(new List<IManagesLedger>());
                 _DeviceListener.DeviceDisconnected -= DevicePoller_DeviceDisconnected;
                 _DeviceListener.DeviceInitialized -= DevicePoller_DeviceInitialized;
                 _DeviceListener.Dispose();
@@ -175,7 +189,7 @@ namespace Ledger.Net
         /// Starts the device listener and waits for the first connected Ledger to be initialized
         /// </summary>
         /// <returns></returns>
-        public async Task<LedgerManager> WaitForFirstDeviceAsync()
+        public async Task<IManagesLedger> WaitForFirstDeviceAsync()
         {
             if (_DeviceListener == null) Start();
             await _DeviceListener.CheckForDevicesAsync();
