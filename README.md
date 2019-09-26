@@ -25,10 +25,12 @@ NuGet: Install-Package Ledger.Net
 ```cs
 public async Task DisplayAddress()
 {
-    WindowsHidDeviceFactory.Register();
-    var ledgerManagerBroker = new LedgerManagerBroker(3000, null, Prompt);
-    _LedgerManager = await ledgerManagerBroker.WaitForFirstDeviceAsync();
-    var address = await _LedgerManager.GetAddressAsync(0, false, 0, true);
+    WindowsHidDeviceFactory.Register(new DebugLogger(), new DebugTracer());
+    var ledgerManagerBroker = new LedgerManagerBroker(3000, null, null, new LedgerManagerFactory() );
+    var ledgerManager = (IAddressDeriver) await ledgerManagerBroker.WaitForFirstDeviceAsync();
+    var path = $"m/49'/0'/0'/0/0";
+    var addressPath = AddressPathBase.Parse<BIP44AddressPath>(path);
+    var address = await ledgerManager.GetAddressAsync(addressPath, false, true);
 }
 ```
 ## Contact
