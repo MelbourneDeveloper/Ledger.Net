@@ -1,4 +1,4 @@
-﻿Imports Hardwarewallets.Net.AddressManagement
+﻿
 Imports Hid.Net.Windows
 
 Class MainWindow

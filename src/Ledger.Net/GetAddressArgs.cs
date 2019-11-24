@@ -1,4 +1,4 @@
-﻿using Hardwarewallets.Net.Model;
+﻿using CryptoCurrency.Net.Base.Abstractions.AddressManagement;
 
 namespace Ledger.Net
 {

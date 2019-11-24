@@ -1,4 +1,4 @@
-﻿using Hardwarewallets.Net.Model;
+﻿using CryptoCurrency.Net.Base.Abstractions.AddressManagement;
 using Ledger.Net.Exceptions;
 using Ledger.Net.Responses;
 using System;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Ledger.Net.Exceptions
+﻿namespace Ledger.Net.Exceptions
 {
     public class InvalidAPDUResponseException : ResponseBaseException
     {

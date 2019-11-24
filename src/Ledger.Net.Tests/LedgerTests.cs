@@ -1,5 +1,3 @@
-using Hardwarewallets.Net;
-using Hardwarewallets.Net.AddressManagement;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
 using Ledger.Net.Tests.Model;

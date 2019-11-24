@@ -1,6 +1,5 @@
-using Hardwarewallets.Net;
-using Hardwarewallets.Net.AddressManagement;
-using Hardwarewallets.Net.Model;
+using CryptoCurrency.Net.Base.Abstractions.AddressManagement;
+using CryptoCurrency.Net.Base.AddressManagement;
 using Ledger.Net.Exceptions;
 using Ledger.Net.Requests;
 using Ledger.Net.Responses;
