@@ -1,4 +1,5 @@
 ﻿
+Imports CryptoCurrency.Net.Base.AddressManagement
 Imports Hid.Net.Windows
 
 Class MainWindow
